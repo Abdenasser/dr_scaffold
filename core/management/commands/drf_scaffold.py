@@ -1,4 +1,5 @@
 from django.core.management.base import BaseCommand
+from core.generators import Generator
 
 class Command(BaseCommand):
     help = 'Meant to generate Models/Views/Urls/Serializers'
@@ -14,4 +15,6 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **kwargs):
-        print(args)
+        # handle the creation of an app with default files first
+        generator = Generator(args[0], args[1], args[2:]) 
+        generator.generate()
