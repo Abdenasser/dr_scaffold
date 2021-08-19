@@ -1,9 +1,14 @@
 from django.core.management.base import BaseCommand
-from django.utils import timezone
 
 class Command(BaseCommand):
     help = 'Meant to generate Models/Views/Urls/Serializers'
 
+    def add_arguments(self, parser):
+        parser.add_argument(
+            'app',
+            help='app name',
+        )
+
     def handle(self, *args, **kwargs):
-        time = timezone.now().strftime('%X')
-        self.stdout.write("It's now %s" % time)
+        app_name = kwargs['app']
+        print(app_name)
