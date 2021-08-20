@@ -5,8 +5,11 @@ class Generator(object):
 
     def __init__(self, appdir, model_name, fields):
       self.appdir = appdir
-      self.MAIN_DIR = appdir.split("/", maxsplit=1)[0]
-      self.app_name = appdir.split("/", maxsplit=1)[1]
+      self.MAIN_DIR = './'
+      self.app_name = appdir
+      if len(appdir.split('/'))>= 2:
+        self.MAIN_DIR = appdir.split("/", maxsplit=1)[0]
+        self.app_name = appdir.split("/", maxsplit=1)[1]
       self.model_name = model_name
       self.fields = fields
       self.foreign_model_imports = list()
@@ -69,10 +72,11 @@ class Generator(object):
       self.foreign_model = field.split(':')[2]
       field_name = field.split(':')[0]
       field_type = field.split(':')[1].lower()
-      foreign_model_import = self.get_import_template(self.foreign_model)
+      #foreign_model_import = self.get_import_template(self.foreign_model)
       if self.is_imported(self.models_file, self.foreign_model):
         return self.get_field_template(field_type, field_name)
-      self.foreign_model_imports.append(foreign_model_import)
+      # No need to add imports of models of the same app
+      #self.foreign_model_imports.append(foreign_model_import)
       return self.get_field_template(field_type, field_name)
       
     def get_field_template(self, field_type, field_name):
