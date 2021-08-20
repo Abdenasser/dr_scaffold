@@ -18,15 +18,15 @@ class Generator(object):
     def generate(self):
       self.generate_app()
       self.generate_model()
-      print("finished %s %s %s %s"% (self.MAIN_DIR, self.app_name, self.model_name, self.fields))
+      print("Model %s have been created at %s%s with the following field: \n %s"% (self.model_name, self.MAIN_DIR, self.app_name, self.fields))
 
     def generate_app(self):
       if not path.exists('%s' % (self.appdir)):
         system('python manage.py startapp %s' % self.app_name)
         system('mv %s %s' % (self.app_name, self.appdir))
-        print("Generated App")
+        print("Generating app through startapp")
       else:
-        print("app already exist @ %s" % (self.appdir))
+        print("App does already exist at %s" % (self.appdir))
 
     def generate_model(self):
       models_file = open(self.models_file, 'r')
@@ -51,13 +51,12 @@ class Generator(object):
         new_field = self.select_field_template(field)
         if new_field:
           actual_fields.append(new_field)
-          print('added %s/models.py\t%s field' % (self.appdir, field.split(':')[0]))
       return actual_fields
 
     def model_exist(self, models_file, model): 
       for line in models_file.readlines():
         if 'class %s' % model in line:
-          print('Model exists at %s/models.py' % (self.appdir))
+          print('Model already exists at %s/models.py' % (self.appdir))
           return True
       return False
 
@@ -82,7 +81,6 @@ class Generator(object):
     def get_field_template(self, field_type, field_name):
       if field_type == 'foreignkey':
         return model_templates.FIELD_TYPES[field_type] % {'name': field_name, 'foreign': self.foreign_model}
-      print(field_type)
       return model_templates.FIELD_TYPES[field_type] % {'name': field_name}  
     
     def get_import_template(self, model):
