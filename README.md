@@ -19,8 +19,9 @@ python manage.py drf_scaffold blog Post title:charfield body:textfield author:fo
 
 ## Installation and usage
 
-Currently as we don't have a package ready to use yet, please follow the instructions below:
+⚠️ **This library assumes that you have setup your project with Django Rest Framework. if not, please refer to this guide first : [Getting Started with DRF](https://www.django-rest-framework.org/#installation)**
 
+Currently as we don't have a package ready to use yet, please follow the instructions below:
 Clone this repository :
 
 ```
