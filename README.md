@@ -34,13 +34,13 @@ And cd into the project directory :
 cd drf_scaffold
 ```
 
-Copy the `drf_scaffold` application folder (not the project folder) into your Django project.
+Copy the `core` application folder (not the project folder) into your Django project.
 Add the application to your INSTALLED_APPS like the following:
 
 ```
 INSTALLED_APPS = [
     ...
-    'drf_scaffold'
+    'core'
 ]
 
 ```
