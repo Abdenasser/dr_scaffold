@@ -4,7 +4,7 @@
 
 ## Overview
 
-Coming from a ruby on rails ecosystem I've been always wondering if there's a CLI we can use with Django to generate a bare minimum setup for our apps like the one we have in rails and that we can use to generate Models, Views, Controllers... and even a resource scaffold that contains all of them, so I started looking and experimenting a few small libraries here and there but most of them if not all either outdated or buggy and doesn't do the job.. so I decided to create mine but for Django rest apis.
+Coming from a ruby on rails ecosystem I've been always wondering if there's a CLI we can use with Django to generate a bare minimum setup for our apps like the one we have in rails, so I started looking a django CLI that does the same but couldn't find anything that suits my needs.. so I decided to create one.
 
 This Library should help you generate a full **Rest API App structure** using one command:
 
