@@ -32,12 +32,15 @@ class Generator(object):
       fields_templates = self.get_fields_templates(self.fields)
       model_template = model_templates.MODEL % (self.model_name, ''.join(field for field in fields_templates))
       imports_template = ''.join(import_line for import_line in self.foreign_model_imports)
-      self.rewrite_models_file(imports_template+model_template)
+      self.rewrite_models_file(imports_template,model_template)
 
-    def rewrite_models_file(self,content):
-      models_file = open(self.models_file, 'a')
-      models_file.write(content)
-      return print("Finished....") 
+    def rewrite_models_file(self, imports, model):
+      with open(self.models_file, 'r+') as models_file:
+        file_content = ''.join(line for line in models_file.readlines())
+        new_content = imports+file_content+model+"\n"
+        models_file.seek(0)
+        models_file.write(new_content)
+      return print("-------|| FINISHED ||-------")
 
     def get_fields_templates(self, fields):
       actual_fields = list()
