@@ -9,7 +9,7 @@ Coming from a ruby on rails ecosystem I've been always wondering if there's a CL
 This Library should help you generate a full **Rest API App structure** using one command:
 
 ```
-python manage.py drf_scaffold apis/blog Article title:charfield body:textfield author:foreignkey:Author category:foreignkey:Category
+python manage.py drf_scaffold blog Post title:charfield body:textfield author:foreignkey:Author
 ```
 
 - **models.py** containing Models with all fields generated using CLI ⚡
