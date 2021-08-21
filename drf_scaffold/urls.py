@@ -20,6 +20,5 @@ from rest_framework import routers
 router = routers.DefaultRouter()
 
 urlpatterns = [
-    path("blog/", include("blog.urls")),
     path('admin/', admin.site.urls),
 ]
