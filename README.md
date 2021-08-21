@@ -57,6 +57,13 @@ INSTALLED_APPS = [
 ]
 ```
 
+Next, lets generate migrate our database through the following commands:
+
+```
+python manage.py makemigrations
+python manage.py migrate
+```
+
 Next, open the urls.py file and add the path to our app urls:
 
 ```
