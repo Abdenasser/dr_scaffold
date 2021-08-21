@@ -13,6 +13,7 @@ python manage.py drf_scaffold blog Post title:charfield body:textfield author:fo
 ```
 
 - **models.py** containing Models with all fields generated using CLI ⚡
+- **admin.py** containing with the previous Models already registered ⚡
 - **views.py** including Django Rest Framework ViewSets with all actions necessary for CRUD operations using Mixins, documented using swagger.⚡
 - **urls.py** containing all needed URLs necessary for CRUD endpoints.⚡
 - **serializers.py** contains Model Serializers for a bare minimum DRF setup to get started ⚡
