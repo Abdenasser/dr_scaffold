@@ -1,5 +1,5 @@
 from os import path, system
-from core.scaffold_templates import model_templates
+from core.scaffold_templates import model_templates, admin_templates
 
 class Generator(object):
 
@@ -14,10 +14,12 @@ class Generator(object):
       self.fields = fields
       self.foreign_model_imports = list()
       self.models_file = '%s/models.py' % (appdir)
+      self.admin_file = '%s/admin.py' % (appdir)
 
     def generate(self):
       self.generate_app()
       self.generate_model()
+      self.register_models_to_admin()
       print("Model %s have been created at %s%s with the following field: \n %s"% (self.model_name, self.MAIN_DIR, self.app_name, self.fields))
 
     def generate_app(self):
@@ -30,19 +32,19 @@ class Generator(object):
 
     def generate_model(self):
       models_file = open(self.models_file, 'r')
-      if self.model_exist(models_file, self.model_name):
+      if self.model_exist('models',models_file, self.model_name):
         return 
       fields_templates = self.get_fields_templates(self.fields)
       model_template = model_templates.MODEL % (self.model_name, ''.join(field for field in fields_templates))
       imports_template = ''.join(import_line for import_line in self.foreign_model_imports)
-      self.rewrite_models_file(imports_template,model_template)
+      self.rewrite_component_file(self.models_file, imports_template,model_template)
 
-    def rewrite_models_file(self, imports, model):
-      with open(self.models_file, 'r+') as models_file:
-        file_content = ''.join(line for line in models_file.readlines())
+    def rewrite_component_file(self, file, imports, model):
+      with open(file, 'r+') as file:
+        file_content = ''.join(line for line in file.readlines())
         new_content = imports+file_content+model+"\n"
-        models_file.seek(0)
-        models_file.write(new_content)
+        file.seek(0)
+        file.write(new_content)
       return print("-------|| FINISHED ||-------")
 
     def get_fields_templates(self, fields):
@@ -53,11 +55,16 @@ class Generator(object):
           actual_fields.append(new_field)
       return actual_fields
 
-    def model_exist(self, models_file, model): 
-      for line in models_file.readlines():
-        if 'class %s' % model in line:
-          print('Model already exists at %s/models.py' % (self.appdir))
-          return True
+    def model_exist(self, component, file, model): 
+      for line in file.readlines():
+        if component == 'models':
+          if 'class %s' % model in line:
+            print('Model already exists at %s/models.py' % (self.appdir))
+            return True
+        elif component == 'admin':
+          if '@admin.register(%s)' % model in line:
+            print('Model already registered at %s/admin.py' % (self.appdir))
+            return True
       return False
 
     def select_field_template(self, field):
@@ -92,3 +99,11 @@ class Generator(object):
         if 'import %s' % model in line:
           return True
       return False
+
+    def register_models_to_admin(self):
+      admin_file = open(self.admin_file, 'r')
+      if self.model_exist('admin', admin_file, self.model_name):
+        return 
+      model_register_template = admin_templates.REGISTER % {'model': self.model_name}
+      import_template = admin_templates.MODEL_IMPORT % {'app': self.appdir.replace("/", "."), 'model': self.model_name}
+      self.rewrite_component_file(self.admin_file, import_template,model_register_template)
