@@ -16,7 +16,7 @@ DECIMALFIELD = """
 DATETIMEFIELD = """
     %(name)s = models.DateTimeField(null=True)"""
 FOREIGNKEY = """
-    %(name)s = models.ForeignKey(%(foreign)s, on_delete=models.CASCADE)"""
+    %(name)s = models.ForeignKey(%(foreign)s, on_delete=models.CASCADE, null=True)"""
 
 FIELD_TYPES = {
     'charfield': CHARFIELD,
