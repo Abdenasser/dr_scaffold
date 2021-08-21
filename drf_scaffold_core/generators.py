@@ -1,3 +1,4 @@
+import inflect
 from os import path, system
 from drf_scaffold_core.scaffold_templates import model_templates, admin_templates, view_templates, serializer_templates, url_templates
 
@@ -18,6 +19,7 @@ class Generator(object):
       self.views_file = '%s/views.py' % (appdir)
       self.serializers_file = '%s/serializers.py' % (appdir)
       self.urls_file = '%s/urls.py' % (appdir)
+      self.p = inflect.engine()
 
     def generate(self):
       self.generate_app()
@@ -56,7 +58,7 @@ class Generator(object):
       if self.class_exist('models',models_file, self.model_name):
         return 
       fields_templates = self.get_fields_templates(self.fields)
-      model_template = model_templates.MODEL % (self.model_name, ''.join(field for field in fields_templates))
+      model_template = model_templates.MODEL % (self.model_name, ''.join(field for field in fields_templates), self.p.plural(self.model_name).capitalize())
       imports_template = ''.join(import_line for import_line in self.foreign_model_imports)
       self.rewrite_component_file(self.models_file, imports_template,model_template)
       return print("🚀 %s have been successfully updated"%self.models_file)
@@ -147,7 +149,7 @@ class Generator(object):
       urls_file = open(self.urls_file, 'r')
       if self.class_exist('url', urls_file, self.model_name):
         return 
-      url_template = url_templates.URL % {'model': self.model_name, 'path': self.model_name.lower()+'es'} + url_templates.URL_PATTERNS
+      url_template = url_templates.URL % {'model': self.model_name, 'path': self.p.plural(self.model_name.lower())} + url_templates.URL_PATTERNS
       model_import_template = url_templates.MODEL_IMPORT % {'app': self.appdir.replace("/", "."), 'model': self.model_name}
       self.rewrite_component_file(self.urls_file, model_import_template,url_template)
       return print("🚀 %s have been successfully updated"%self.urls_file)

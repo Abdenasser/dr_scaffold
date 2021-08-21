@@ -1,6 +1,9 @@
 MODEL = """class %s(models.Model):\
     %s
     create_date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name_plural = "%s"
     
 """
 MODEL_IMPORT = """from %(app)s.models import %(model)s

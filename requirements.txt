@@ -12,6 +12,7 @@ django-filter==2.4.0
 djangorestframework==3.12.4
 drf-cli==0.1.1
 idna==3.2
+inflect==5.3.0
 Jinja2==3.0.1
 jinja2-time==0.2.0
 Markdown==3.3.4
