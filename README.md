@@ -72,4 +72,4 @@ urlpatterns = [
 
 ## TODO
 
-- most importantly Implement views, urls, serializers.
+- write some tests
