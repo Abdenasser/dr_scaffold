@@ -52,7 +52,23 @@ Enjoy running the CLI command as follow :
 python manage.py drf_scaffold apps_folder_name/app_name Article title:charfield body:textfield author:foreignkey:Author category:foreignkey:Category
 ```
 
-don't forget to add the generated application to your INSTALLED_APPS.
+Don't forget to add the generated application to your INSTALLED_APPS:
+
+```
+INSTALLED_APPS = [
+    ...,
+    'your_scaffolded_app_name'
+]
+```
+
+And in your project urls file add:
+
+```
+urlpatterns = [
+    ...,
+    path("your_scaffolded_app_name/", include("your_scaffolded_app_name.urls")),
+]
+```
 
 ## TODO
 
