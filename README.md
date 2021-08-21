@@ -74,6 +74,7 @@ urlpatterns = [
 ```
 
 Finally start your server with `python manage.py runserver` and head over to `http://127.0.0.1:8000/blog/posts/`
+**don't forget to checkout your admin panel as well `http://127.0.0.1:8000/admin`**
 
 ## Installation and usage
 
