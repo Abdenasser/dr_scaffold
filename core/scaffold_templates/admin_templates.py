@@ -1,5 +1,5 @@
-REGISTER = """@admin.register(%s)\
-class %sAdmin(admin.ModelAdmin):
+REGISTER = """@admin.register(%(model)s)
+class %(model)sAdmin(admin.ModelAdmin):
     exclude = ()
     
 """
