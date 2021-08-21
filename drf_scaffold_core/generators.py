@@ -1,5 +1,5 @@
 from os import path, system
-from core.scaffold_templates import model_templates, admin_templates
+from drf_scaffold_core.scaffold_templates import model_templates, admin_templates
 
 class Generator(object):
 
@@ -22,19 +22,17 @@ class Generator(object):
       self.generate_models()
       self.register_models_to_admin()
       # self.generate_views()
-      print("Model %s have been created at %s%s with the following field: \n %s"% (self.model_name, self.MAIN_DIR, self.app_name, self.fields))
 
     def generate_app(self):
       if not path.exists('%s' % (self.appdir)):
         system('python manage.py startapp %s' % self.app_name)
         system('mv %s %s' % (self.app_name, self.appdir))
-        print("Generating app through startapp")
       else:
         print("App does already exist at %s" % (self.appdir))
 
     def generate_models(self):
       models_file = open(self.models_file, 'r')
-      if self.model_exist('models',models_file, self.model_name):
+      if self.class_exist('models',models_file, self.model_name):
         return 
       fields_templates = self.get_fields_templates(self.fields)
       model_template = model_templates.MODEL % (self.model_name, ''.join(field for field in fields_templates))
@@ -47,7 +45,7 @@ class Generator(object):
         new_content = head + file_content + body + "\n"
         file.seek(0)
         file.write(new_content)
-      return print("-------|| FINISHED ||-------")
+      return print("🚀 %s have been successfully updated"%file_path)
 
     def get_fields_templates(self, fields):
       actual_fields = list()
@@ -57,7 +55,7 @@ class Generator(object):
           actual_fields.append(new_field)
       return actual_fields
 
-    def model_exist(self, component, file, model): 
+    def class_exist(self, component, file, model): 
       for line in file.readlines():
         if component == 'models':
           if 'class %s' % model in line:
@@ -83,7 +81,7 @@ class Generator(object):
 
     def register_models_to_admin(self):
       admin_file = open(self.admin_file, 'r')
-      if self.model_exist('admin', admin_file, self.model_name):
+      if self.class_exist('admin', admin_file, self.model_name):
         return 
       model_register_template = admin_templates.REGISTER % {'model': self.model_name}
       import_template = admin_templates.MODEL_IMPORT % {'app': self.appdir.replace("/", "."), 'model': self.model_name}

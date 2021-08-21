@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from core.generators import Generator
+from drf_scaffold_core.generators import Generator
 
 class Command(BaseCommand):
     help = 'Meant to generate Models/Views/Urls/Serializers'
