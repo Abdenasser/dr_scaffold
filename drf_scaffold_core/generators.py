@@ -1,5 +1,5 @@
 from os import path, system
-from drf_scaffold_core.scaffold_templates import model_templates, admin_templates, view_templates, serializer_templates
+from drf_scaffold_core.scaffold_templates import model_templates, admin_templates, view_templates, serializer_templates, url_templates
 
 class Generator(object):
 
@@ -17,6 +17,7 @@ class Generator(object):
       self.admin_file = '%s/admin.py' % (appdir)
       self.views_file = '%s/views.py' % (appdir)
       self.serializers_file = '%s/serializers.py' % (appdir)
+      self.urls_file = '%s/urls.py' % (appdir)
 
     def generate(self):
       self.generate_app()
@@ -24,6 +25,7 @@ class Generator(object):
       self.register_models_to_admin()
       self.generate_serializers()
       self.generate_views()
+      self.generate_urls()
 
     def generate_app(self):
       if not path.exists('%s' % (self.appdir)):
@@ -31,6 +33,7 @@ class Generator(object):
         system('mv %s %s' % (self.app_name, self.appdir))
         self.setup_views_file()
         self.setup_serializers_file()
+        self.setup_urls_file()
       else:
         print("App does already exist at %s" % (self.appdir))
 
@@ -42,6 +45,11 @@ class Generator(object):
       open(self.serializers_file, 'x')
       serializer_setup = serializer_templates.SERIALIZER_SETUP
       self.rewrite_component_file( self.serializers_file, serializer_setup, '')
+
+    def setup_urls_file(self):
+      open(self.urls_file, 'x')
+      urls_setup = url_templates.URLS_SETUP
+      self.rewrite_component_file( self.urls_file, urls_setup, '')
 
     def generate_models(self):
       models_file = open(self.models_file, 'r')
@@ -85,7 +93,11 @@ class Generator(object):
         elif component == 'serializer':
           if 'class %sSerializer' % model in line:
             print('Serializer already exists at %s/serializers.py' % (self.appdir))
-            return True       
+            return True
+        elif component == 'url':
+          if '%sViewSet)' % model in line:
+            print('Url already exists at %s/urls.py' % (self.appdir))
+            return True           
       return False
 
     def select_field_template(self, field):
@@ -128,3 +140,12 @@ class Generator(object):
       model_import_template = serializer_templates.MODEL_IMPORT % {'app': self.appdir.replace("/", "."), 'model': self.model_name}
       self.rewrite_component_file(self.serializers_file, model_import_template,serializer_template)
       return print("🚀 %s have been successfully updated"%self.serializers_file)
+
+    def generate_urls(self):
+      urls_file = open(self.urls_file, 'r')
+      if self.class_exist('url', urls_file, self.model_name):
+        return 
+      url_template = url_templates.URL % {'model': self.model_name, 'path': self.model_name.lower()+'es'} + url_templates.URL_PATTERNS
+      model_import_template = url_templates.MODEL_IMPORT % {'app': self.appdir.replace("/", "."), 'model': self.model_name}
+      self.rewrite_component_file(self.urls_file, model_import_template,url_template)
+      return print("🚀 %s have been successfully updated"%self.urls_file)
