@@ -1,5 +1,5 @@
 from os import path, system
-from core.scaffold_templates import model_templates, admin_templates
+from drf_scaffold_core.scaffold_templates import model_templates, admin_templates
 
 class Generator(object):
 
