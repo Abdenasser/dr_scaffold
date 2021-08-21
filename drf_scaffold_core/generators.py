@@ -64,6 +64,8 @@ class Generator(object):
     def rewrite_component_file(self, file_path, head, body):
       with open(file_path, 'r+') as file:
         file_content = ''.join(line for line in file.readlines())
+        if file_path == self.urls_file:
+          file_content = file_content.replace(url_templates.URL_PATTERNS,"")
         new_content = head + file_content + body + "\n"
         file.seek(0)
         file.write(new_content)
