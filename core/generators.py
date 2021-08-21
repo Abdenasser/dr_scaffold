@@ -15,11 +15,13 @@ class Generator(object):
       self.foreign_model_imports = list()
       self.models_file = '%s/models.py' % (appdir)
       self.admin_file = '%s/admin.py' % (appdir)
+      self.views_file = '%s/views.py' % (appdir)
 
     def generate(self):
       self.generate_app()
-      self.generate_model()
+      self.generate_models()
       self.register_models_to_admin()
+      # self.generate_views()
       print("Model %s have been created at %s%s with the following field: \n %s"% (self.model_name, self.MAIN_DIR, self.app_name, self.fields))
 
     def generate_app(self):
@@ -30,7 +32,7 @@ class Generator(object):
       else:
         print("App does already exist at %s" % (self.appdir))
 
-    def generate_model(self):
+    def generate_models(self):
       models_file = open(self.models_file, 'r')
       if self.model_exist('models',models_file, self.model_name):
         return 
@@ -39,10 +41,10 @@ class Generator(object):
       imports_template = ''.join(import_line for import_line in self.foreign_model_imports)
       self.rewrite_component_file(self.models_file, imports_template,model_template)
 
-    def rewrite_component_file(self, file, imports, model):
-      with open(file, 'r+') as file:
+    def rewrite_component_file(self, file_path, head, body):
+      with open(file_path, 'r+') as file:
         file_content = ''.join(line for line in file.readlines())
-        new_content = imports+file_content+model+"\n"
+        new_content = head + file_content + body + "\n"
         file.seek(0)
         file.write(new_content)
       return print("-------|| FINISHED ||-------")
@@ -70,28 +72,7 @@ class Generator(object):
     def select_field_template(self, field):
       field_name = field.split(':')[0]
       field_type = field.split(':')[1].lower()
-      if field_type == 'foreignkey':
-        self.set_foreign_field(field)
-      return self.get_field_template(field_type,field_name) 
-
-    def set_foreign_field(self, field):
-      self.foreign_model = field.split(':')[2]
-      field_name = field.split(':')[0]
-      field_type = field.split(':')[1].lower()
-      #foreign_model_import = self.get_import_template(self.foreign_model)
-      if self.is_imported(self.models_file, self.foreign_model):
-        return self.get_field_template(field_type, field_name)
-      # No need to add imports of models of the same app
-      #self.foreign_model_imports.append(foreign_model_import)
-      return self.get_field_template(field_type, field_name)
-      
-    def get_field_template(self, field_type, field_name):
-      if field_type == 'foreignkey':
-        return model_templates.FIELD_TYPES[field_type] % {'name': field_name, 'foreign': self.foreign_model}
-      return model_templates.FIELD_TYPES[field_type] % {'name': field_name}  
-    
-    def get_import_template(self, model):
-      return model_templates.MODEL_IMPORT % {'app': self.appdir.replace("/", "."), 'model': model}
+      return model_templates.FIELD_TYPES[field_type] % dict(name= field_name, foreign = field.split(':')[2] if (field_type == 'foreignkey') else '')
 
     def is_imported(self, path, model):
       file = open(path, 'r')
@@ -107,3 +88,6 @@ class Generator(object):
       model_register_template = admin_templates.REGISTER % {'model': self.model_name}
       import_template = admin_templates.MODEL_IMPORT % {'app': self.appdir.replace("/", "."), 'model': self.model_name}
       self.rewrite_component_file(self.admin_file, import_template,model_register_template)
+
+    def generate_views():
+      pass
