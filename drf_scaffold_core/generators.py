@@ -1,5 +1,5 @@
 from os import path, system
-from drf_scaffold_core.scaffold_templates import model_templates, admin_templates
+from drf_scaffold_core.scaffold_templates import model_templates, admin_templates, view_templates
 
 class Generator(object):
 
@@ -21,14 +21,19 @@ class Generator(object):
       self.generate_app()
       self.generate_models()
       self.register_models_to_admin()
-      # self.generate_views()
+      self.generate_views()
 
     def generate_app(self):
       if not path.exists('%s' % (self.appdir)):
         system('python manage.py startapp %s' % self.app_name)
         system('mv %s %s' % (self.app_name, self.appdir))
+        self.setup_view_file()
       else:
         print("App does already exist at %s" % (self.appdir))
+
+    def setup_view_file(self):
+      view_setup = view_templates.VIEWSET_SETUP
+      self.rewrite_component_file( self.views_file, view_setup, '')
 
     def generate_models(self):
       models_file = open(self.models_file, 'r')
@@ -65,6 +70,10 @@ class Generator(object):
           if '@admin.register(%s)' % model in line:
             print('Model already registered at %s/admin.py' % (self.appdir))
             return True
+        elif component == 'view':
+          if 'class %sViewSet' % model in line:
+            print('ViewSet already exists at %s/views.py' % (self.appdir))
+            return True    
       return False
 
     def select_field_template(self, field):
@@ -87,5 +96,12 @@ class Generator(object):
       import_template = admin_templates.MODEL_IMPORT % {'app': self.appdir.replace("/", "."), 'model': self.model_name}
       self.rewrite_component_file(self.admin_file, import_template,model_register_template)
 
-    def generate_views():
-      pass
+    def generate_views(self):
+      view_file = open(self.views_file, 'r')
+      if self.class_exist('view', view_file, self.model_name):
+        return 
+      viewset_template = view_templates.VIEWSET % {'model': self.model_name}
+      model_import_template = view_templates.MODEL_IMPORT % {'app': self.appdir.replace("/", "."), 'model': self.model_name}
+      serializer_import_template= view_templates.SERIALIZER_IMPORT % {'app': self.appdir.replace("/", "."), 'model': self.model_name}
+      imports = model_import_template+serializer_import_template
+      self.rewrite_component_file(self.views_file, imports,viewset_template)
