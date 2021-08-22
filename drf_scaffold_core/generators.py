@@ -82,8 +82,6 @@ class Generator():
             if self.appdir != self.app_name:
                 system(f'mv {self.app_name} {self.appdir}')
             self.setup_files()
-        else:
-            return print(f"App does already exist at {self.appdir}")
 
     def get_fields_string(self, fields):
         """ 
@@ -91,10 +89,16 @@ class Generator():
         """ 
         actual_fields = list()
         relation_types = ('foreignkey', 'manytomany', 'onetoone')
+        file = f"{self.appdir}/models.py"
         for field in fields:
             field_name = field.split(':')[0]
             field_type = field.split(':')[1].lower()
             field_dict = dict(name= field_name, related = field.split(':')[2] if (field_type in relation_types) else '')
+            if field_type in relation_types:
+                # tells developer if related model doesn't exist in file
+                chunk = f'class {field_dict["related"]}(models.Model)'
+                if not file_api.is_present_in_file(file, chunk):
+                    print(f"⚠️ bare in mind that {field_dict['related']} model doesn't exist yet!")
             field_template = model_templates.FIELD_TYPES[field_type] % field_dict
             actual_fields.append(field_template)
         fields_string = ''.join(f for f in actual_fields)    
