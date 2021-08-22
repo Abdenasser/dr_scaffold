@@ -8,8 +8,9 @@ Coming from a ruby on rails ecosystem I've been always wondering if there's a CL
 
 This Library should help you generate a full **Rest API App structure** using one command:
 
-```
-python manage.py drf_scaffold blog Post title:charfield body:textfield author:foreignkey:Author
+```console
+$ python manage.py drf_scaffold blog Post title:charfield body:textfield author:foreignkey:Author
+🎉 Your Post resource is ready 🎉
 ```
 
 - **models.py** containing Models with all fields generated using CLI ⚡
@@ -22,35 +23,37 @@ python manage.py drf_scaffold blog Post title:charfield body:textfield author:fo
 
 Clone this repository :
 
-```
-git clone https://github.com/Abdenasser/drf_scaffold.git
+```console
+$ git clone https://github.com/Abdenasser/drf_scaffold.git
 ```
 
 And cd into the project directory :
 
-```
-cd drf_scaffold
+```console
+$ cd drf_scaffold
 ```
 
 Activate your virtualenv, then run:
 
-```
-pip install -r requirements.txt
+```console
+$ pip install -r requirements.txt
 ```
 
 Let's now create our Api, run the commands below to generate our Author and Post scaffolds:
 
-```
-python manage.py drf_scaffold blog Author name:charfield
+```console
+$ python manage.py drf_scaffold blog Author name:charfield
+🎉 Your Author resource is ready 🎉
 ```
 
-```
-python manage.py drf_scaffold blog Post body:textfield author:foreignkey:Author
+```console
+$ python manage.py drf_scaffold blog Post body:textfield author:foreignkey:Author
+🎉 Your Post resource is ready 🎉
 ```
 
 Now that our app has everything that we need let's add it to our INSTALLED_APPS and urls, open your `settings.py` file and add the app name like the following:
 
-```
+```python
 INSTALLED_APPS = [
     ...,
     'blog'
@@ -59,14 +62,17 @@ INSTALLED_APPS = [
 
 Next, lets generate migrate our database through the following commands:
 
+```console
+$ python manage.py makemigrations
 ```
-python manage.py makemigrations
-python manage.py migrate
+
+```console
+$ python manage.py migrate
 ```
 
 Next, open the urls.py file and add the path to our app urls:
 
-```
+```python
 urlpatterns = [
     ...,
     path("blog/", include("blog.urls")),
@@ -83,39 +89,39 @@ Finally start your server with `python manage.py runserver` and head over to `ht
 Currently as we don't have a package ready to use yet, please follow the instructions below:
 Clone this repository :
 
-```
-git clone https://github.com/Abdenasser/drf_scaffold.git
+```console
+$ git clone https://github.com/Abdenasser/drf_scaffold.git
 ```
 
 And cd into the project directory :
 
-```
-cd drf_scaffold
+```console
+$ cd drf_scaffold
 ```
 
 Copy the `drf_scaffold_core` application folder and `requirements.txt` file into your Django project.
 
 **Inside your project directory (preferably)** create a virtual environment using the following command:
 
-```
-python3 -m venv env
+```console
+$ python3 -m venv env
 ```
 
 Next, Activate your newly created virtualenv by running:
 
-```
-source env/bin/activate
+```console
+$ source env/bin/activate
 ```
 
 install requirements:
 
-```
-pip install -r requirements.txt
+```console
+$ pip install -r requirements.txt
 ```
 
 Add the application to your INSTALLED_APPS along with `rest_framework` like the following:
 
-```
+```python
 INSTALLED_APPS = [
     ...
     'rest_framework',
