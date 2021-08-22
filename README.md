@@ -115,12 +115,12 @@ pip install -r requirements.txt
 
 Add the application to your INSTALLED_APPS like the following:
 
-```
+````
 INSTALLED_APPS = [
     ...
     'drf_scaffold_core'
 ]
-```
+````
 
 Enjoy!
 
