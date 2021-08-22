@@ -93,7 +93,26 @@ And cd into the project directory :
 cd drf_scaffold
 ```
 
-Copy the `drf_scaffold_core` application folder into your Django project.
+Copy the `drf_scaffold_core` application folder and `requirements.txt` file into your Django project.
+
+**Inside your project directory (preferably)** create a virtual environment using the following command:
+
+```
+python3 -m venv env
+```
+
+Next, Activate your newly created virtualenv by running:
+
+```
+source env/bin/activate  
+```
+
+install requirements:
+
+```
+pip install -r requirements.txt
+```
+
 Add the application to your INSTALLED_APPS like the following:
 
 ```
