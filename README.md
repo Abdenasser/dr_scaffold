@@ -11,7 +11,7 @@ This Library should help you generate a full **Rest API App structure** using on
 ```console
 $ python manage.py drf_scaffold blog Post title:charfield body:textfield author:foreignkey:Author
 
-🎉 Your Post resource is ready 🎉
+🎉 Your RESTful Post api resource is ready 🎉
 ```
 
 - **models.py** containing Models with all fields generated using CLI ⚡
@@ -45,13 +45,13 @@ Let's now create our Api, run the commands below to generate our Author and Post
 ```console
 $ python manage.py drf_scaffold blog Author name:charfield
 
-🎉 Your Author resource is ready 🎉
+🎉 Your RESTful Author api resource is ready 🎉
 ```
 
 ```console
 $ python manage.py drf_scaffold blog Post body:textfield author:foreignkey:Author
 
-🎉 Your Post resource is ready 🎉
+🎉 Your RESTful Post api resource is ready 🎉
 ```
 
 Now that our app has everything that we need let's add it to our INSTALLED_APPS and urls, open your `settings.py` file and add the app name like the following:

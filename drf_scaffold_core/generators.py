@@ -39,7 +39,7 @@ class Generator():
             self.generate_api()
         except Exception as e:
             return print(f"🤔 Oops something is wrong: {e}")
-        return print(f"🎉 Your {self.model_name} resource is ready 🎉")
+        return print(f"🎉 Your RESTful {self.model_name} api resource is ready 🎉")
 
     def generate_api(self):
         """ 
