@@ -22,7 +22,7 @@ def set_file_content(path, body):
 def prepend_file_content(path, head):
   body = get_file_content(path)
   wipe_file_content(path)
-  set_file_content(path, head + "\n" + body)
+  set_file_content(path, head + body)
 
 def append_file_content(path, tail):
   body = get_file_content(path)
@@ -31,7 +31,7 @@ def append_file_content(path, tail):
 
 def wrap_file_content(path, head, tail):
   prepend_file_content(path, head)
-  append_file_content(path, "\n" + tail)
+  append_file_content(path, tail)
 
 def replace_file_chunk(path, chunk, new):
   body = get_file_content(path)

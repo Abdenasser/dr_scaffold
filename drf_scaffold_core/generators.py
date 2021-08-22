@@ -1,7 +1,7 @@
 import inflect
 from os import path, system
 from drf_scaffold_core.scaffold_templates import model_templates, admin_templates, view_templates, serializer_templates, url_templates
-from drf_scaffold_core.file_api import wipe_file_content, create_file, set_file_content, is_present_in_file, append_file_content
+from drf_scaffold_core import file_api
 
 def pluralize(str):
     p = inflect.engine()
@@ -9,11 +9,11 @@ def pluralize(str):
 
 def wipe_files(file_paths):
     for f in file_paths:
-        wipe_file_content(f)
+        file_api.wipe_file_content(f)
 
 def create_files(file_paths):
     for f in file_paths:
-        create_file(f)
+        file_api.create_file(f)
 
 class Generator(object):
 
@@ -31,9 +31,9 @@ class Generator(object):
       self.generate_app()
       self.generate_models()
       self.register_models_to_admin()
-      self.generate_serializers()
-      self.generate_views()
-      self.generate_urls()
+      # self.generate_serializers()
+      # self.generate_views()
+      # self.generate_urls()
 
     def setup_files(self):
       extra_files = (f"{self.appdir}/serializers.py", f"{self.appdir}/urls.py" )
@@ -46,7 +46,7 @@ class Generator(object):
 
     def add_setup_imports(self, file_paths, imports):
       for i, f in enumerate(file_paths):
-        set_file_content(f, imports[i])
+        file_api.set_file_content(f, imports[i])
 
     def generate_app(self):
       if not path.exists('%s' % (self.appdir)):
@@ -64,11 +64,12 @@ class Generator(object):
       return model_string
 
     def generate_models(self):
+      models_file = f"{self.appdir}/models.py"
       model_class_head = f'class {self.model_name}'
-      if is_present_in_file(f"{self.appdir}/models.py", model_class_head):
+      if file_api.is_present_in_file(models_file, model_class_head):
         return 
       model_string = self.get_model_string()
-      append_file_content(f"{self.appdir}/models.py", model_string)
+      file_api.append_file_content(models_file, model_string)
 
     def rewrite_component_file(self, file_path, head, body):
       with open(file_path, 'r+') as file:
@@ -89,11 +90,7 @@ class Generator(object):
 
     def class_exist(self, component, file, model): 
       for line in file.readlines():
-        if component == 'admin':
-          if f'@admin.register({model})' in line:
-            print(f'Model already registered at {self.appdir}/admin.py')
-            return True
-        elif component == 'view':
+        if component == 'view':
           if f'class {model}ViewSet' in line:
             print(f'ViewSet already exists at {self.appdir}/views.py')
             return True   
@@ -120,13 +117,14 @@ class Generator(object):
       return False
 
     def register_models_to_admin(self):
-      admin_file = open(f"{self.appdir}/admin.py", 'r')
-      if self.class_exist('admin', admin_file, self.model_name):
+      admin_file = f"{self.appdir}/admin.py"
+      admin_register_head = f'@admin.register({self.model_name})'
+      if file_api.is_present_in_file(admin_file, admin_register_head):
         return 
+      app_path = self.appdir.replace("/", ".")
       model_register_template = admin_templates.REGISTER % {'model': self.model_name}
-      import_template = admin_templates.MODEL_IMPORT % {'app': self.appdir.replace("/", "."), 'model': self.model_name}
-      self.rewrite_component_file(f"{self.appdir}/admin.py", import_template,model_register_template)
-      return print(f"🚀 {self.appdir}/admin.py have been successfully updated")
+      model_import_template = admin_templates.MODEL_IMPORT % {'app': app_path, 'model': self.model_name}
+      file_api.wrap_file_content(admin_file, model_import_template, model_register_template)
 
     def generate_views(self):
       view_file = open(f"{self.appdir}/views.py", 'r')
