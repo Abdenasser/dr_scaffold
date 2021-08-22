@@ -1,3 +1,7 @@
+def create_file(path):
+  with open(path, 'x') as file:
+    file.close()
+
 def wipe_file_content(path):
   with open(path, 'r+') as file:
     file.truncate(0)
