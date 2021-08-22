@@ -1,5 +1,5 @@
-PACKAGE = "drf_scaffold"
-NAME = "drf_scaffold"
+PACKAGE = "dr_scaffold"
+NAME = "dr_scaffold"
 DESCRIPTION = "a Django app for scaffolding django rest apis using cli"
 AUTHOR = "Nasser El Idrissi"
 AUTHOR_EMAIL = "nasser.elidrissi065@gmail.com"

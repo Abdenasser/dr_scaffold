@@ -1,4 +1,4 @@
-# drf_scaffold
+# dr_scaffold (Django Rest Scaffold)
 
 **Scaffold django rest apis like a champion** ⚡
 
@@ -9,7 +9,7 @@ Coming from a ruby on rails ecosystem I've been always wondering if there's a CL
 This Library should help you generate a full **Rest API App structure** using one command:
 
 ```console
-$ python manage.py drf_scaffold blog Post title:charfield body:textfield author:foreignkey:Author
+$ python manage.py dr_scaffold blog Post title:charfield body:textfield author:foreignkey:Author
 
 🎉 Your RESTful Post api resource is ready 🎉
 ```
@@ -31,7 +31,7 @@ $ git clone https://github.com/Abdenasser/drf_scaffold.git
 And cd into the project directory :
 
 ```console
-$ cd drf_scaffold
+$ cd dr_scaffold
 ```
 
 Activate your virtualenv, then run:
@@ -43,13 +43,13 @@ $ pip install -r requirements.txt
 Let's now create our Api, run the commands below to generate our Author and Post scaffolds:
 
 ```console
-$ python manage.py drf_scaffold blog Author name:charfield
+$ python manage.py dr_scaffold blog Author name:charfield
 
 🎉 Your RESTful Author api resource is ready 🎉
 ```
 
 ```console
-$ python manage.py drf_scaffold blog Post body:textfield author:foreignkey:Author
+$ python manage.py dr_scaffold blog Post body:textfield author:foreignkey:Author
 
 🎉 Your RESTful Post api resource is ready 🎉
 ```
@@ -99,10 +99,10 @@ $ git clone https://github.com/Abdenasser/drf_scaffold.git
 And cd into the project directory :
 
 ```console
-$ cd drf_scaffold
+$ cd dr_scaffold
 ```
 
-Copy the `drf_scaffold_core` application folder and `requirements.txt` file into your Django project.
+Copy the `dr_scaffold_core` application folder and `requirements.txt` file into your Django project.
 
 **Inside your project directory (preferably)** create a virtual environment using the following command:
 
@@ -128,7 +128,7 @@ Add the application to your INSTALLED_APPS along with `rest_framework` like the 
 INSTALLED_APPS = [
     ...
     'rest_framework',
-    'drf_scaffold_core'
+    'dr_scaffold_core'
 ]
 ```
 
