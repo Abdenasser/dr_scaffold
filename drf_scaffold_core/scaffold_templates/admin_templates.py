@@ -5,3 +5,7 @@ class %(model)sAdmin(admin.ModelAdmin):
 """
 MODEL_IMPORT = """from %(app)s.models import %(model)s
 """
+
+SETUP="""from django.contrib import admin
+
+"""

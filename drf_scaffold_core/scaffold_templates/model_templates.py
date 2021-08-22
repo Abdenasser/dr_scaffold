@@ -29,3 +29,7 @@ FIELD_TYPES = {
     'datetimefield':DATETIMEFIELD,
     'foreignkey':FOREIGNKEY,
 }
+
+SETUP="""from django.db import models
+
+"""
