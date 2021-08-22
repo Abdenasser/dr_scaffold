@@ -1,6 +1,19 @@
 import inflect
 from os import path, system
 from drf_scaffold_core.scaffold_templates import model_templates, admin_templates, view_templates, serializer_templates, url_templates
+from drf_scaffold_core.file_api import wipe_file_content, create_file, set_file_content
+
+def pluralize(str):
+    p = inflect.engine()
+    return p.plural(str)
+
+def wipe_files(file_paths):
+    for f in file_paths:
+        wipe_file_content(f)
+
+def create_files(file_paths):
+    for f in file_paths:
+        create_file(f)
 
 class Generator(object):
 
@@ -13,13 +26,6 @@ class Generator(object):
         self.app_name = appdir.split("/", maxsplit=1)[1]
       self.model_name = model_name
       self.fields = fields
-      self.foreign_model_imports = list()
-      self.models_file = '%s/models.py' % (appdir)
-      self.admin_file = '%s/admin.py' % (appdir)
-      self.views_file = '%s/views.py' % (appdir)
-      self.serializers_file = '%s/serializers.py' % (appdir)
-      self.urls_file = '%s/urls.py' % (appdir)
-      self.p = inflect.engine()
 
     def generate(self):
       self.generate_app()
@@ -29,44 +35,41 @@ class Generator(object):
       self.generate_views()
       self.generate_urls()
 
+    def setup_files(self):
+      extra_files = (f"{self.appdir}/serializers.py", f"{self.appdir}/urls.py" )
+      original_files = (f"{self.appdir}/models.py", f"{self.appdir}/admin.py", f"{self.appdir}/views.py")
+      all_files = extra_files + original_files
+      setup_imports = (serializer_templates.SETUP, url_templates.SETUP, model_templates.SETUP, admin_templates.SETUP, view_templates.SETUP)
+      create_files(extra_files)
+      wipe_files(all_files)
+      self.add_setup_imports(all_files, setup_imports)
+
+    def add_setup_imports(self, file_paths, imports):
+      for i, f in enumerate(file_paths):
+        set_file_content(f, imports[i])
+
     def generate_app(self):
       if not path.exists('%s' % (self.appdir)):
-        system('python manage.py startapp %s' % self.app_name)
-        system('mv %s %s' % (self.app_name, self.appdir))
-        self.setup_views_file()
-        self.setup_serializers_file()
-        self.setup_urls_file()
+        system(f'python manage.py startapp {self.app_name}')
+        system(f'mv {self.app_name} {self.appdir}')
+        self.setup_files()
       else:
-        print("App does already exist at %s" % (self.appdir))
-
-    def setup_views_file(self):
-      view_setup = view_templates.VIEWSET_SETUP
-      self.rewrite_component_file( self.views_file, view_setup, '')
-
-    def setup_serializers_file(self):
-      open(self.serializers_file, 'x')
-      serializer_setup = serializer_templates.SERIALIZER_SETUP
-      self.rewrite_component_file( self.serializers_file, serializer_setup, '')
-
-    def setup_urls_file(self):
-      open(self.urls_file, 'x')
-      urls_setup = url_templates.URLS_SETUP
-      self.rewrite_component_file( self.urls_file, urls_setup, '')
+        print(f"App does already exist at {self.appdir}")
 
     def generate_models(self):
-      models_file = open(self.models_file, 'r')
+      models_file = open(f"{self.appdir}/models.py", 'r')
       if self.class_exist('models',models_file, self.model_name):
         return 
       fields_templates = self.get_fields_templates(self.fields)
-      model_template = model_templates.MODEL % (self.model_name, ''.join(field for field in fields_templates), self.p.plural(self.model_name).capitalize())
-      imports_template = ''.join(import_line for import_line in self.foreign_model_imports)
-      self.rewrite_component_file(self.models_file, imports_template,model_template)
-      return print("🚀 %s have been successfully updated"%self.models_file)
+      all_fields = ''.join(field for field in fields_templates)
+      model_template = model_templates.MODEL % (self.model_name, all_fields, pluralize(self.model_name).capitalize())
+      self.rewrite_component_file(f"{self.appdir}/models.py", "",model_template)
+      return print(f"🚀 {self.appdir}/models.py have been successfully updated")
 
     def rewrite_component_file(self, file_path, head, body):
       with open(file_path, 'r+') as file:
         file_content = ''.join(line for line in file.readlines())
-        if file_path == self.urls_file:
+        if file_path == f"{self.appdir}/urls.py":
           file_content = file_content.replace(url_templates.URL_PATTERNS,"")
         new_content = head + file_content + body + "\n"
         file.seek(0)
@@ -83,24 +86,24 @@ class Generator(object):
     def class_exist(self, component, file, model): 
       for line in file.readlines():
         if component == 'models':
-          if 'class %s' % model in line:
-            print('Model already exists at %s/models.py' % (self.appdir))
+          if f'class {model}' in line:
+            print(f'Model already exists at {self.appdir}/models.py')
             return True
         elif component == 'admin':
-          if '@admin.register(%s)' % model in line:
-            print('Model already registered at %s/admin.py' % (self.appdir))
+          if f'@admin.register({model})' in line:
+            print(f'Model already registered at {self.appdir}/admin.py')
             return True
         elif component == 'view':
-          if 'class %sViewSet' % model in line:
-            print('ViewSet already exists at %s/views.py' % (self.appdir))
+          if f'class {model}ViewSet' in line:
+            print(f'ViewSet already exists at {self.appdir}/views.py')
             return True   
         elif component == 'serializer':
-          if 'class %sSerializer' % model in line:
-            print('Serializer already exists at %s/serializers.py' % (self.appdir))
+          if f'class {model}Serializer' in line:
+            print(f'Serializer already exists at {self.appdir}/serializers.py')
             return True
         elif component == 'url':
-          if '%sViewSet)' % model in line:
-            print('Url already exists at %s/urls.py' % (self.appdir))
+          if f'{model}ViewSet)' in line:
+            print(f'Url already exists at {self.appdir}/urls.py')
             return True           
       return False
 
@@ -112,44 +115,44 @@ class Generator(object):
     def is_imported(self, path, model):
       file = open(path, 'r')
       for line in file.readlines():
-        if 'import %s' % model in line:
+        if f'import {model}' in line:
           return True
       return False
 
     def register_models_to_admin(self):
-      admin_file = open(self.admin_file, 'r')
+      admin_file = open(f"{self.appdir}/admin.py", 'r')
       if self.class_exist('admin', admin_file, self.model_name):
         return 
       model_register_template = admin_templates.REGISTER % {'model': self.model_name}
       import_template = admin_templates.MODEL_IMPORT % {'app': self.appdir.replace("/", "."), 'model': self.model_name}
-      self.rewrite_component_file(self.admin_file, import_template,model_register_template)
-      return print("🚀 %s have been successfully updated"%self.admin_file)
+      self.rewrite_component_file(f"{self.appdir}/admin.py", import_template,model_register_template)
+      return print(f"🚀 {self.appdir}/admin.py have been successfully updated")
 
     def generate_views(self):
-      view_file = open(self.views_file, 'r')
+      view_file = open(f"{self.appdir}/views.py", 'r')
       if self.class_exist('view', view_file, self.model_name):
         return 
       viewset_template = view_templates.VIEWSET % {'model': self.model_name}
       model_import_template = view_templates.MODEL_IMPORT % {'app': self.appdir.replace("/", "."), 'model': self.model_name}
       serializer_import_template= view_templates.SERIALIZER_IMPORT % {'app': self.appdir.replace("/", "."), 'model': self.model_name}
       imports = model_import_template+serializer_import_template
-      self.rewrite_component_file(self.views_file, imports,viewset_template)
-      return print("🚀 %s have been successfully updated"%self.views_file)
+      self.rewrite_component_file(f"{self.appdir}/views.py", imports,viewset_template)
+      return print(f"🚀 {self.appdir}/views.py have been successfully updated")
 
     def generate_serializers(self):
-      serializer_file = open(self.serializers_file, 'r')
+      serializer_file = open(f"{self.appdir}/serializers.py", 'r')
       if self.class_exist('serializer', serializer_file, self.model_name):
         return 
       serializer_template = serializer_templates.SERIALIZER % {'model': self.model_name}
       model_import_template = serializer_templates.MODEL_IMPORT % {'app': self.appdir.replace("/", "."), 'model': self.model_name}
-      self.rewrite_component_file(self.serializers_file, model_import_template,serializer_template)
-      return print("🚀 %s have been successfully updated"%self.serializers_file)
+      self.rewrite_component_file(f"{self.appdir}/serializers.py", model_import_template,serializer_template)
+      return print(f"🚀 {self.appdir}/views.py have been successfully updated")
 
     def generate_urls(self):
-      urls_file = open(self.urls_file, 'r')
+      urls_file = open(f"{self.appdir}/urls.py", 'r')
       if self.class_exist('url', urls_file, self.model_name):
         return 
-      url_template = url_templates.URL % {'model': self.model_name, 'path': self.p.plural(self.model_name.lower())} + url_templates.URL_PATTERNS
+      url_template = url_templates.URL % {'model': self.model_name, 'path': pluralize(self.model_name.lower())} + url_templates.URL_PATTERNS
       model_import_template = url_templates.MODEL_IMPORT % {'app': self.appdir.replace("/", "."), 'model': self.model_name}
-      self.rewrite_component_file(self.urls_file, model_import_template,url_template)
-      return print("🚀 %s have been successfully updated"%self.urls_file)
+      self.rewrite_component_file(f"{self.appdir}/urls.py", model_import_template,url_template)
+      return print(f"🚀 {self.appdir}/urls.py have been successfully updated")
