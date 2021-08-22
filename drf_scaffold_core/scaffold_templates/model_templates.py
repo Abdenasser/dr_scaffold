@@ -5,12 +5,40 @@ MODEL = """class %s(models.Model):\
     class Meta:
         verbose_name_plural = "%s"
     
-    
+
 """
 MODEL_IMPORT = """from %(app)s.models import %(model)s
 """
 CHARFIELD = """
     %(name)s = models.CharField(max_length=255, null=True, blank=True)"""
+BIGINTEGERFIELD = """
+    %(name)s = models.BigIntegerField()"""
+BINARYFIELD = """
+    %(name)s = models.BinaryField()""" 
+BOOLEANFIELD = """
+    %(name)s = models.BooleanField()""" 
+DATEFIELD = """
+    %(name)s = models.DateField()""" 
+FLOATFIELD = """
+    %(name)s = models.FloatField()"""  
+GENERICIPADDRESSFIELD = """
+    %(name)s = models.GenericIPAddressField()"""  
+NULLBOOLEANFIELD = """
+    %(name)s = forms.NullBooleanField()"""  
+POSITIVEINTEGERFIELD = """
+    %(name)s = models.PositiveIntegerField()"""  
+POSITIVESMALLINTEGERFIELD = """
+    %(name)s = models.PositiveSmallIntegerField()"""  
+EMAILFIELD = """
+    %(name)s = models.EmailField(max_length = 254)"""  
+SLUGFIELD = """
+    %(name)s = models.SlugField(max_length = 200)""" 
+TIMEFIELD = """
+    %(name)s = models.TimeField()""" 
+URLFIELD = """
+    %(name)s = models.URLField(max_length = 200)""" 
+SMALLINTEGERFIELD = """
+    %(name)s = models.SmallIntegerField()"""                                                            
 TEXTFIELD = """
     %(name)s = models.TextField(null=True, blank=True)"""
 INTEGERFIELD = """
@@ -29,6 +57,20 @@ FIELD_TYPES = {
     'decimalfield':DECIMALFIELD,
     'datetimefield':DATETIMEFIELD,
     'foreignkey':FOREIGNKEY,
+    'bigintegerfield':BIGINTEGERFIELD,
+    'binaryfield':BINARYFIELD,
+    'booleanfield':BOOLEANFIELD,
+    'datefield':DATEFIELD,
+    'floatfield':FLOATFIELD,
+    'genericipaddressfield':GENERICIPADDRESSFIELD,
+    'nullbooleanfield':NULLBOOLEANFIELD,
+    'positiveintegerfield':POSITIVEINTEGERFIELD,
+    'positivesmallintegerfield':POSITIVESMALLINTEGERFIELD,
+    'emailfield':EMAILFIELD,
+    'slugfield':SLUGFIELD,
+    'timefield':TIMEFIELD,
+    'urlfield':URLFIELD,
+    'smallintegerfield':SMALLINTEGERFIELD,
 }
 
 SETUP="""from django.db import models

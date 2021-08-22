@@ -125,6 +125,10 @@ INSTALLED_APPS = [
 
 Enjoy!
 
+## SUPPORTED FIELD TYPES
+
+**We support most of django field types**
+
 ## TODO
 
 - write some tests

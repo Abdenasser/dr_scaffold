@@ -38,8 +38,8 @@ class Generator():
         try:
             self.generate_api()
         except Exception as e:
-            return print(f"Oops something is wrong: {e}")
-        return print(f"Your {self.app_name} resource is ready!")
+            return print(f"🤔 Oops something is wrong: {e}")
+        return print(f"🎉 Your {self.model_name} resource is ready 🎉")
 
     def generate_api(self):
         """ 
@@ -79,7 +79,6 @@ class Generator():
         """       
         if not path.exists('%s' % (self.appdir)):
             system(f'python manage.py startapp {self.app_name}')
-            print(f'App directory have been successfully generated.')
             if self.appdir != self.app_name:
                 system(f'mv {self.app_name} {self.appdir}')
             self.setup_files()
