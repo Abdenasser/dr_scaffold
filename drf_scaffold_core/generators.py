@@ -90,10 +90,11 @@ class Generator():
         get appropriate fields templates based on the field type and return them joined in a string
         """ 
         actual_fields = list()
+        relation_types = ('foreignkey', 'manytomany', 'onetoone')
         for field in fields:
             field_name = field.split(':')[0]
             field_type = field.split(':')[1].lower()
-            field_dict = dict(name= field_name, foreign = field.split(':')[2] if (field_type == 'foreignkey') else '')
+            field_dict = dict(name= field_name, related = field.split(':')[2] if (field_type in relation_types) else '')
             field_template = model_templates.FIELD_TYPES[field_type] % field_dict
             actual_fields.append(field_template)
         fields_string = ''.join(f for f in actual_fields)    
@@ -104,7 +105,7 @@ class Generator():
         returns a Model class string with fields and Meta class
         """ 
         fields_string = self.get_fields_string(self.fields)
-        params = (self.model_name, fields_string, pluralize(self.model_name).capitalize())
+        params = (self.model_name, fields_string, pluralize(self.model_name.lower()).capitalize())
         return model_templates.MODEL % params
 
     def generate_models(self):

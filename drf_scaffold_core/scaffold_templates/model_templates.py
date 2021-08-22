@@ -48,7 +48,11 @@ DECIMALFIELD = """
 DATETIMEFIELD = """
     %(name)s = models.DateTimeField(null=True)"""
 FOREIGNKEY = """
-    %(name)s = models.ForeignKey(%(foreign)s, on_delete=models.CASCADE, null=True)"""
+    %(name)s = models.ForeignKey(%(related)s, on_delete=models.CASCADE, null=True)"""
+MANYTOMANY = """
+    %(name)s = models.ManyToManyField(%(related)s)"""
+ONETOONE = """
+    %(name)s = models.OneToOneField(%(related)s, on_delete = models.CASCADE, primary_key = True)"""    
 
 FIELD_TYPES = {
     'charfield': CHARFIELD,
@@ -71,6 +75,8 @@ FIELD_TYPES = {
     'timefield':TIMEFIELD,
     'urlfield':URLFIELD,
     'smallintegerfield':SMALLINTEGERFIELD,
+    'manytomany': MANYTOMANY,
+    'onetoone': ONETOONE,
 }
 
 SETUP="""from django.db import models
