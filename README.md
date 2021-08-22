@@ -104,7 +104,7 @@ python3 -m venv env
 Next, Activate your newly created virtualenv by running:
 
 ```
-source env/bin/activate  
+source env/bin/activate
 ```
 
 install requirements:
@@ -113,14 +113,15 @@ install requirements:
 pip install -r requirements.txt
 ```
 
-Add the application to your INSTALLED_APPS like the following:
+Add the application to your INSTALLED_APPS along with `rest_framework` like the following:
 
-````
+```
 INSTALLED_APPS = [
     ...
+    'rest_framework',
     'drf_scaffold_core'
 ]
-````
+```
 
 Enjoy!
 
