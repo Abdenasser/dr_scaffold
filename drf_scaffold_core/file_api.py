@@ -1,3 +1,6 @@
+from os import path
+
+
 def create_file(path):
   with open(path, 'x') as file:
     file.close()
@@ -44,3 +47,12 @@ def is_present_in_file(path, str):
   if str in body:
     return True
   return False
+
+def wipe_files(file_paths):
+    for f in file_paths:
+        wipe_file_content(f)
+
+def create_files(file_paths):
+    for f in file_paths:
+        if not path.isfile(f):
+            create_file(f)

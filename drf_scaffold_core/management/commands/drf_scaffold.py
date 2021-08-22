@@ -2,10 +2,10 @@ from django.core.management.base import BaseCommand
 from drf_scaffold_core.generators import Generator
 
 class Command(BaseCommand):
-    help = 'Meant to generate Models/Views/Urls/Serializers'
+    help = 'Meant to generate Models, admin, Views, Serializers, Urls files for a ready to use REST api'
     missing_args_message = (
         "You are missing some arguments in your command check the example below"
-        "python manage.py drf_scaffold blog Article title:char body:text"
+        "python manage.py drf_scaffold apps_folder/blog Article title:char body:text"
     )
 
     def add_arguments(self, parser):
@@ -17,4 +17,4 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         # handle the creation of an app with default files first
         generator = Generator(args[0], args[1], args[2:]) 
-        generator.generate()
+        generator.generate_api()
