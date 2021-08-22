@@ -17,4 +17,4 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         # handle the creation of an app with default files first
         generator = Generator(args[0], args[1], args[2:]) 
-        generator.generate_api()
+        generator.run()

@@ -1,5 +1,5 @@
 import inflect
-from os import path, system
+from os import path, system, rmdir
 from drf_scaffold_core.scaffold_templates import model_templates
 from drf_scaffold_core.scaffold_templates import admin_templates
 from drf_scaffold_core.scaffold_templates import view_templates
@@ -8,10 +8,16 @@ from drf_scaffold_core.scaffold_templates import url_templates
 from drf_scaffold_core import file_api
 
 def pluralize(str):
+    """ 
+    pluralizes a string word using a python library, needed for verbose model names and url paths
+    """ 
     p = inflect.engine()
     return p.plural(str)
 
-class Generator(object):
+class Generator():
+    """ 
+    A wrapper for CLI command arguments and the REST api different files generation methods
+    """ 
 
     def __init__(self, appdir, model_name, fields):
         """
@@ -25,10 +31,20 @@ class Generator(object):
         self.model_name = model_name
         self.fields = fields
 
+    def run(self):
+        """ 
+        runs generate api and throws an exception if something went wrong 
+        """ 
+        try:
+            self.generate_api()
+        except Exception as e:
+            return print(f"Oops something is wrong: {e}")
+        return print(f"Your {self.app_name} resource is ready!")
+
     def generate_api(self):
         """ 
         Generates a REST api files based on CLI command arguments
-        """       
+        """  
         self.generate_app()
         self.generate_models()
         self.register_models_to_admin()
@@ -56,14 +72,16 @@ class Generator(object):
     def generate_app(self):     
         """ 
         APP GENERATION 
-            1 - first we generate a django app through django's startapp command
-            2 - we move the generated app directory to the apps directory if one is specified in our CLI command
-            3 - we setup the files with the basic imports needed for each component
-            4 - if application folder does already exist we return
+        1 - first we generate a django app through django's startapp command
+        2 - we move the generated app directory to the apps directory if one is specified in our CLI command
+        3 - we setup the files with the basic imports needed for each component
+        4 - if application folder does already exist we return
         """       
         if not path.exists('%s' % (self.appdir)):
             system(f'python manage.py startapp {self.app_name}')
-            system(f'mv {self.app_name} {self.appdir}')
+            print(f'App directory have been successfully generated.')
+            if self.appdir != self.app_name:
+                system(f'mv {self.app_name} {self.appdir}')
             self.setup_files()
         else:
             return print(f"App does already exist at {self.appdir}")
@@ -93,9 +111,9 @@ class Generator(object):
     def generate_models(self):
         """ 
         MODELS GENERATION METHODS 
-            1 - get_fields_string : match fields from cli with their templates and return a string of them joined
-            2 - get_model_string : yield the fields string in the Model template and returns a new Model string
-            3 - generate_models: check if the model does already exists in the models.py file if not it append it
+        1 - get_fields_string : match fields from cli with their templates and return a string of them joined
+        2 - get_model_string : yield the fields string in the Model template and returns a new Model string
+        3 - generate_models: check if the model does already exists in the models.py file if not it append it
         """      
         file = f"{self.appdir}/models.py"
         chunk = f'class {self.model_name}'
@@ -116,9 +134,9 @@ class Generator(object):
     def register_models_to_admin(self):
         """ 
         MODELS REGISTRATION TO ADMIN 
-            1 - get_admin_parts : returns the register template and imports of the Model class
-            2 - register_models_to_admin : check if the model already registered in admin.py if not 
-            it wraps the admin file content between the Model imports and register template 
+        1 - get_admin_parts : returns the register template and imports of the Model class
+        2 - register_models_to_admin : check if the model already registered in admin.py if not 
+        it wraps the admin file content between the Model imports and register template 
         """      
         file = f"{self.appdir}/admin.py"
         chunk = f'@admin.register({self.model_name})'
@@ -141,9 +159,9 @@ class Generator(object):
     def generate_views(self):
         """ 
         VIEWS GENERATION 
-            1 - get_viewset_parts : returns the viewset template and model + serializers imports of the Model class
-            2 - generate_views : check if the viewset already exists in views.py if not 
-            it wraps the file content between the imports and the viewset template 
+        1 - get_viewset_parts : returns the viewset template and model + serializers imports of the Model class
+        2 - generate_views : check if the viewset already exists in views.py if not 
+        it wraps the file content between the imports and the viewset template 
         """      
         file = f"{self.appdir}/views.py"
         chunk = f'class {self.model_name}ViewSet'
@@ -164,9 +182,9 @@ class Generator(object):
     def generate_serializers(self):
         """ 
         SERIALIZER GENERATION 
-            1 - get_serializer_parts : returns the serializer template and imports of the Model class
-            2 - generate_serializers : check if the viewset already exists in serializers.py if not 
-            it wraps the file content between the imports and the serializer template 
+        1 - get_serializer_parts : returns the serializer template and imports of the Model class
+        2 - generate_serializers : check if the viewset already exists in serializers.py if not 
+        it wraps the file content between the imports and the serializer template 
         """      
         serializer_file = f"{self.appdir}/serializers.py"
         serializer_head = f'class {self.model_name}Serializer'
@@ -188,10 +206,10 @@ class Generator(object):
     def generate_urls(self):
         """ 
         URLS GENERATION 
-            1 - get_url_parts : returns the url template and model imports of the Model class
-            2 - generate_urls : check if the url already exists in urls.py if not 
-            it wraps the file content between the imports and the url template, before wrapping 
-            it checks if the file has URL_PATTERS it take it off and append it to the url template 
+        1 - get_url_parts : returns the url template and model imports of the Model class
+        2 - generate_urls : check if the url already exists in urls.py if not 
+        it wraps the file content between the imports and the url template, before wrapping 
+        it checks if the file has URL_PATTERS it take it off and append it to the url template 
         """      
         file = f"{self.appdir}/urls.py"
         chunk = f'{self.model_name}ViewSet)'
