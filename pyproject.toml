@@ -1,0 +1,9 @@
+[build-system]
+requires = [
+    "Django==3.2.6",
+    "django-filter==2.4.0",
+    "djangorestframework==3.12.4",
+    "inflect==5.3.0",
+    "Markdown==3.3.4",
+]
+build-backend = "setuptools.build_meta"

@@ -25,7 +25,7 @@ $ python manage.py dr_scaffold blog Post title:charfield body:textfield author:f
 Clone this repository :
 
 ```console
-$ git clone https://github.com/Abdenasser/drf_scaffold.git
+$ git clone https://github.com/Abdenasser/dr_scaffold.git
 ```
 
 And cd into the project directory :
@@ -93,7 +93,7 @@ Currently as we don't have a package ready to use yet, please follow the instruc
 Clone this repository :
 
 ```console
-$ git clone https://github.com/Abdenasser/drf_scaffold.git
+$ git clone https://github.com/Abdenasser/dr_scaffold.git
 ```
 
 And cd into the project directory :
