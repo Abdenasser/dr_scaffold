@@ -1,7 +1,7 @@
 import inflect
 from os import path, system
 from drf_scaffold_core.scaffold_templates import model_templates, admin_templates, view_templates, serializer_templates, url_templates
-from drf_scaffold_core.file_api import wipe_file_content, create_file, set_file_content
+from drf_scaffold_core.file_api import wipe_file_content, create_file, set_file_content, is_present_in_file, append_file_content
 
 def pluralize(str):
     p = inflect.engine()
@@ -56,15 +56,19 @@ class Generator(object):
       else:
         print(f"App does already exist at {self.appdir}")
 
+    def get_model_string(self):
+      fields_list = self.get_fields_template_list(self.fields)
+      fields_string = ''.join(field for field in fields_list)
+      verbose_model = pluralize(self.model_name).capitalize()
+      model_string = model_templates.MODEL % (self.model_name, fields_string, verbose_model)
+      return model_string
+
     def generate_models(self):
-      models_file = open(f"{self.appdir}/models.py", 'r')
-      if self.class_exist('models',models_file, self.model_name):
+      model_class_head = f'class {self.model_name}'
+      if is_present_in_file(f"{self.appdir}/models.py", model_class_head):
         return 
-      fields_templates = self.get_fields_templates(self.fields)
-      all_fields = ''.join(field for field in fields_templates)
-      model_template = model_templates.MODEL % (self.model_name, all_fields, pluralize(self.model_name).capitalize())
-      self.rewrite_component_file(f"{self.appdir}/models.py", "",model_template)
-      return print(f"🚀 {self.appdir}/models.py have been successfully updated")
+      model_string = self.get_model_string()
+      append_file_content(f"{self.appdir}/models.py", model_string)
 
     def rewrite_component_file(self, file_path, head, body):
       with open(file_path, 'r+') as file:
@@ -75,7 +79,7 @@ class Generator(object):
         file.seek(0)
         file.write(new_content)
 
-    def get_fields_templates(self, fields):
+    def get_fields_template_list(self, fields):
       actual_fields = list()
       for field in fields:
         new_field = self.select_field_template(field)
@@ -85,11 +89,7 @@ class Generator(object):
 
     def class_exist(self, component, file, model): 
       for line in file.readlines():
-        if component == 'models':
-          if f'class {model}' in line:
-            print(f'Model already exists at {self.appdir}/models.py')
-            return True
-        elif component == 'admin':
+        if component == 'admin':
           if f'@admin.register({model})' in line:
             print(f'Model already registered at {self.appdir}/admin.py')
             return True

@@ -38,3 +38,9 @@ def replace_file_chunk(path, chunk, new):
   body = body.replace(chunk, new)
   wipe_file_content(path)
   set_file_content(path, body)
+
+def is_present_in_file(path, str):
+  body = get_file_content(path)
+  if str in body:
+    return True
+  return False
