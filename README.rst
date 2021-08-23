@@ -1,6 +1,5 @@
 
-.. image:: https://codecov.io/gh/Abdenasser/dr_scaffold/branch/main/graph/badge.svg?token=VLUZWSTJV2
-:target: https://codecov.io/gh/Abdenasser/dr_scaffold
+.. image:: https://codecov.io/gh/Abdenasser/dr_scaffold/branch/main/graph/badge.svg?token=VLUZWSTJV2:target: https://codecov.io/gh/Abdenasser/dr_scaffold
 
 dr\_scaffold (Django Rest Scaffold)
 ===================================
