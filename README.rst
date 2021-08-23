@@ -1,7 +1,13 @@
 
 dr\_scaffold (Django Rest Scaffold)
 ===================================
+   
 
+
+    Scaffold django rest apis like a champion ⚡.
+    said no one before
+
+   
 
 .. image:: https://codecov.io/gh/Abdenasser/dr_scaffold/branch/main/graph/badge.svg?token=VLUZWSTJV2
    :target: https://codecov.io/gh/Abdenasser/dr_scaffold   
@@ -11,10 +17,6 @@ dr\_scaffold (Django Rest Scaffold)
    :target: https://opensource.org/licenses/MIT  
 .. image:: https://badge.fury.io/py/ansicolortags.svg
    :target: https://pypi.org/project/dr-scaffold/ 
-
-
-    Scaffold django rest apis like a champion ⚡.
-
 
 Overview
 --------
