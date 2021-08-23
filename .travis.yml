@@ -14,6 +14,6 @@ install:
 script:
   - pytest --cov=dr_scaffold/ tests/ # run tests
 after_success:
-  - coveralls # submit coverage
+  - codecov # submit coverage
 notifications:
   email: false
