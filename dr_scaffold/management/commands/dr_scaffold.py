@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from dr_scaffold_core.generators import Generator
+from dr_scaffold.generators import Generator
 
 class Command(BaseCommand):
     help = 'Meant to generate Models, admin, Views, Serializers, Urls files for a ready to use REST api'

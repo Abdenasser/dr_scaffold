@@ -1,11 +1,11 @@
 import inflect
 from os import path, system, rmdir
-from dr_scaffold_core.scaffold_templates import model_templates
-from dr_scaffold_core.scaffold_templates import admin_templates
-from dr_scaffold_core.scaffold_templates import view_templates
-from dr_scaffold_core.scaffold_templates import serializer_templates
-from dr_scaffold_core.scaffold_templates import url_templates
-from dr_scaffold_core import file_api
+from dr_scaffold.scaffold_templates import model_templates
+from dr_scaffold.scaffold_templates import admin_templates
+from dr_scaffold.scaffold_templates import view_templates
+from dr_scaffold.scaffold_templates import serializer_templates
+from dr_scaffold.scaffold_templates import url_templates
+from dr_scaffold import file_api
 
 def pluralize(str):
     """ 
