@@ -15,7 +15,7 @@ dr\_scaffold (Django Rest Scaffold)
    :target: https://app.travis-ci.com/Abdenasser/dr_scaffold    
 .. image:: https://img.shields.io/pypi/l/ansicolortags.svg
    :target: https://opensource.org/licenses/MIT  
-.. image:: https://badge.fury.io/py/ansicolortags.svg
+.. image:: https://d25lcipzij17d.cloudfront.net/badge.svg?id=py&r=r&type=6e&v=1.0.0b1&x2=0
    :target: https://pypi.org/project/dr-scaffold/ 
 
 Overview
