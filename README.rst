@@ -13,6 +13,7 @@ dr\_scaffold (Django Rest Scaffold)
    :target: https://pypi.org/project/dr-scaffold/ 
 
 
+
 **Scaffold django rest apis like a champion** ⚡
 
 Overview
