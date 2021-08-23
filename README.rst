@@ -3,7 +3,14 @@ dr\_scaffold (Django Rest Scaffold)
 ===================================
 
 
-.. image:: https://codecov.io/gh/Abdenasser/dr_scaffold/branch/main/graph/badge.svg?token=VLUZWSTJV2:target: https://codecov.io/gh/Abdenasser/dr_scaffold   .. image:: https://app.travis-ci.com/Abdenasser/dr_scaffold.svg?branch=main:target: https://app.travis-ci.com/Abdenasser/dr_scaffold    .. image:: https://img.shields.io/pypi/l/ansicolortags.svg:target: https://opensource.org/licenses/MIT  .. image:: https://badge.fury.io/py/ansicolortags.svg:target: https://pypi.org/project/dr-scaffold/ 
+.. image:: https://codecov.io/gh/Abdenasser/dr_scaffold/branch/main/graph/badge.svg?token=VLUZWSTJV2
+   :target: https://codecov.io/gh/Abdenasser/dr_scaffold   
+.. image:: https://app.travis-ci.com/Abdenasser/dr_scaffold.svg?branch=main
+   :target: https://app.travis-ci.com/Abdenasser/dr_scaffold    
+.. image:: https://img.shields.io/pypi/l/ansicolortags.svg
+   :target: https://opensource.org/licenses/MIT  
+.. image:: https://badge.fury.io/py/ansicolortags.svg
+   :target: https://pypi.org/project/dr-scaffold/ 
 
 
 [![PyPI version fury.io](https://badge.fury.io/py/ansicolortags.svg)](https://pypi.python.org/pypi/ansicolortags/)
