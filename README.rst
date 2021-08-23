@@ -13,8 +13,6 @@ dr\_scaffold (Django Rest Scaffold)
    :target: https://pypi.org/project/dr-scaffold/ 
 
 
-[![PyPI version fury.io](https://badge.fury.io/py/ansicolortags.svg)](https://pypi.python.org/pypi/ansicolortags/)
-
 **Scaffold django rest apis like a champion** ⚡
 
 Overview
