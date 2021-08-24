@@ -44,7 +44,6 @@ class TestGenerator(TestCase):
 
     def test_setup_files(self):
         g = Generator(f"{self.tmpdirpath}/blog", "Article", ("title:charfield", "body:textfield"))
-        #making the appdir the temp folder for test purpose
         g.appdir = self.tmpdirpath
         g.setup_files()
         files = [f for f in os.listdir(self.tmpdirpath)]
@@ -53,11 +52,16 @@ class TestGenerator(TestCase):
         assert len(files) == 5
         assert ("from django.db import models" in body) == True
 
-    def test_get_fields_string(self):
+    @mock.patch('dr_scaffold.generators.file_api.is_present_in_file')
+    def test_get_fields_string(self, mock_is_in_file):
         g = self.generator
         fields_string = g.get_fields_string(g.fields)
         string = model_templates.CHARFIELD % dict(name ="title") + model_templates.TEXTFIELD % dict(name="body")
         assert fields_string == string
+        #test relation field type 
+        g2 = Generator(f"{self.tmpdirpath}/blog", "Article", ("author:foreignkey:Author",))
+        g2.get_fields_string(g2.fields)
+        mock_is_in_file.assert_called_once()
 
     def test_get_model_string(self):
         g = self.generator
@@ -66,9 +70,27 @@ class TestGenerator(TestCase):
         string = model_templates.MODEL % ("Article", fields_string, "Articles")
         assert model_string == string
 
+    @mock.patch('dr_scaffold.generators.Generator')
+    def test_run(self,mock_generator):
+        g = Generator(f"{self.tmpdirpath}/blog", "Article", ("title:charfield", "body:textfield"))
+        g.appdir = self.tmpdirpath
+        result = g.run()      
+        assert result == print(f"🎉 Your RESTful Article api resource is ready 🎉")
+        # test case where something is wront
+        g2 = Generator(f"{self.tmpdirpath}/blog", "Author", ("title:charfiel",))
+        g2.appdir = self.tmpdirpath
+        result = g2.run()      
+        assert result == print(f"🤔 Oops something is wrong: charfiel")
+
+    @mock.patch('dr_scaffold.generators.Generator.generate_app')
+    def test_generate_api(self,mock_generate_app):
+        g = Generator(f"{self.tmpdirpath}/blog", "Article", ("title:charfield", "body:textfield"))
+        g.appdir = self.tmpdirpath
+        g.generate_api()      
+        mock_generate_app.assert_called_once()
+
     def test_generate_models(self):
         g = Generator(f"{self.tmpdirpath}/blog", "Article", ("title:charfield", "body:textfield"))
-        #making the appdir the temp folder for test purpose
         g.appdir = self.tmpdirpath
         g.generate_models()      
         with open(f"{g.appdir}/models.py", 'r+') as file:
@@ -77,7 +99,13 @@ class TestGenerator(TestCase):
         assert ('Articles' in body) == True
         assert ('title' in body) == True
         assert ('body' in body) == True
-      
+        # test when model already generated
+        g = Generator(f"{self.tmpdirpath}/blog", "Article", ("title:charfield", "body:textfield"))
+        g.appdir = self.tmpdirpath
+        g.generate_models()
+        assert body.count('class Article') == 1
+        assert body.count('class Meta:') == 1
+
     def test_get_admin_parts(self):
         g = Generator(f"{self.tmpdirpath}/blog", "Article", ("title:charfield",))
         head, body = g.get_admin_parts()
@@ -92,6 +120,14 @@ class TestGenerator(TestCase):
             body = ''.join(line for line in file.readlines())
         assert ("import Article" in body) == True
         assert ("@admin.register(Article)" in body) == True
+        # test when model already registered
+        g = Generator(f"{self.tmpdirpath}/blog", "Article", ("title:charfield",))
+        g.appdir = self.tmpdirpath
+        g.register_models_to_admin()
+        with open(f"{g.appdir}/admin.py", 'r+') as file:
+            body = ''.join(line for line in file.readlines())
+        assert body.count('models import Article') == 1
+        assert body.count('@admin.register(Article)') == 1
 
     def test_get_viewset_parts(self):
         g = Generator(f"{self.tmpdirpath}/blog", "Article", ("title:charfield",))
@@ -101,7 +137,6 @@ class TestGenerator(TestCase):
 
     def test_generate_views(self):
         g = Generator(f"{self.tmpdirpath}/blog", "Article", ("title:charfield",))
-        #making the appdir the temp folder for test purpose
         g.appdir = self.tmpdirpath
         g.generate_views()      
         with open(f"{g.appdir}/views.py", 'r+') as file:
@@ -109,6 +144,16 @@ class TestGenerator(TestCase):
         assert ('import Article' in body) == True
         assert ('ArticleViewSet' in body) == True
         assert ('ArticleSerializer' in body) == True
+        # test if view already exists
+        g = Generator(f"{self.tmpdirpath}/blog", "Article", ("title:charfield",))
+        g.appdir = self.tmpdirpath
+        g.generate_views()      
+        with open(f"{g.appdir}/views.py", 'r+') as file:
+            body = ''.join(line for line in file.readlines())
+        assert body.count('models import Article') == 1
+        assert body.count('ArticleViewSet') == 1
+        assert body.count('import ArticleSerializer') == 1
+        assert body.count('serializer_class = ArticleSerializer') == 1
 
     def test_get_serializer_parts(self):
         g = Generator(f"{self.tmpdirpath}/blog", "Article", ("title:charfield",))
@@ -118,13 +163,20 @@ class TestGenerator(TestCase):
 
     def test_generate_serializer(self):
         g = Generator(f"{self.tmpdirpath}/blog", "Article", ("title:charfield",))
-        #making the appdir the temp folder for test purpose
         g.appdir = self.tmpdirpath
         g.generate_serializers()      
         with open(f"{g.appdir}/serializers.py", 'r+') as file:
             body = ''.join(line for line in file.readlines())
         assert ('import Article' in body) == True
         assert ('ArticleSerializer' in body) == True
+        #test if serializer already exists
+        g = Generator(f"{self.tmpdirpath}/blog", "Article", ("title:charfield",))
+        g.appdir = self.tmpdirpath
+        g.generate_serializers()
+        with open(f"{g.appdir}/serializers.py", 'r+') as file:
+            body = ''.join(line for line in file.readlines())
+        assert body.count('import Article') == 1
+        assert body.count('ArticleSerializer') == 1
 
     def test_get_url_parts(self):
         g = Generator(f"{self.tmpdirpath}/blog", "Article", ("title:charfield",))
@@ -135,7 +187,6 @@ class TestGenerator(TestCase):
     @mock.patch('dr_scaffold.file_api.replace_file_chunk')
     def test_generate_urls(self, mock_replace_chunk):
         g = Generator(f"{self.tmpdirpath}/blog", "Article", ("title:charfield",))
-        #making the appdir the temp folder for test purpose
         g.appdir = self.tmpdirpath
         g.generate_urls()      
         with open(f"{g.appdir}/urls.py", 'r+') as file:
@@ -144,7 +195,6 @@ class TestGenerator(TestCase):
         assert (', ArticleViewSet)' in body) == True
         #test : if url have been added we won't add it again
         g = Generator(f"{self.tmpdirpath}/blog", "Article", ("title:charfield",))
-        #making the appdir the temp folder for test purpose
         g.appdir = self.tmpdirpath
         g.generate_urls()  
         with open(f"{g.appdir}/urls.py", 'r+') as file:
@@ -153,26 +203,32 @@ class TestGenerator(TestCase):
         assert body.count(', ArticleViewSet)') == 1
         #test : if when creating another resource we replace the url_patterns
         g = Generator(f"{self.tmpdirpath}/blog", "Author", ("name:charfield",))
-        #making the appdir the temp folder for test purpose
         g.appdir = self.tmpdirpath
         g.generate_urls() 
         mock_replace_chunk.assert_called()
 
 
     @mock.patch('dr_scaffold.generators.Generator.generate_api')
-    def test_generate_api(self, mock_generate_api):
+    def test_generate_api_called(self, mock_generate_api):
         g = Generator(f"{self.tmpdirpath}/blog", "Article", ("title:charfield",))
         g.generate_api()
         mock_generate_api.assert_called()
 
     @mock.patch('dr_scaffold.generators.Generator.run')
-    def test_run(self, mock_run):
+    def test_run_called(self, mock_run):
         g = Generator(f"{self.tmpdirpath}/blog", "Article", ("title:charfield",))
         g.run()
         mock_run.assert_called()
 
-    @mock.patch('dr_scaffold.generators.Generator.generate_app')
-    def test_generate_app(self, mock_generate_app):
+    @mock.patch('dr_scaffold.generators.Generator.setup_files')
+    def test_generate_app(self, mock_setup_files):
         g = Generator(f"{self.tmpdirpath}/blog", "Article", ("title:charfield",))
         g.generate_app()
-        mock_generate_app.assert_called()
+        mock_setup_files.assert_called()
+
+    @mock.patch('dr_scaffold.generators.Generator.setup_files')
+    def test_generate_app_appdir_exist(self, mock_setup_files):
+        g = Generator(f"{self.tmpdirpath}/blog", "Author", ("name:charfield",))
+        g.appdir = self.tmpdirpath
+        g.generate_app()
+        mock_setup_files.assert_not_called() 
