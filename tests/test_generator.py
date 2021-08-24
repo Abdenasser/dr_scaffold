@@ -9,40 +9,44 @@ from unittest import TestCase
 class TestGenerator(TestCase):
     tmpfilepath = os.path.join(tempfile.gettempdir(), "tmp-testfile")
     tmpdirpath = tempfile.mkdtemp()
-    generator = Generator("apps/blog", "Article", ("title:charfield", "body:textfield"))
+    generator = Generator("blog", "Article", ("title:charfield", "body:textfield"))
 
     def setUp(self):
-        with open(self.tmpfilepath, "x") as f:
-            f.write("Delete me!")
+        for f in ['models.py', 'serializers.py', 'admin.py', 'urls.py', 'views.py']:
+            with open(os.path.join(self.tmpdirpath, f), 'x') as file:
+                file.close()
+            
         
     def tearDown(self):
-        os.remove(self.tmpfilepath)
+        for f in ['models.py', 'serializers.py', 'admin.py', 'urls.py', 'views.py']:
+            os.remove(f'{self.tmpdirpath}/{f}')
 
     def test_init(self):
         g = self.generator
         assert g.app_name == "blog"
-        assert g.MAIN_DIR == "apps"
+        assert g.MAIN_DIR == "./"
         assert g.model_name == "Article"
 
     def test_add_setup_imports(self):
         g = self.generator
-        file_paths = (self.tmpfilepath,)
+        file_paths = (self.tmpdirpath+'/models.py',)
         matching_imports = (serializer_templates.SETUP,)
         g.add_setup_imports(file_paths, matching_imports)
-        with open(self.tmpfilepath, 'r+') as file:
+        with open(file_paths[0], 'r+') as file:
             body = ''.join(line for line in file.readlines())
         assert body == serializer_templates.SETUP
 
     def test_setup_files(self):
         g = Generator(f"{self.tmpdirpath}/blog", "Article", ("title:charfield", "body:textfield"))
-        system(f'python manage.py startapp {g.app_name}')
-        system(f'mv {g.app_name} {self.tmpdirpath}')
         #making the appdir the temp folder for test purpose
         g.appdir = self.tmpdirpath
         g.setup_files()
-        files = [f for f in os.listdir(self.tmpdirpath)]        
+        files = [f for f in os.listdir(self.tmpdirpath)]
+        with open(self.tmpdirpath+'/models.py', 'r+') as file:
+            body = ''.join(line for line in file.readlines())      
         assert len(files) == 5
         assert files == ['models.py', 'serializers.py', 'admin.py', 'urls.py', 'views.py']
+        assert ("from django.db import models" in body) == True
 
     def test_get_fields_string(self):
         g = self.generator
@@ -59,11 +63,8 @@ class TestGenerator(TestCase):
 
     def test_generate_models(self):
         g = Generator(f"{self.tmpdirpath}/blog", "Article", ("title:charfield", "body:textfield"))
-        system(f'python manage.py startapp {g.app_name}')
-        system(f'mv {g.app_name} {self.tmpdirpath}')
         #making the appdir the temp folder for test purpose
         g.appdir = self.tmpdirpath
-        g.setup_files()
         g.generate_models()      
         with open(f"{g.appdir}/models.py", 'r+') as file:
             body = ''.join(line for line in file.readlines())
@@ -71,4 +72,9 @@ class TestGenerator(TestCase):
         assert ('Articles' in body) == True
         assert ('title' in body) == True
         assert ('body' in body) == True
-        
+      
+    def test_get_admin_parts(self):
+        g = Generator(f"{self.tmpdirpath}/blog", "Article", ("title:charfield", "body:textfield"))
+        head, body = g.get_admin_parts()
+        assert ("import Article" in head) == True
+        assert ("@admin.register(Article)" in body) == True
