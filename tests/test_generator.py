@@ -3,8 +3,10 @@ import pytest
 import tempfile  
 from os import path, system
 from dr_scaffold.generators import Generator, pluralize
+from dr_scaffold.management.commands import dr_scaffold
 from dr_scaffold.scaffold_templates import serializer_templates, model_templates
-from unittest import TestCase
+from unittest import TestCase, mock
+
 
 class TestGenerator(TestCase):
     tmpfilepath = os.path.join(tempfile.gettempdir(), "tmp-testfile")
@@ -139,3 +141,21 @@ class TestGenerator(TestCase):
             body = ''.join(line for line in file.readlines())
         assert ('import ArticleViewSet' in body) == True
         assert (', ArticleViewSet)' in body) == True
+
+    @mock.patch('dr_scaffold.generators.Generator.generate_api')
+    def test_generate_api(self, mock_generate_api):
+        g = Generator(f"{self.tmpdirpath}/blog", "Article", ("title:charfield",))
+        g.generate_api()
+        mock_generate_api.assert_called()
+
+    @mock.patch('dr_scaffold.generators.Generator.run')
+    def test_run(self, mock_run):
+        g = Generator(f"{self.tmpdirpath}/blog", "Article", ("title:charfield",))
+        g.run()
+        mock_run.assert_called()
+
+    @mock.patch('dr_scaffold.generators.Generator.generate_app')
+    def test_generate_app(self, mock_generate_app):
+        g = Generator(f"{self.tmpdirpath}/blog", "Article", ("title:charfield",))
+        g.generate_app()
+        mock_generate_app.assert_called()
