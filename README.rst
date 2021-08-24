@@ -1,25 +1,12 @@
+.. raw:: html
 
-dr\_scaffold (Django Rest Scaffold)
-===================================
-   
+    <p align="center"><a href="https://github.com/Abdenasser/dr_scaffold"><img src="https://ph-files.imgix.net/99f3cc0a-58b1-4c16-bb41-1963b0a692fc.png" alt="dr_scaffold blueprint icon" height="80"/></a></p>
+    <h1 align="center">dr_scaffold</h1>
+    <p align="center">Scaffold django rest apis like a champion ⚡. said no one before</p>
 
-
-    Scaffold django rest apis like a champion ⚡.
-    said no one before
-
-.. image:: https://ph-files.imgix.net/99f3cc0a-58b1-4c16-bb41-1963b0a692fc.png
-   :align: center
-   
-
-.. image:: https://codecov.io/gh/Abdenasser/dr_scaffold/branch/main/graph/badge.svg?token=VLUZWSTJV2
-   :target: https://codecov.io/gh/Abdenasser/dr_scaffold
-.. image:: https://app.travis-ci.com/Abdenasser/dr_scaffold.svg?branch=main
-   :target: https://app.travis-ci.com/Abdenasser/dr_scaffold    
-.. image:: https://img.shields.io/pypi/l/ansicolortags.svg
-   :target: https://opensource.org/licenses/MIT  
-.. image:: https://d25lcipzij17d.cloudfront.net/badge.svg?id=py&r=r&type=6e&v=1.0.0&x2=0
-   :target: https://pypi.org/project/dr-scaffold/ 
-
+    <p align="center">
+        <a href="https://codecov.io/gh/Abdenasser/dr_scaffold"><img src="https://codecov.io/gh/Abdenasser/dr_scaffold/branch/main/graph/badge.svg?token=VLUZWSTJV2"/></a> <a href="https://app.travis-ci.com/Abdenasser/dr_scaffold"><img src="https://app.travis-ci.com/Abdenasser/dr_scaffold.svg?branch=main"/></a> <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/pypi/l/ansicolortags.svg"/></a> <a href="https://pypi.org/project/dr-scaffold/"><img src="https://d25lcipzij17d.cloudfront.net/badge.svg?id=py&r=r&type=6e&v=1.0.0&x2=0"/></a>
+    </p> 
 Overview
 --------
 
@@ -49,9 +36,11 @@ using one command:
 -  **urls.py** containing all needed URLs necessary for CRUD endpoints.⚡
 -  **serializers.py** contains Model Serializers for a bare minimum DRF
    setup to get started ⚡
--  **and more ...**   
+-  **and more ...** 
+.. raw:: html
+   </br></br>
 
-Totorial
+Tutorial
 --------
 
 Install dr_scaffold package with the following command :
@@ -69,8 +58,7 @@ Add dr_scaffold to your project INSTALLED_APPS:
         'dr_scaffold'
     ]
 
-Let's now create our Api, run the commands below to generate our Author
-and Post scaffolds:
+Let's now create our blog Api, first generate an Author:
 
 .. code:: console
 
@@ -78,15 +66,15 @@ and Post scaffolds:
 
     🎉 Your RESTful Author api resource is ready 🎉
 
+Then a Post that's related to Author through a foreignkey:
+
 .. code:: console
 
     $ python manage.py dr_scaffold blog Post body:textfield author:foreignkey:Author
 
     🎉 Your RESTful Post api resource is ready 🎉
 
-Now that our app has everything that we need let's add it to our
-INSTALLED\_APPS and urls, open your ``settings.py`` file and add the app
-name like the following:
+Let's add our blog to INSTALLED\_APPS like the following:
 
 .. code:: python
 
@@ -95,17 +83,19 @@ name like the following:
         'blog'
     ]
 
-Next, lets migrate our database through the following commands:
+Next, lets make the migrations with:
 
 .. code:: console
 
     $ python manage.py makemigrations
+    
+Then migrate with:
 
 .. code:: console
 
     $ python manage.py migrate
 
-Next, open the urls.py file and add the path to our app urls:
+Now, open urls.py and add the path to our blog urls:
 
 .. code:: python
 
@@ -115,15 +105,18 @@ Next, open the urls.py file and add the path to our app urls:
     ]
 
 Finally start your server with ``python manage.py runserver`` and head
-over to ``http://127.0.0.1:8000/blog/posts/`` **don't forget to checkout
-your admin panel as well ``http://127.0.0.1:8000/admin``**
+over to ``http://127.0.0.1:8000/blog/posts/`` don't forget to checkout
+the admin panel as well!
+
+.. raw:: html
+   </br></br>
 
 Installation and usage
 ----------------------
 
-**This library assumes that you have setup your project with Django Rest
-Framework. if not, please refer to this guide first** : `Getting Started
-with DRF <https://www.django-rest-framework.org/#installation>`_
+This library assumes that you have setup your project with **Django Rest
+Framework**.
+if not, please refer to `this guide <https://www.django-rest-framework.org/#installation>`_
 
 Install dr_scaffold package :
 
@@ -140,9 +133,12 @@ Add ``dr_scaffold`` to your INSTALLED\_APPS like this:
         'dr_scaffold'
     ]
 
-🎉🎉 Enjoy running the commands! 🎉🎉
+Enjoy running the commands!
 
-SUPPORTED FIELD TYPES
+.. raw:: html
+   </br></br>
+
+Supported field types
 ---------------------
 
 **We support most of django field types**
