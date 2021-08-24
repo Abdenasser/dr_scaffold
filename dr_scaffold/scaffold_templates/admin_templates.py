@@ -1,3 +1,7 @@
+"""
+templates for admin
+"""
+
 REGISTER = """@admin.register(%(model)s)
 class %(model)sAdmin(admin.ModelAdmin):
     exclude = ()

@@ -7,13 +7,8 @@ from setuptools import find_packages, setup
 with open("README.rst", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
-def get_version(filename):
-    with codecs.open(filename, 'r', 'utf-8') as fp:
-        contents = fp.read()
-    return re.search(r"__version__ = ['\"]([^'\"]+)['\"]", contents).group(1)
-
 NAME = 'dr_scaffold'
-VERSION = get_version(os.path.join('dr_scaffold', '__init__.py'))
+VERSION = 'v1.0.0-beta1'
 DESCRIPTION = 'a Django package for scaffolding django rest apis using cli'
 LONG_DESCRIPTION=long_description,
 URL = 'https://github.com/Abdenasser/dr_scaffold'

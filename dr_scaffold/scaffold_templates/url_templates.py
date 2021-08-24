@@ -1,3 +1,7 @@
+"""
+templates for urls
+"""
+
 URL = """router.register(r'%(path)s', %(model)sViewSet)
 
 """
