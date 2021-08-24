@@ -7,10 +7,12 @@ dr\_scaffold (Django Rest Scaffold)
     Scaffold django rest apis like a champion ⚡.
     said no one before
 
+.. image:: https://ph-files.imgix.net/99f3cc0a-58b1-4c16-bb41-1963b0a692fc.png
+   :align: center
    
 
 .. image:: https://codecov.io/gh/Abdenasser/dr_scaffold/branch/main/graph/badge.svg?token=VLUZWSTJV2
-   :target: https://codecov.io/gh/Abdenasser/dr_scaffold   
+   :target: https://codecov.io/gh/Abdenasser/dr_scaffold
 .. image:: https://app.travis-ci.com/Abdenasser/dr_scaffold.svg?branch=main
    :target: https://app.travis-ci.com/Abdenasser/dr_scaffold    
 .. image:: https://img.shields.io/pypi/l/ansicolortags.svg
