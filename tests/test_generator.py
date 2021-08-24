@@ -73,7 +73,65 @@ class TestGenerator(TestCase):
         assert ('body' in body) == True
       
     def test_get_admin_parts(self):
-        g = Generator(f"{self.tmpdirpath}/blog", "Article", ("title:charfield", "body:textfield"))
+        g = Generator(f"{self.tmpdirpath}/blog", "Article", ("title:charfield",))
         head, body = g.get_admin_parts()
         assert ("import Article" in head) == True
         assert ("@admin.register(Article)" in body) == True
+
+    def test_register_models_to_admin(self):
+        g = Generator(f"{self.tmpdirpath}/blog", "Article", ("title:charfield",))
+        g.appdir = self.tmpdirpath
+        g.register_models_to_admin()
+        with open(f"{g.appdir}/admin.py", 'r+') as file:
+            body = ''.join(line for line in file.readlines())
+        assert ("import Article" in body) == True
+        assert ("@admin.register(Article)" in body) == True
+
+    def test_get_viewset_parts(self):
+        g = Generator(f"{self.tmpdirpath}/blog", "Article", ("title:charfield",))
+        head, body = g.get_viewset_parts()
+        assert ("import Article" in head) == True
+        assert ("class ArticleViewSet" in body) == True
+
+    def test_generate_views(self):
+        g = Generator(f"{self.tmpdirpath}/blog", "Article", ("title:charfield",))
+        #making the appdir the temp folder for test purpose
+        g.appdir = self.tmpdirpath
+        g.generate_views()      
+        with open(f"{g.appdir}/views.py", 'r+') as file:
+            body = ''.join(line for line in file.readlines())
+        assert ('import Article' in body) == True
+        assert ('ArticleViewSet' in body) == True
+        assert ('ArticleSerializer' in body) == True
+
+    def test_get_serializer_parts(self):
+        g = Generator(f"{self.tmpdirpath}/blog", "Article", ("title:charfield",))
+        head, body = g.get_serializer_parts()
+        assert ("import Article" in head) == True
+        assert ("class ArticleSerializer" in body) == True
+
+    def test_generate_serializer(self):
+        g = Generator(f"{self.tmpdirpath}/blog", "Article", ("title:charfield",))
+        #making the appdir the temp folder for test purpose
+        g.appdir = self.tmpdirpath
+        g.generate_serializers()      
+        with open(f"{g.appdir}/serializers.py", 'r+') as file:
+            body = ''.join(line for line in file.readlines())
+        assert ('import Article' in body) == True
+        assert ('ArticleSerializer' in body) == True
+
+    def test_get_url_parts(self):
+        g = Generator(f"{self.tmpdirpath}/blog", "Article", ("title:charfield",))
+        head, body = g.get_url_parts()
+        assert ("import ArticleViewSet" in head) == True
+        assert (", ArticleViewSet)" in body) == True
+
+    def test_generate_urls(self):
+        g = Generator(f"{self.tmpdirpath}/blog", "Article", ("title:charfield",))
+        #making the appdir the temp folder for test purpose
+        g.appdir = self.tmpdirpath
+        g.generate_urls()      
+        with open(f"{g.appdir}/urls.py", 'r+') as file:
+            body = ''.join(line for line in file.readlines())
+        assert ('import ArticleViewSet' in body) == True
+        assert (', ArticleViewSet)' in body) == True
