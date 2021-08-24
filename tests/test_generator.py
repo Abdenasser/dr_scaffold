@@ -2,6 +2,8 @@
 Tests for Generator
 """
 import os
+import io
+import sys
 import tempfile
 from unittest import TestCase, mock
 from dr_scaffold.generators import Generator, pluralize
@@ -92,6 +94,20 @@ class TestGenerator(TestCase):
             ("author:foreignkey:Author",))
         generator_obj2.get_fields_string(generator_obj2.fields)
         mock_is_in_file.assert_called_once()
+
+    def test_get_fields_string_relation_model_not_created_yet(self):
+        """
+        Tests
+        """
+        generator_obj2 = Generator(f"{self.tmpdirpath}/blog",
+            "Article",
+            ("author:foreignkey:Author",))
+        generator_obj2.appdir = self.tmpdirpath
+        captured_output = io.StringIO()
+        sys.stdout = captured_output
+        generator_obj2.get_fields_string(generator_obj2.fields)
+        sys.stdout = sys.__stdout__
+        assert "⚠️ bare in mind that Author" in captured_output.getvalue()
 
     def test_get_model_string(self):
         """
