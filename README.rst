@@ -148,5 +148,6 @@ SUPPORTED FIELD TYPES
 TODO
 ----
 
--  write some tests
+-  create a landing page
+-  handle DRF ViewSets using Mixins
 
