@@ -224,7 +224,7 @@ class Generator():
         returns the url template and imports of the Model class
         """
         app_path = self.appdir.replace("/", ".")
-        plural_path = pluralize(self.model_name.lower()).capitalize()
+        plural_path = pluralize(self.model_name.lower())
         url_template = url_templates.URL % {'model': self.model_name, 'path': plural_path}
         imports = url_templates.MODEL_IMPORT % {'app': app_path, 'model': self.model_name}
         return(imports, url_template)

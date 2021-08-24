@@ -8,7 +8,7 @@ with open("README.rst", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 NAME = 'dr_scaffold'
-VERSION = 'v1.0.0'
+VERSION = 'v1.0.1'
 DESCRIPTION = 'a Django package for scaffolding django rest apis using cli'
 LONG_DESCRIPTION=long_description,
 URL = 'https://github.com/Abdenasser/dr_scaffold'
@@ -30,8 +30,6 @@ CLASSIFIERS=[
         'Natural Language :: English',
         'Operating System :: POSIX :: Linux',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
