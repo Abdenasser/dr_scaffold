@@ -13,12 +13,13 @@ class TestFileApi(TestCase):
             f.write("Delete me!")
         
     def tearDown(self):
-        os.remove(self.tmpfilepath)           
+        os.remove(self.tmpfilepath)     
+        if path.exists("file.txt"):
+            os.remove("file.txt")       
          
     def test_create_file(self):
         file_api.create_file('file.txt')
-        assert  path.exists("file.txt") == True
-        os.remove("file.txt")  
+        assert  path.exists("file.txt") == True 
 
     def test_wipe_file_content(self):
         file_api.wipe_file_content(self.tmpfilepath)
@@ -64,3 +65,14 @@ class TestFileApi(TestCase):
     def test_is_present_in_file(self):
         assert file_api.is_present_in_file(self.tmpfilepath, "Delete") == True
         assert file_api.is_present_in_file(self.tmpfilepath, "Remove") == False
+
+    def test_wipe_files(self):
+        file_api.wipe_files((self.tmpfilepath,))
+        with open(self.tmpfilepath, 'r+') as file:
+            body = ''.join(line for line in file.readlines())
+        assert body != "Delete me!"
+        assert len(body) == 0
+
+    def test_create_files(self):
+        file_api.create_files(('file.txt',))
+        assert  path.exists("file.txt") == True

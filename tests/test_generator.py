@@ -2,7 +2,7 @@ import os
 import pytest  
 import tempfile  
 from os import path, system
-from dr_scaffold.generators import Generator
+from dr_scaffold.generators import Generator, pluralize
 from dr_scaffold.scaffold_templates import serializer_templates, model_templates
 from unittest import TestCase
 
@@ -15,11 +15,15 @@ class TestGenerator(TestCase):
         for f in ['models.py', 'serializers.py', 'admin.py', 'urls.py', 'views.py']:
             with open(os.path.join(self.tmpdirpath, f), 'x') as file:
                 file.close()
-            
         
     def tearDown(self):
         for f in ['models.py', 'serializers.py', 'admin.py', 'urls.py', 'views.py']:
             os.remove(f'{self.tmpdirpath}/{f}')
+    
+    def test_pluralize(self):
+        assert pluralize("article") == 'articles'
+        assert pluralize("category") == 'categories'
+        assert pluralize("post") == 'posts'
 
     def test_init(self):
         g = self.generator
