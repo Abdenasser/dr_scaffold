@@ -2,7 +2,7 @@ import os
 import pytest  
 import tempfile  
 from os import path, system
-from dr_scaffold.generators import Generator, pluralize
+from dr_scaffold.generators import Generator, pluralize, file_api
 from dr_scaffold.management.commands import dr_scaffold
 from dr_scaffold.scaffold_templates import serializer_templates, model_templates
 from unittest import TestCase, mock
@@ -132,7 +132,8 @@ class TestGenerator(TestCase):
         assert ("import ArticleViewSet" in head) == True
         assert (", ArticleViewSet)" in body) == True
 
-    def test_generate_urls(self):
+    @mock.patch('dr_scaffold.file_api.replace_file_chunk')
+    def test_generate_urls(self, mock_replace_chunk):
         g = Generator(f"{self.tmpdirpath}/blog", "Article", ("title:charfield",))
         #making the appdir the temp folder for test purpose
         g.appdir = self.tmpdirpath
@@ -141,6 +142,22 @@ class TestGenerator(TestCase):
             body = ''.join(line for line in file.readlines())
         assert ('import ArticleViewSet' in body) == True
         assert (', ArticleViewSet)' in body) == True
+        #test : if url have been added we won't add it again
+        g = Generator(f"{self.tmpdirpath}/blog", "Article", ("title:charfield",))
+        #making the appdir the temp folder for test purpose
+        g.appdir = self.tmpdirpath
+        g.generate_urls()  
+        with open(f"{g.appdir}/urls.py", 'r+') as file:
+            body = ''.join(line for line in file.readlines())
+        assert body.count('import ArticleViewSet') == 1
+        assert body.count(', ArticleViewSet)') == 1
+        #test : if when creating another resource we replace the url_patterns
+        g = Generator(f"{self.tmpdirpath}/blog", "Author", ("name:charfield",))
+        #making the appdir the temp folder for test purpose
+        g.appdir = self.tmpdirpath
+        g.generate_urls() 
+        mock_replace_chunk.assert_called()
+
 
     @mock.patch('dr_scaffold.generators.Generator.generate_api')
     def test_generate_api(self, mock_generate_api):
