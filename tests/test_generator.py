@@ -45,7 +45,6 @@ class TestGenerator(TestCase):
         with open(self.tmpdirpath+'/models.py', 'r+') as file:
             body = ''.join(line for line in file.readlines())      
         assert len(files) == 5
-        assert files == ['models.py', 'serializers.py', 'admin.py', 'urls.py', 'views.py']
         assert ("from django.db import models" in body) == True
 
     def test_get_fields_string(self):
