@@ -16,8 +16,8 @@ for our apps like the one we have in rails, so I started looking for a
 django CLI that does the same but couldn't find anything that suits my
 needs.. so I decided to create one.
 
-**Checkout the video demo** : `Getting Started
-with dr_scaffold <https://www.youtube.com/watch?v=RhMJf4pL90o>`_
+**Checkout the the detailed tutorial here** : `Getting Started
+with dr_scaffold <https://www.abdenasser.com/scaffold-django-apis>`_
 
 This Library should help you generate full **Restful API Resources**
 using one command:
