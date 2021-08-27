@@ -66,6 +66,6 @@ We support most of django field types.
 TODO
 ----
 
-_  add an option to include swagger documentation
+-  add an option to include swagger documentation
 -  handle DRF ViewSets using Mixins
 
