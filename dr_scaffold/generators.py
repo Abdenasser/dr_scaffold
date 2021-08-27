@@ -66,10 +66,28 @@ class Generator():
         for i, file_path in enumerate(file_paths):
             file_api.set_file_content(file_path, matching_imports[i])
 
+    def setup_folders(self):
+        """
+        creates folders if they not exist
+        """
+        if not self.core_dir is self.api_dir:
+            if not path.exists(self.core_dir + self.app_name):
+                makedirs(self.core_dir + self.app_name)
+            if not path.exists(self.api_dir + self.app_name):
+                makedirs(self.api_dir + self.app_name)
+            if not path.exists(self.core_dir + self.app_name + '/migrations/'):
+                mkdir(self.core_dir + self.app_name + '/migrations/')
+        else:
+            if not path.exists(self.core_dir + self.app_name):
+                makedirs(self.core_dir + self.app_name)
+            if not path.exists(self.core_dir + self.app_name + '/migrations/'):
+                makedirs(self.core_dir + self.app_name + '/migrations/')
+
     def setup_files(self):
         """
         creates files if not exist, and adds appropriate imports
         """
+        self.setup_folders()
         files = (f"{self.api_dir + self.app_name}/serializers.py",
             f"{self.api_dir + self.app_name}/urls.py",
             f"{self.core_dir + self.app_name}/models.py",
@@ -95,19 +113,10 @@ class Generator():
         3 - we setup the files with the basic imports needed for each component
         4 - if application folder does already exist we return
         """
-        if not self.core_dir is self.api_dir:
-            if not path.exists(self.core_dir + self.app_name):
-                makedirs(self.core_dir + self.app_name)
-            if not path.exists(self.api_dir + self.app_name):
-                makedirs(self.api_dir + self.app_name)
-            if not path.exists(self.core_dir + self.app_name + '/migrations/'):
-                mkdir(self.core_dir + self.app_name + '/migrations/')
-        else:
-            if not path.exists(self.core_dir + self.app_name):
-                makedirs(self.core_dir + self.app_name)
-            if not path.exists(self.core_dir + self.app_name + '/migrations/'):
-                makedirs(self.core_dir + self.app_name + '/migrations/')
-        self.setup_files()
+        core_dir_exists = path.exists(self.core_dir + self.app_name)
+        api_dir_exists = path.exists(self.api_dir + self.app_name)
+        if not core_dir_exists and not api_dir_exists:
+            self.setup_files()
 
     def get_fields_string(self, fields):
         """

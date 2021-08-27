@@ -368,19 +368,19 @@ class TestGenerator(TestCase):
         """
         Tests
         """
-        generator_obj = Generator("blog", "Article", ("title:charfield",))
+        generator_obj = Generator("blog2", "Article", ("title:charfield",))
         generator_obj.core_dir = self.core_folder
         generator_obj.api_dir = self.api_folder
         generator_obj.generate_app()
         mock_setup_files.assert_called()
 
-    # @mock.patch('dr_scaffold.generators.Generator.setup_files')
-    # def test_generate_app_appdir_exist(self, mock_setup_files):
-    #     """
-    #     Tests
-    #     """
-    #     generator_obj = Generator("blog", "Author", ("name:charfield",))
-    #     generator_obj.core_dir = self.core_folder
-    #     generator_obj.api_dir = self.api_folder
-    #     generator_obj.generate_app()
-    #     mock_setup_files.assert_not_called()
+    @mock.patch('dr_scaffold.generators.Generator.setup_files')
+    def test_generate_app_appdir_exist(self, mock_setup_files):
+        """
+        Tests
+        """
+        generator_obj = Generator("blog", "Author", ("name:charfield",))
+        generator_obj.core_dir = self.core_folder
+        generator_obj.api_dir = self.api_folder
+        generator_obj.generate_app()
+        mock_setup_files.assert_not_called()
