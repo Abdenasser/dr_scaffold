@@ -6,7 +6,7 @@ URL = """router.register(r'%(path)s', %(model)sViewSet)
 
 """
 
-MODEL_IMPORT = """from %(app)s.views import %(model)sViewSet
+VIEWSET_IMPORT = """from %(app)s.views import %(model)sViewSet
 """
 
 URL_PATTERNS = """urlpatterns = [
