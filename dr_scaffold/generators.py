@@ -1,15 +1,19 @@
 """
 Generator module where the real work happens
 """
-from os import mkdir, path, makedirs
+from os import makedirs, mkdir, path
+
 import inflect
 from django.conf import settings
-from dr_scaffold.scaffold_templates import model_templates
-from dr_scaffold.scaffold_templates import admin_templates
-from dr_scaffold.scaffold_templates import view_templates
-from dr_scaffold.scaffold_templates import serializer_templates
-from dr_scaffold.scaffold_templates import url_templates
 from dr_scaffold import file_api
+from dr_scaffold.scaffold_templates import (
+    admin_templates,
+    model_templates,
+    serializer_templates,
+    url_templates,
+    view_templates,
+)
+
 
 def pluralize(string):
     """
@@ -18,7 +22,8 @@ def pluralize(string):
     pluralizer = inflect.engine()
     return pluralizer.plural(string)
 
-class Generator():
+
+class Generator:
     """
     A wrapper for CLI command arguments and the REST api different files generation methods
     """
@@ -30,12 +35,11 @@ class Generator():
         :param fields: a list of fields strings we want to generate along
         """
         self.appdir = appdir
-        self.app_name = appdir.split("/")[1] if len(appdir.split('/'))>= 2 else appdir
+        self.app_name = appdir.split("/")[1] if len(appdir.split("/")) >= 2 else appdir
         self.model_name = model_name
         self.fields = fields
         self.core_dir = settings.CORE_FOLDER
         self.api_dir = settings.API_FOLDER
-
 
     def run(self):
         """
@@ -75,32 +79,38 @@ class Generator():
                 makedirs(self.core_dir + self.app_name)
             if not path.exists(self.api_dir + self.app_name):
                 makedirs(self.api_dir + self.app_name)
-            if not path.exists(self.core_dir + self.app_name + '/migrations/'):
-                mkdir(self.core_dir + self.app_name + '/migrations/')
+            if not path.exists(self.core_dir + self.app_name + "/migrations/"):
+                mkdir(self.core_dir + self.app_name + "/migrations/")
         else:
             if not path.exists(self.core_dir + self.app_name):
                 makedirs(self.core_dir + self.app_name)
-            if not path.exists(self.core_dir + self.app_name + '/migrations/'):
-                makedirs(self.core_dir + self.app_name + '/migrations/')
+            if not path.exists(self.core_dir + self.app_name + "/migrations/"):
+                makedirs(self.core_dir + self.app_name + "/migrations/")
 
     def setup_files(self):
         """
         creates files if not exist, and adds appropriate imports
         """
         self.setup_folders()
-        files = (f"{self.api_dir + self.app_name}/serializers.py",
+        files = (
+            f"{self.api_dir + self.app_name}/serializers.py",
             f"{self.api_dir + self.app_name}/urls.py",
             f"{self.core_dir + self.app_name}/models.py",
             f"{self.core_dir + self.app_name}/admin.py",
-            f"{self.api_dir + self.app_name}/views.py")
-        files_matching_imports = (serializer_templates.SETUP,
+            f"{self.api_dir + self.app_name}/views.py",
+        )
+        files_matching_imports = (
+            serializer_templates.SETUP,
             url_templates.SETUP,
             model_templates.SETUP,
             admin_templates.SETUP,
-            view_templates.SETUP)
+            view_templates.SETUP,
+        )
         file_api.create_files(files)
-        if not path.exists(self.core_dir + self.app_name + '/migrations/__init__.py'):
-            file_api.create_file(self.core_dir + self.app_name + '/migrations/__init__.py')
+        if not path.exists(self.core_dir + self.app_name + "/migrations/__init__.py"):
+            file_api.create_file(
+                self.core_dir + self.app_name + "/migrations/__init__.py"
+            )
         file_api.wipe_files(files)
         self.add_setup_imports(files, files_matching_imports)
 
@@ -123,28 +133,36 @@ class Generator():
         get appropriate fields templates based on the field type and return them joined in a string
         """
         actual_fields = []
-        relation_types = ('foreignkey', 'manytomany', 'onetoone')
+        relation_types = ("foreignkey", "manytomany", "onetoone")
         file = f"{self.core_dir + self.app_name}/models.py"
         for field in fields:
-            field_name = field.split(':')[0]
-            field_type = field.split(':')[1].lower()
-            field_dict = dict(name= field_name,
-                related = field.split(':')[2] if (field_type in relation_types) else '')
+            field_name = field.split(":")[0]
+            field_type = field.split(":")[1].lower()
+            field_dict = dict(
+                name=field_name,
+                related=field.split(":")[2] if (field_type in relation_types) else "",
+            )
             if field_type in relation_types:
                 # tells developer if related model doesn't exist in file
                 chunk = f'class {field_dict["related"]}(models.Model)'
                 if not file_api.is_present_in_file(file, chunk):
-                    print(f"⚠️ bare in mind that {field_dict['related']} model doesn't exist yet!")
+                    print(
+                        f"⚠️ bare in mind that {field_dict['related']} model doesn't exist yet!"
+                    )
             field_template = model_templates.FIELD_TYPES[field_type] % field_dict
             actual_fields.append(field_template)
-        return ''.join(actual_fields)
+        return "".join(actual_fields)
 
     def get_model_string(self):
         """
         returns a Model class string with fields and Meta class
         """
         fields_string = self.get_fields_string(self.fields)
-        params = (self.model_name, fields_string, pluralize(self.model_name.lower()).capitalize())
+        params = (
+            self.model_name,
+            fields_string,
+            pluralize(self.model_name.lower()).capitalize(),
+        )
         return model_templates.MODEL % params
 
     def generate_models(self):
@@ -158,7 +176,7 @@ class Generator():
          file if not it append it
         """
         file = f"{self.core_dir + self.app_name}/models.py"
-        chunk = f'class {self.model_name}'
+        chunk = f"class {self.model_name}"
         if file_api.is_present_in_file(file, chunk):
             return
         model_string = self.get_model_string()
@@ -170,9 +188,11 @@ class Generator():
         """
         app_dir = self.core_dir + self.app_name
         app_path = app_dir.replace("/", ".")
-        model_register_template = admin_templates.REGISTER % {'model': self.model_name}
-        model_import_template = admin_templates.MODEL_IMPORT % {'app': app_path,
-            'model': self.model_name}
+        model_register_template = admin_templates.REGISTER % {"model": self.model_name}
+        model_import_template = admin_templates.MODEL_IMPORT % {
+            "app": app_path,
+            "model": self.model_name,
+        }
         return (model_import_template, model_register_template)
 
     def register_models_to_admin(self):
@@ -185,7 +205,7 @@ class Generator():
          template
         """
         file = f"{self.core_dir + self.app_name}/admin.py"
-        chunk = f'@admin.register({self.model_name})'
+        chunk = f"@admin.register({self.model_name})"
         if file_api.is_present_in_file(file, chunk):
             return
         head, body = self.get_admin_parts()
@@ -199,11 +219,15 @@ class Generator():
         api_app_dir = self.api_dir + self.app_name
         core_app_path = core_app_dir.replace("/", ".")
         api_app_path = api_app_dir.replace("/", ".")
-        viewset_template = view_templates.VIEWSET % {'model': self.model_name}
-        model_import_template = view_templates.MODEL_IMPORT % {'app': core_app_path,
-            'model': self.model_name}
-        serializer_import_template= view_templates.SERIALIZER_IMPORT % {'app': api_app_path,
-            'model': self.model_name}
+        viewset_template = view_templates.VIEWSET % {"model": self.model_name}
+        model_import_template = view_templates.MODEL_IMPORT % {
+            "app": core_app_path,
+            "model": self.model_name,
+        }
+        serializer_import_template = view_templates.SERIALIZER_IMPORT % {
+            "app": api_app_path,
+            "model": self.model_name,
+        }
         imports = model_import_template + serializer_import_template
         return (imports, viewset_template)
 
@@ -216,7 +240,7 @@ class Generator():
         it wraps the file content between the imports and the viewset template
         """
         file = f"{self.api_dir + self.app_name}/views.py"
-        chunk = f'class {self.model_name}ViewSet'
+        chunk = f"class {self.model_name}ViewSet"
         if file_api.is_present_in_file(file, chunk):
             return
         head, body = self.get_viewset_parts()
@@ -228,9 +252,14 @@ class Generator():
         """
         app_dir = self.core_dir + self.app_name
         app_path = app_dir.replace("/", ".")
-        serializer_template = serializer_templates.SERIALIZER % {'model': self.model_name}
-        imports = serializer_templates.MODEL_IMPORT % {'app': app_path, 'model': self.model_name}
-        return(imports, serializer_template)
+        serializer_template = serializer_templates.SERIALIZER % {
+            "model": self.model_name
+        }
+        imports = serializer_templates.MODEL_IMPORT % {
+            "app": app_path,
+            "model": self.model_name,
+        }
+        return (imports, serializer_template)
 
     def generate_serializers(self):
         """
@@ -240,7 +269,7 @@ class Generator():
         it wraps the file content between the imports and the serializer template
         """
         serializer_file = f"{self.api_dir + self.app_name}/serializers.py"
-        serializer_head = f'class {self.model_name}Serializer'
+        serializer_head = f"class {self.model_name}Serializer"
         if file_api.is_present_in_file(serializer_file, serializer_head):
             return
         head, body = self.get_serializer_parts()
@@ -253,9 +282,15 @@ class Generator():
         api_app_dir = self.api_dir + self.app_name
         api_app_path = api_app_dir.replace("/", ".")
         plural_path = pluralize(self.model_name.lower())
-        url_template = url_templates.URL % {'model': self.model_name, 'path': plural_path}
-        imports = url_templates.VIEWSET_IMPORT % {'app': api_app_path, 'model': self.model_name}
-        return(imports, url_template)
+        url_template = url_templates.URL % {
+            "model": self.model_name,
+            "path": plural_path,
+        }
+        imports = url_templates.VIEWSET_IMPORT % {
+            "app": api_app_path,
+            "model": self.model_name,
+        }
+        return (imports, url_template)
 
     def generate_urls(self):
         """
@@ -266,11 +301,11 @@ class Generator():
         it checks if the file has URL_PATTERS it take it off and append it to the url template
         """
         file = f"{self.api_dir + self.app_name}/urls.py"
-        chunk = f'{self.model_name}ViewSet)'
+        chunk = f"{self.model_name}ViewSet)"
         if file_api.is_present_in_file(file, chunk):
             return
         head, body = self.get_url_parts()
         if file_api.is_present_in_file(file, url_templates.URL_PATTERNS):
-            file_api.replace_file_chunk(file,url_templates.URL_PATTERNS, "")
+            file_api.replace_file_chunk(file, url_templates.URL_PATTERNS, "")
         body = body + url_templates.URL_PATTERNS
         file_api.wrap_file_content(file, head, body)
