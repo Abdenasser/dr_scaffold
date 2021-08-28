@@ -7,6 +7,7 @@ import shutil
 import sys
 import tempfile
 from unittest import TestCase, mock
+import pytest
 
 from django.conf import settings
 
@@ -402,19 +403,21 @@ class TestGenerator(TestCase):
         """
         delattr(self.test_settings, 'CORE_FOLDER')
         delattr(self.test_settings, 'API_FOLDER')
-        generator_obj = Generator("blog", "Author", ("name:charfield",))
-        assert generator_obj.core_dir == ""
-        assert generator_obj.api_dir == ""
+        with pytest.raises(ValueError, match=r".* should end with .*"):
+            Generator("blog", "Author", ("name:charfield",))
 
     def test_get_folder_settings_without_forward_slash(self):
         """
         test add forward slash if forgotten
         """
+        # overwriting settings for test
         setattr(self.test_settings, 'CORE_FOLDER', 'core')
         setattr(self.test_settings, 'API_FOLDER', 'api')
-        generator_obj = Generator("blog", "Author", ("name:charfield",))
-        assert generator_obj.core_dir == "core/"
-        assert generator_obj.api_dir == "api/"
+        with pytest.raises(ValueError, match=r".* should end with .*"):
+            Generator("blog", "Author", ("name:charfield",))
+        # settings to normal
+        setattr(self.test_settings, 'CORE_FOLDER', 'my_app_core/')
+        setattr(self.test_settings, 'API_FOLDER', 'my_app_api/')
 
     def test_get_folder_settings_with_forward_slash(self):
         """
