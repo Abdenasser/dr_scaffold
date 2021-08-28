@@ -19,8 +19,8 @@ class TestGenerator(TestCase):
     Tests for Generator
     """
     test_settings = settings
-    tmpfilepath = os.path.join(tempfile.gettempdir(), "tmp-testfile")
-    # tmpdirpath = tempfile.mkdtemp()
+    # tmpfilepath = os.path.join(tempfile.gettempdir(), "tmp-testfile")
+    tmpdirpath = tempfile.mkdtemp()
     tmpdirpath = "generated_tests_folder"
     core_folder = tmpdirpath + "/" + test_settings.CORE_FOLDER
     api_folder = tmpdirpath + "/" + test_settings.API_FOLDER
