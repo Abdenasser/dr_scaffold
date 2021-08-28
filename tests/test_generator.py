@@ -406,8 +406,9 @@ class TestGenerator(TestCase):
         """
         delattr(self.test_settings, "CORE_FOLDER")
         delattr(self.test_settings, "API_FOLDER")
-        with pytest.raises(ValueError, match=r".* should end with .*"):
-            Generator("blog", "Author", ("name:charfield",))
+        generator = Generator("blog", "Author", ("name:charfield",))
+        assert generator.core_dir == ""
+        assert generator.api_dir == ""
 
     def test_get_folder_settings_without_forward_slash(self):
         """

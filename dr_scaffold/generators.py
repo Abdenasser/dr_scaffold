@@ -114,7 +114,7 @@ class Generator:
         self.core_dir = getattr(settings, "CORE_FOLDER", "")
         self.api_dir = getattr(settings, "API_FOLDER", "")
         slashed = self.core_dir.endswith("/") and self.api_dir.endswith("/")
-        if not slashed:
+        if len(self.api_dir)>0 and len(self.core_dir)>0 and not slashed:
             raise ValueError("🤔 Oops CORE_FOLDER & API_FOLDER should end with a '/'")
 
     def generate_app(self):
