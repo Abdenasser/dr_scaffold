@@ -1,7 +1,7 @@
 """
 Generator module where the real work happens
 """
-from os import makedirs, mkdir, path
+from os import makedirs, path
 
 import inflect
 from django.conf import settings
@@ -29,19 +29,16 @@ class Generator:
     A wrapper for CLI command arguments and the REST api different files generation methods
     """
 
-    def __init__(self, appdir, model_name, fields):
+    def __init__(self, app_name, model_name, fields):
         """
         :param appdir: a string that has the app directory's path or just the appname itself
         :param model_name: model name we want to generate
         :param fields: a list of fields strings we want to generate along
         """
-        self.appdir = appdir
-        self.app_name = appdir.split("/")[1] if len(appdir.split("/")) >= 2 else appdir
+        self.init_paths_from_settings()
+        self.app_name = app_name
         self.model_name = model_name
         self.fields = fields
-        self.core_dir = ""
-        self.api_dir = ""
-        self.get_folder_settings()
 
     def run(self):
         """
@@ -76,30 +73,26 @@ class Generator:
         """
         creates folders if they not exist
         """
-        if self.core_dir is not self.api_dir:
-            if not path.exists(self.core_dir + self.app_name):
-                makedirs(self.core_dir + self.app_name)
-            if not path.exists(self.api_dir + self.app_name):
-                makedirs(self.api_dir + self.app_name)
-            if not path.exists(self.core_dir + self.app_name + "/migrations/"):
-                mkdir(self.core_dir + self.app_name + "/migrations/")
-        else:
-            if not path.exists(self.core_dir + self.app_name):
-                makedirs(self.core_dir + self.app_name)
-            if not path.exists(self.core_dir + self.app_name + "/migrations/"):
-                makedirs(self.core_dir + self.app_name + "/migrations/")
+        core_app_path = self.core_dir + self.app_name
+        api_app_path = self.api_dir + self.app_name
+        migrations_path = f"{core_app_path}/migrations/"
+        makedirs(core_app_path, exist_ok=True)
+        makedirs(api_app_path, exist_ok=True)
+        makedirs(migrations_path, exist_ok=True)
 
     def setup_files(self):
         """
         creates files if not exist, and adds appropriate imports
         """
         self.setup_folders()
+        core_app_path = self.core_dir + self.app_name
+        api_app_path = self.api_dir + self.app_name
         files = (
-            f"{self.api_dir + self.app_name}/serializers.py",
-            f"{self.api_dir + self.app_name}/urls.py",
-            f"{self.core_dir + self.app_name}/models.py",
-            f"{self.core_dir + self.app_name}/admin.py",
-            f"{self.api_dir + self.app_name}/views.py",
+            f"{api_app_path}/serializers.py",
+            f"{api_app_path}/urls.py",
+            f"{core_app_path}/models.py",
+            f"{core_app_path}/admin.py",
+            f"{api_app_path}/views.py",
         )
         files_matching_imports = (
             serializer_templates.SETUP,
@@ -109,25 +102,22 @@ class Generator:
             view_templates.SETUP,
         )
         file_api.create_files(files)
-        if not path.exists(self.core_dir + self.app_name + "/migrations/__init__.py"):
+        if not path.exists(f"{core_app_path}/migrations/__init__.py"):
             file_api.create_file(
-                self.core_dir + self.app_name + "/migrations/__init__.py"
+                f"{core_app_path}/migrations/__init__.py"
             )
         file_api.wipe_files(files)
         self.add_setup_imports(files, files_matching_imports)
 
-    def get_folder_settings(self):
+    def init_paths_from_settings(self):
         """
         Get folder paths from settings if they exist and add forward slash if forgotten
         """
-        if hasattr(settings, "CORE_FOLDER"):
-            self.core_dir = settings.CORE_FOLDER
-            if not self.core_dir.endswith("/"):
-                self.core_dir += "/"
-        if hasattr(settings, "API_FOLDER"):
-            self.api_dir = settings.API_FOLDER
-            if not self.api_dir.endswith("/"):
-                self.api_dir += "/"
+        self.core_dir = getattr(settings, "CORE_FOLDER", "")
+        self.api_dir = getattr(settings, "API_FOLDER", "")
+        slashed = self.core_dir.endswith("/") and self.api_dir.endswith("/")
+        if not slashed:
+            raise ValueError("🤔 Oops CORE_FOLDER & API_FOLDER should end with a '/'")
 
     def generate_app(self):
         """
