@@ -10,12 +10,12 @@ from django.test.testcases import SimpleTestCase
 
 django.setup()
 
+
 @override_settings(
     INSTALLED_APPS=[
-        'dr_scaffold',
+        "dr_scaffold",
     ],
 )
-
 class CommandTestCase(SimpleTestCase):
     """
     simple tests for management command

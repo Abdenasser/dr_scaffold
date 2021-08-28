@@ -3,6 +3,7 @@ Tests for Generator
 """
 import io
 import os
+import shutil
 import sys
 import tempfile
 from unittest import TestCase, mock
@@ -17,20 +18,20 @@ class TestGenerator(TestCase):
     """
     Tests for Generator
     """
-
-    tmpfilepath = os.path.join(tempfile.gettempdir(), "tmp-testfile")
+    test_settings = settings
+    # tmpfilepath = os.path.join(tempfile.gettempdir(), "tmp-testfile")
     tmpdirpath = tempfile.mkdtemp()
-    # tmpdirpath = 'generated_tests_folder'
-    if not os.path.exists(tmpdirpath):
-        os.mkdir(tmpdirpath)
-    core_folder = tmpdirpath + "/" + settings.CORE_FOLDER
-    api_folder = tmpdirpath + "/" + settings.API_FOLDER
+    tmpdirpath = "generated_tests_folder"
+    core_folder = tmpdirpath + "/" + test_settings.CORE_FOLDER
+    api_folder = tmpdirpath + "/" + test_settings.API_FOLDER
     generator = Generator("blog", "Article", ("title:charfield", "body:textfield"))
 
     def setUp(self):
         """
         Tests
         """
+        if not os.path.exists(self.tmpdirpath):
+            os.mkdir(self.tmpdirpath)
         if not os.path.exists(self.core_folder):
             os.mkdir(self.core_folder)
             os.mkdir(self.core_folder + "blog")
@@ -59,6 +60,8 @@ class TestGenerator(TestCase):
             f"{self.api_folder}blog/views.py",
         ]:
             os.remove(file_name)
+        if os.path.exists(self.tmpdirpath):
+            shutil.rmtree(self.tmpdirpath)
 
     @classmethod
     def test_pluralize(cls):
@@ -392,3 +395,33 @@ class TestGenerator(TestCase):
         generator_obj.api_dir = self.api_folder
         generator_obj.generate_app()
         mock_setup_files.assert_not_called()
+
+    def test_get_folder_settings_not_set(self):
+        """
+        Get folder paths from settings if they exist and add forward slash if forgotten
+        """
+        delattr(self.test_settings, 'CORE_FOLDER')
+        delattr(self.test_settings, 'API_FOLDER')
+        generator_obj = Generator("blog", "Author", ("name:charfield",))
+        assert generator_obj.core_dir == ""
+        assert generator_obj.api_dir == ""
+
+    def test_get_folder_settings_without_forward_slash(self):
+        """
+        Get folder paths from settings if they exist and add forward slash if forgotten
+        """
+        setattr(self.test_settings, 'CORE_FOLDER', 'core')
+        setattr(self.test_settings, 'API_FOLDER', 'api')
+        generator_obj = Generator("blog", "Author", ("name:charfield",))
+        assert generator_obj.core_dir == "core/"
+        assert generator_obj.api_dir == "api/"
+
+    def test_get_folder_settings_with_forward_slash(self):
+        """
+        Get folder paths from settings if they exist and add forward slash if forgotten
+        """
+        setattr(self.test_settings, 'CORE_FOLDER', 'core/')
+        setattr(self.test_settings, 'API_FOLDER', 'api/')
+        generator_obj = Generator("blog", "Author", ("name:charfield",))
+        assert generator_obj.core_dir == "core/"
+        assert generator_obj.api_dir == "api/"

@@ -39,8 +39,9 @@ class Generator:
         self.app_name = appdir.split("/")[1] if len(appdir.split("/")) >= 2 else appdir
         self.model_name = model_name
         self.fields = fields
-        self.core_dir = settings.CORE_FOLDER
-        self.api_dir = settings.API_FOLDER
+        self.core_dir = ""
+        self.api_dir = ""
+        self.get_folder_settings()
 
     def run(self):
         """
@@ -114,6 +115,19 @@ class Generator:
             )
         file_api.wipe_files(files)
         self.add_setup_imports(files, files_matching_imports)
+
+    def get_folder_settings(self):
+        """
+        Get folder paths from settings if they exist and add forward slash if forgotten
+        """
+        if hasattr(settings, "CORE_FOLDER"):
+            self.core_dir = settings.CORE_FOLDER
+            if not self.core_dir.endswith("/"):
+                self.core_dir += "/"
+        if hasattr(settings, "API_FOLDER"):
+            self.api_dir = settings.API_FOLDER
+            if not self.api_dir.endswith("/"):
+                self.api_dir += "/"
 
     def generate_app(self):
         """
