@@ -21,7 +21,7 @@ class TestGenerator(TestCase):
     test_settings = settings
     # tmpfilepath = os.path.join(tempfile.gettempdir(), "tmp-testfile")
     tmpdirpath = tempfile.mkdtemp()
-    tmpdirpath = "generated_tests_folder"
+    # tmpdirpath = "generated_tests_folder"
     core_folder = tmpdirpath + "/" + test_settings.CORE_FOLDER
     api_folder = tmpdirpath + "/" + test_settings.API_FOLDER
     generator = Generator("blog", "Article", ("title:charfield", "body:textfield"))
@@ -398,7 +398,7 @@ class TestGenerator(TestCase):
 
     def test_get_folder_settings_not_set(self):
         """
-        Get folder paths from settings if they exist and add forward slash if forgotten
+        if no settings folder paths exists
         """
         delattr(self.test_settings, 'CORE_FOLDER')
         delattr(self.test_settings, 'API_FOLDER')
@@ -408,7 +408,7 @@ class TestGenerator(TestCase):
 
     def test_get_folder_settings_without_forward_slash(self):
         """
-        Get folder paths from settings if they exist and add forward slash if forgotten
+        test add forward slash if forgotten
         """
         setattr(self.test_settings, 'CORE_FOLDER', 'core')
         setattr(self.test_settings, 'API_FOLDER', 'api')
@@ -418,7 +418,7 @@ class TestGenerator(TestCase):
 
     def test_get_folder_settings_with_forward_slash(self):
         """
-        Get folder paths from settings if they exist and add forward slash if forgotten
+        if settings are well set
         """
         setattr(self.test_settings, 'CORE_FOLDER', 'core/')
         setattr(self.test_settings, 'API_FOLDER', 'api/')
