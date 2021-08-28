@@ -7,8 +7,8 @@ import shutil
 import sys
 import tempfile
 from unittest import TestCase, mock
-import pytest
 
+import pytest
 from django.conf import settings
 
 from dr_scaffold.generators import Generator, pluralize
@@ -19,26 +19,20 @@ class TestGenerator(TestCase):
     """
     Tests for Generator
     """
+
     test_settings = settings
-    # tmpfilepath = os.path.join(tempfile.gettempdir(), "tmp-testfile")
     tmpdirpath = tempfile.mkdtemp()
     # tmpdirpath = "generated_tests_folder"
-    core_folder = tmpdirpath + "/" + test_settings.CORE_FOLDER
-    api_folder = tmpdirpath + "/" + test_settings.API_FOLDER
-    generator = Generator("blog", "Article", ("title:charfield", "body:textfield"))
+    core_folder = f"{tmpdirpath}/{test_settings.CORE_FOLDER}"
+    api_folder = f"{tmpdirpath}/{test_settings.API_FOLDER}"
 
     def setUp(self):
         """
-        Tests
+        Tests set up : get executed before each test
         """
-        if not os.path.exists(self.tmpdirpath):
-            os.mkdir(self.tmpdirpath)
-        if not os.path.exists(self.core_folder):
-            os.mkdir(self.core_folder)
-            os.mkdir(self.core_folder + "blog")
-        if not os.path.exists(self.api_folder):
-            os.mkdir(self.api_folder)
-            os.mkdir(self.api_folder + "blog")
+        os.makedirs(self.tmpdirpath, exist_ok=True)
+        os.makedirs(f"{self.core_folder}blog", exist_ok=True)
+        os.makedirs(f"{self.api_folder}blog", exist_ok=True)
         for file_name in [
             f"{self.core_folder}blog/models.py",
             f"{self.api_folder}blog/serializers.py",
@@ -51,7 +45,7 @@ class TestGenerator(TestCase):
 
     def tearDown(self):
         """
-        Tests
+        Tests tear down : get executed after each test
         """
         for file_name in [
             f"{self.core_folder}blog/models.py",
@@ -67,25 +61,28 @@ class TestGenerator(TestCase):
     @classmethod
     def test_pluralize(cls):
         """
-        Tests
+        Test pluralization
         """
         assert pluralize("article") == "articles"
         assert pluralize("category") == "categories"
         assert pluralize("post") == "posts"
 
-    def test_init(self):
+    @classmethod
+    def test_init(cls):
         """
-        Tests
+        Test arguments
         """
-        generator_obj = self.generator
+        generator_obj = Generator("blog", "Article", "")
         assert generator_obj.app_name == "blog"
         assert generator_obj.model_name == "Article"
 
     def test_add_setup_imports(self):
         """
-        Tests
+        Tests imports
         """
-        generator_obj = self.generator
+        generator_obj = Generator(
+            "blog", "Article", ("title:charfield", "body:textfield")
+        )
         generator_obj.core_folder = self.core_folder
         file_paths = (f"{self.core_folder}blog/models.py",)
         matching_imports = (serializer_templates.SETUP,)
@@ -96,7 +93,7 @@ class TestGenerator(TestCase):
 
     def test_setup_files(self):
         """
-        Tests
+        Tests files setup
         """
         generator_obj = Generator(
             "blog", "Article", ("title:charfield", "body:textfield")
@@ -104,19 +101,22 @@ class TestGenerator(TestCase):
         generator_obj.core_dir = self.core_folder
         generator_obj.api_dir = self.api_folder
         generator_obj.setup_files()
-        core_files = list(os.listdir(self.core_folder + "blog/"))
-        api_files = list(os.listdir(self.api_folder + "blog/"))
-        with open(self.core_folder + "blog/models.py", "r+", encoding="utf8") as file:
+        core_files = list(os.listdir(f"{self.core_folder}blog/"))
+        api_files = list(os.listdir(f"{self.api_folder}blog/"))
+        with open(f"{self.core_folder}blog/models.py", "r+", encoding="utf8") as file:
             body = "".join(file.readlines())
         assert len(core_files + api_files) == 6  # taking in count migrations folder
         assert ("from django.db import models" in body) is True
 
+    @classmethod
     @mock.patch("dr_scaffold.generators.file_api.is_present_in_file")
-    def test_get_fields_string(self, mock_is_in_file):
+    def test_get_fields_string(cls, mock_is_in_file):
         """
         Tests
         """
-        generator_obj = self.generator
+        generator_obj = Generator(
+            "blog", "Article", ("title:charfield", "body:textfield")
+        )
         fields_string = generator_obj.get_fields_string(generator_obj.fields)
         body_template = model_templates.TEXTFIELD % dict(name="body")
         title_template = model_templates.CHARFIELD % dict(name="title")
@@ -140,11 +140,14 @@ class TestGenerator(TestCase):
         sys.stdout = sys.__stdout__
         assert "⚠️ bare in mind that Author" in captured_output.getvalue()
 
-    def test_get_model_string(self):
+    @classmethod
+    def test_get_model_string(cls):
         """
         Tests
         """
-        generator_obj = self.generator
+        generator_obj = Generator(
+            "blog", "Article", ("title:charfield", "body:textfield")
+        )
         fields_string = generator_obj.get_fields_string(fields=generator_obj.fields)
         model_string = generator_obj.get_model_string()
         string = model_templates.MODEL % ("Article", fields_string, "Articles")
@@ -401,8 +404,8 @@ class TestGenerator(TestCase):
         """
         if no settings folder paths exists
         """
-        delattr(self.test_settings, 'CORE_FOLDER')
-        delattr(self.test_settings, 'API_FOLDER')
+        delattr(self.test_settings, "CORE_FOLDER")
+        delattr(self.test_settings, "API_FOLDER")
         with pytest.raises(ValueError, match=r".* should end with .*"):
             Generator("blog", "Author", ("name:charfield",))
 
@@ -411,20 +414,20 @@ class TestGenerator(TestCase):
         test add forward slash if forgotten
         """
         # overwriting settings for test
-        setattr(self.test_settings, 'CORE_FOLDER', 'core')
-        setattr(self.test_settings, 'API_FOLDER', 'api')
+        setattr(self.test_settings, "CORE_FOLDER", "core")
+        setattr(self.test_settings, "API_FOLDER", "api")
         with pytest.raises(ValueError, match=r".* should end with .*"):
             Generator("blog", "Author", ("name:charfield",))
         # settings to normal
-        setattr(self.test_settings, 'CORE_FOLDER', 'my_app_core/')
-        setattr(self.test_settings, 'API_FOLDER', 'my_app_api/')
+        setattr(self.test_settings, "CORE_FOLDER", "my_app_core/")
+        setattr(self.test_settings, "API_FOLDER", "my_app_api/")
 
     def test_get_folder_settings_with_forward_slash(self):
         """
         if settings are well set
         """
-        setattr(self.test_settings, 'CORE_FOLDER', 'core/')
-        setattr(self.test_settings, 'API_FOLDER', 'api/')
+        setattr(self.test_settings, "CORE_FOLDER", "core/")
+        setattr(self.test_settings, "API_FOLDER", "api/")
         generator_obj = Generator("blog", "Author", ("name:charfield",))
         assert generator_obj.core_dir == "core/"
         assert generator_obj.api_dir == "api/"

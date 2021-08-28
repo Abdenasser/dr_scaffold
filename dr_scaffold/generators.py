@@ -103,9 +103,7 @@ class Generator:
         )
         file_api.create_files(files)
         if not path.exists(f"{core_app_path}/migrations/__init__.py"):
-            file_api.create_file(
-                f"{core_app_path}/migrations/__init__.py"
-            )
+            file_api.create_file(f"{core_app_path}/migrations/__init__.py")
         file_api.wipe_files(files)
         self.add_setup_imports(files, files_matching_imports)
 
