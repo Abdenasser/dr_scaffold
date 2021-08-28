@@ -3,6 +3,7 @@
 django custom management command class
 """
 from django.core.management.base import BaseCommand
+
 from dr_scaffold.generators import Generator
 
 
