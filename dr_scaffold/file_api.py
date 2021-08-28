@@ -8,8 +8,8 @@ def create_file(file_path):
     """
     creates a file
     """
-    with open(file_path, "x", encoding="utf8") as file:
-        file.close()
+    with open(file_path, "x", encoding="utf8"):
+        pass
 
 
 def wipe_file_content(file_path):
@@ -18,7 +18,6 @@ def wipe_file_content(file_path):
     """
     with open(file_path, "r+", encoding="utf8") as file:
         file.truncate(0)
-        file.close()
 
 
 def get_file_content(file_path):
@@ -26,9 +25,7 @@ def get_file_content(file_path):
     gets a file content
     """
     with open(file_path, "r+", encoding="utf8") as file:
-        body = "".join(file.readlines())
-        file.close()
-        return body
+        return "".join(file.readlines())
 
 
 def set_file_content(file_path, body):
@@ -38,7 +35,6 @@ def set_file_content(file_path, body):
     wipe_file_content(file_path)
     with open(file_path, "r+", encoding="utf8") as file:
         file.write(body)
-        file.close()
 
 
 def prepend_file_content(file_path, head):
