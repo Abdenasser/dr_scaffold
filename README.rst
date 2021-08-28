@@ -54,11 +54,12 @@ Add ``dr_scaffold`` to your INSTALLED\_APPS like this:
     ]
 
 Add ``CORE_FOLDER`` and ``API_FOLDER`` to your ``settings.py`` include a forward slash at the end of each:
-You can set them to the same folder as well.
+
+
 .. code:: python
 
-    CORE_FOLDER = "my_core_folder/"
-    API_FOLDER = "my_api_folder/"
+    CORE_FOLDER = "my_core_folder/" # you can leave them empty
+    API_FOLDER = "my_api_folder/"   # or set them to be the same
 
 
 Enjoy 🎉
