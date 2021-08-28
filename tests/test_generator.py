@@ -80,7 +80,7 @@ class TestGenerator(TestCase):
         matching_imports = (serializer_templates.SETUP,)
         generator_obj.add_setup_imports(file_paths, matching_imports)
         with open(file_paths[0], 'r+', encoding='utf8') as file:
-            body = ''.join(line for line in file.readlines())
+            body = ''.join(file.readlines())
         assert body == serializer_templates.SETUP
 
     def test_setup_files(self):
@@ -96,7 +96,7 @@ class TestGenerator(TestCase):
         core_files = list(os.listdir(self.core_folder+'blog/'))
         api_files= list(os.listdir(self.api_folder+'blog/'))
         with open(self.core_folder+'blog/models.py', 'r+', encoding='utf8') as file:
-            body = ''.join(line for line in file.readlines())
+            body = ''.join(file.readlines())
         assert len(core_files+api_files) == 6 #taking in count migrations folder
         assert ("from django.db import models" in body) is True
 
@@ -150,16 +150,23 @@ class TestGenerator(TestCase):
         generator_obj = Generator("blog",
             "Article",
             ("title:charfield", "body:textfield"))
-        generator_obj.core_dir = self.core_folder
-        generator_obj.api_dir = self.api_folder
-        result = generator_obj.run()
-        assert result == print("🎉 Your RESTful Article api resource is ready 🎉")
+        result = self._extracted_from_test_run_6(
+            generator_obj, "🎉 Your RESTful Article api resource is ready 🎉"
+        )
+
         # test case where something is wront
         generator_obj2 = Generator("blog", "Author", ("title:charfiel",))
-        generator_obj2.core_dir = self.core_folder
-        generator_obj2.api_dir = self.api_folder
-        result = generator_obj2.run()
-        assert result == print("🤔 Oops something is wrong: charfiel")
+        result = self._extracted_from_test_run_6(
+            generator_obj2, "🤔 Oops something is wrong: charfiel"
+        )
+
+
+    def _extracted_from_test_run_6(self, arg0, arg1):
+        arg0.core_dir = self.core_folder
+        arg0.api_dir = self.api_folder
+        result = arg0.run()
+        assert result == print(arg1)
+        return result
 
     @mock.patch('dr_scaffold.generators.Generator.generate_app')
     def test_generate_api(self,mock_generate_app):
@@ -178,27 +185,25 @@ class TestGenerator(TestCase):
         """
         Tests
         """
-        generator_obj = Generator("blog",
-            "Article",
-            ("title:charfield", "body:textfield"))
-        generator_obj.core_dir = self.core_folder
-        generator_obj.api_dir = self.api_folder
-        generator_obj.generate_models()
+        generator_obj = self._extracted_from_test_generate_models_3()
         with open(f"{self.core_folder}blog/models.py", 'r+', encoding='utf8') as file:
-            body = ''.join(line for line in file.readlines())
+            body = ''.join(file.readlines())
         assert ('Article' in body) is True
         assert ('Articles' in body) is True
         assert ('title' in body) is True
         assert ('body' in body) is True
-        # test when model already generated
-        generator_obj = Generator("blog",
-            "Article",
-            ("title:charfield", "body:textfield"))
-        generator_obj.core_dir = self.core_folder
-        generator_obj.api_dir = self.api_folder
-        generator_obj.generate_models()
+        generator_obj = self._extracted_from_test_generate_models_3()
         assert body.count('class Article') == 1
         assert body.count('class Meta:') == 1
+
+    def _extracted_from_test_generate_models_3(self):
+        result = Generator("blog",
+            "Article",
+            ("title:charfield", "body:textfield"))
+        result.core_dir = self.core_folder
+        result.api_dir = self.api_folder
+        result.generate_models()
+        return result
 
     def test_get_admin_parts(self):
         """
@@ -220,7 +225,7 @@ class TestGenerator(TestCase):
         generator_obj.api_dir = self.api_folder
         generator_obj.register_models_to_admin()
         with open(f"{self.core_folder}blog/admin.py", 'r+', encoding='utf8') as file:
-            body = ''.join(line for line in file.readlines())
+            body = ''.join(file.readlines())
         assert ("import Article" in body) is True
         assert ("@admin.register(Article)" in body) is True
         # test when model already registered
@@ -229,7 +234,7 @@ class TestGenerator(TestCase):
         generator_obj.api_dir = self.api_folder
         generator_obj.register_models_to_admin()
         with open(f"{self.core_folder}blog/admin.py", 'r+', encoding='utf8') as file:
-            body = ''.join(line for line in file.readlines())
+            body = ''.join(file.readlines())
         assert body.count('models import Article') == 1
         assert body.count('@admin.register(Article)') == 1
 
@@ -253,7 +258,7 @@ class TestGenerator(TestCase):
         generator_obj.api_dir = self.api_folder
         generator_obj.generate_views()
         with open(f"{self.api_folder}blog/views.py", 'r+', encoding='utf8') as file:
-            body = ''.join(line for line in file.readlines())
+            body = ''.join(file.readlines())
         assert ('import Article' in body) is True
         assert ('ArticleViewSet' in body) is True
         assert ('ArticleSerializer' in body) is True
@@ -263,7 +268,7 @@ class TestGenerator(TestCase):
         generator_obj.api_dir = self.api_folder
         generator_obj.generate_views()
         with open(f"{self.api_folder}blog/views.py", 'r+', encoding='utf8') as file:
-            body = ''.join(line for line in file.readlines())
+            body = ''.join(file.readlines())
         assert body.count('models import Article') == 1
         assert body.count('ArticleViewSet') == 1
         assert body.count('import ArticleSerializer') == 1
@@ -289,7 +294,7 @@ class TestGenerator(TestCase):
         generator_obj.api_dir = self.api_folder
         generator_obj.generate_serializers()
         with open(f"{self.api_folder}blog/serializers.py", 'r+', encoding='utf8') as file:
-            body = ''.join(line for line in file.readlines())
+            body = ''.join(file.readlines())
         assert ('import Article' in body) is True
         assert ('ArticleSerializer' in body) is True
         #test if serializer already exists
@@ -298,7 +303,7 @@ class TestGenerator(TestCase):
         generator_obj.api_dir = self.api_folder
         generator_obj.generate_serializers()
         with open(f"{self.api_folder}blog/serializers.py", 'r+', encoding='utf8') as file:
-            body = ''.join(line for line in file.readlines())
+            body = ''.join(file.readlines())
         assert body.count('import Article') == 1
         assert body.count('ArticleSerializer') == 1
 
@@ -323,7 +328,7 @@ class TestGenerator(TestCase):
         generator_obj.api_dir = self.api_folder
         generator_obj.generate_urls()
         with open(f"{self.api_folder}blog/urls.py", 'r+', encoding='utf8') as file:
-            body = ''.join(line for line in file.readlines())
+            body = ''.join(file.readlines())
         assert ('import ArticleViewSet' in body) is True
         assert (', ArticleViewSet)' in body) is True
         #test : if url have been added we won't add it again
@@ -332,7 +337,7 @@ class TestGenerator(TestCase):
         generator_obj.api_dir = self.api_folder
         generator_obj.generate_urls()
         with open(f"{self.api_folder}blog/urls.py", 'r+', encoding='utf8') as file:
-            body = ''.join(line for line in file.readlines())
+            body = ''.join(file.readlines())
         assert body.count('import ArticleViewSet') == 1
         assert body.count(', ArticleViewSet)') == 1
         #test : if when creating another resource we replace the url_patterns

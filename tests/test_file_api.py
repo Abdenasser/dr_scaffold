@@ -41,10 +41,7 @@ class TestFileApi(TestCase):
         Tests for file api
         """
         file_api.wipe_file_content(self.tmpfilepath)
-        with open(self.tmpfilepath, 'r+', encoding='utf8') as file:
-            body = ''.join(line for line in file.readlines())
-        assert body != "Delete me!"
-        assert len(body) == 0
+        self._extracted_from_test_wipe_files_4()
 
     def test_get_file_content(self):
         """
@@ -59,7 +56,7 @@ class TestFileApi(TestCase):
         """
         file_api.set_file_content(self.tmpfilepath, "new content")
         with open(self.tmpfilepath, 'r+', encoding='utf8') as file:
-            body = ''.join(line for line in file.readlines())
+            body = ''.join(file.readlines())
         assert body == "new content"
 
     def test_prepend_file_content(self):
@@ -68,7 +65,7 @@ class TestFileApi(TestCase):
         """
         file_api.prepend_file_content(self.tmpfilepath, "new content")
         with open(self.tmpfilepath, 'r+', encoding='utf8') as file:
-            body = ''.join(line for line in file.readlines())
+            body = ''.join(file.readlines())
         assert body == "new contentDelete me!"
 
     def test_append_file_content(self):
@@ -77,7 +74,7 @@ class TestFileApi(TestCase):
         """
         file_api.append_file_content(self.tmpfilepath, "new content")
         with open(self.tmpfilepath, 'r+', encoding='utf8') as file:
-            body = ''.join(line for line in file.readlines())
+            body = ''.join(file.readlines())
         assert body == "Delete me!new content"
 
     def test_wrap_file_content(self):
@@ -86,7 +83,7 @@ class TestFileApi(TestCase):
         """
         file_api.wrap_file_content(self.tmpfilepath, "head", "tail")
         with open(self.tmpfilepath, 'r+', encoding='utf8') as file:
-            body = ''.join(line for line in file.readlines())
+            body = ''.join(file.readlines())
         assert body == "headDelete me!tail"
 
     def test_replace_file_chunk(self):
@@ -95,7 +92,7 @@ class TestFileApi(TestCase):
         """
         file_api.replace_file_chunk(self.tmpfilepath, "Delete", "Remove")
         with open(self.tmpfilepath, 'r+', encoding='utf8') as file:
-            body = ''.join(line for line in file.readlines())
+            body = ''.join(file.readlines())
         assert body == "Remove me!"
 
     def test_is_present_in_file(self):
@@ -110,9 +107,12 @@ class TestFileApi(TestCase):
         Tests for file api
         """
         file_api.wipe_files((self.tmpfilepath,))
+        self._extracted_from_test_wipe_files_4()
+
+    def _extracted_from_test_wipe_files_4(self):
         with open(self.tmpfilepath, 'r+', encoding='utf8') as file:
-            body = ''.join(line for line in file.readlines())
-        assert body != "Delete me!"
+            body = ''.join(file.readlines())
+        assert body != 'Delete me!'
         assert len(body) == 0
 
     @classmethod

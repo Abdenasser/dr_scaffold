@@ -24,7 +24,7 @@ def get_file_content(file_path):
     gets a file content
     """
     with open(file_path, 'r+', encoding='utf8') as file:
-        body = ''.join(line for line in file.readlines())
+        body = ''.join(file.readlines())
         file.close()
         return body
 
@@ -74,9 +74,7 @@ def is_present_in_file(file_path, string):
     check for string if present in a file
     """
     body = get_file_content(file_path)
-    if string in body:
-        return True
-    return False
+    return string in body
 
 def wipe_files(file_paths):
     """

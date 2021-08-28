@@ -137,8 +137,7 @@ class Generator():
                     print(f"⚠️ bare in mind that {field_dict['related']} model doesn't exist yet!")
             field_template = model_templates.FIELD_TYPES[field_type] % field_dict
             actual_fields.append(field_template)
-        fields_string = ''.join(f for f in actual_fields)
-        return fields_string
+        return ''.join(actual_fields)
 
     def get_model_string(self):
         """
