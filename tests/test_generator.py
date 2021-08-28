@@ -150,23 +150,16 @@ class TestGenerator(TestCase):
         generator_obj = Generator("blog",
             "Article",
             ("title:charfield", "body:textfield"))
-        result = self._extracted_from_test_run_6(
-            generator_obj, "🎉 Your RESTful Article api resource is ready 🎉"
-        )
-
+        generator_obj.core_dir = self.core_folder
+        generator_obj.api_dir = self.api_folder
+        result = generator_obj.run()
+        assert result == print("🎉 Your RESTful Article api resource is ready 🎉")
         # test case where something is wront
         generator_obj2 = Generator("blog", "Author", ("title:charfiel",))
-        result = self._extracted_from_test_run_6(
-            generator_obj2, "🤔 Oops something is wrong: charfiel"
-        )
-
-
-    def _extracted_from_test_run_6(self, arg0, arg1):
-        arg0.core_dir = self.core_folder
-        arg0.api_dir = self.api_folder
-        result = arg0.run()
-        assert result == print(arg1)
-        return result
+        generator_obj2.core_dir = self.core_folder
+        generator_obj2.api_dir = self.api_folder
+        result = generator_obj2.run()
+        assert result == print("🤔 Oops something is wrong: charfiel")
 
     @mock.patch('dr_scaffold.generators.Generator.generate_app')
     def test_generate_api(self,mock_generate_app):
@@ -185,25 +178,27 @@ class TestGenerator(TestCase):
         """
         Tests
         """
-        generator_obj = self._extracted_from_test_generate_models_3()
+        generator_obj = Generator("blog",
+            "Article",
+            ("title:charfield", "body:textfield"))
+        generator_obj.core_dir = self.core_folder
+        generator_obj.api_dir = self.api_folder
+        generator_obj.generate_models()
         with open(f"{self.core_folder}blog/models.py", 'r+', encoding='utf8') as file:
-            body = ''.join(file.readlines())
+            body = ''.join(line for line in file.readlines())
         assert ('Article' in body) is True
         assert ('Articles' in body) is True
         assert ('title' in body) is True
         assert ('body' in body) is True
-        generator_obj = self._extracted_from_test_generate_models_3()
-        assert body.count('class Article') == 1
-        assert body.count('class Meta:') == 1
-
-    def _extracted_from_test_generate_models_3(self):
-        result = Generator("blog",
+        # test when model already generated
+        generator_obj = Generator("blog",
             "Article",
             ("title:charfield", "body:textfield"))
-        result.core_dir = self.core_folder
-        result.api_dir = self.api_folder
-        result.generate_models()
-        return result
+        generator_obj.core_dir = self.core_folder
+        generator_obj.api_dir = self.api_folder
+        generator_obj.generate_models()
+        assert body.count('class Article') == 1
+        assert body.count('class Meta:') == 1
 
     def test_get_admin_parts(self):
         """
