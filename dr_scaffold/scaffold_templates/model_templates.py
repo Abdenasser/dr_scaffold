@@ -82,30 +82,30 @@ ONETOONE = """
     %(name)s = models.OneToOneField(%(related)s, on_delete = models.CASCADE, primary_key = True)"""
 
 FIELD_TYPES = {
-    'charfield': CHARFIELD,
-    'textfield': TEXTFIELD,
-    'integerfield':INTEGERFIELD,
-    'decimalfield':DECIMALFIELD,
-    'datetimefield':DATETIMEFIELD,
-    'foreignkey':FOREIGNKEY,
-    'bigintegerfield':BIGINTEGERFIELD,
-    'binaryfield':BINARYFIELD,
-    'booleanfield':BOOLEANFIELD,
-    'datefield':DATEFIELD,
-    'floatfield':FLOATFIELD,
-    'genericipaddressfield':GENERICIPADDRESSFIELD,
-    'nullbooleanfield':NULLBOOLEANFIELD,
-    'positiveintegerfield':POSITIVEINTEGERFIELD,
-    'positivesmallintegerfield':POSITIVESMALLINTEGERFIELD,
-    'emailfield':EMAILFIELD,
-    'slugfield':SLUGFIELD,
-    'timefield':TIMEFIELD,
-    'urlfield':URLFIELD,
-    'smallintegerfield':SMALLINTEGERFIELD,
-    'manytomany': MANYTOMANY,
-    'onetoone': ONETOONE,
+    "charfield": CHARFIELD,
+    "textfield": TEXTFIELD,
+    "integerfield": INTEGERFIELD,
+    "decimalfield": DECIMALFIELD,
+    "datetimefield": DATETIMEFIELD,
+    "foreignkey": FOREIGNKEY,
+    "bigintegerfield": BIGINTEGERFIELD,
+    "binaryfield": BINARYFIELD,
+    "booleanfield": BOOLEANFIELD,
+    "datefield": DATEFIELD,
+    "floatfield": FLOATFIELD,
+    "genericipaddressfield": GENERICIPADDRESSFIELD,
+    "nullbooleanfield": NULLBOOLEANFIELD,
+    "positiveintegerfield": POSITIVEINTEGERFIELD,
+    "positivesmallintegerfield": POSITIVESMALLINTEGERFIELD,
+    "emailfield": EMAILFIELD,
+    "slugfield": SLUGFIELD,
+    "timefield": TIMEFIELD,
+    "urlfield": URLFIELD,
+    "smallintegerfield": SMALLINTEGERFIELD,
+    "manytomany": MANYTOMANY,
+    "onetoone": ONETOONE,
 }
 
-SETUP="""from django.db import models
+SETUP = """from django.db import models
 
 """

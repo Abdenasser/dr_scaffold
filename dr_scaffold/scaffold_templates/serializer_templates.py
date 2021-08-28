@@ -13,6 +13,6 @@ SERIALIZER = """class %(model)sSerializer(serializers.HyperlinkedModelSerializer
 MODEL_IMPORT = """from %(app)s.models import %(model)s
 """
 
-SETUP="""from rest_framework import serializers
+SETUP = """from rest_framework import serializers
 
 """
