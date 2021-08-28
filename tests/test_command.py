@@ -3,12 +3,10 @@ Tests for management command
 """
 from unittest import mock
 import django
-from django.conf import settings
 from django.core.management import call_command
 from django.test import override_settings
 from django.test.testcases import SimpleTestCase
 
-settings.configure()
 django.setup()
 
 @override_settings(

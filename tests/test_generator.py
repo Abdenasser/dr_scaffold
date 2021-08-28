@@ -6,6 +6,7 @@ import io
 import sys
 import tempfile
 from unittest import TestCase, mock
+from django.conf import settings
 from dr_scaffold.generators import Generator, pluralize
 from dr_scaffold.scaffold_templates import serializer_templates, model_templates
 
@@ -19,8 +20,8 @@ class TestGenerator(TestCase):
     # tmpdirpath = 'generated_tests_folder'
     if not os.path.exists(tmpdirpath):
         os.mkdir(tmpdirpath)
-    core_folder = tmpdirpath+'/test_core/'
-    api_folder = tmpdirpath+'/test_api/'
+    core_folder = tmpdirpath+'/'+ settings.CORE_FOLDER
+    api_folder = tmpdirpath+'/'+ settings.API_FOLDER
     generator = Generator("blog", "Article", ("title:charfield", "body:textfield"))
 
     def setUp(self):

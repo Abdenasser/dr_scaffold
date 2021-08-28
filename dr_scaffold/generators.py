@@ -3,7 +3,7 @@ Generator module where the real work happens
 """
 from os import mkdir, path, makedirs
 import inflect
-import environ
+from django.conf import settings
 from dr_scaffold.scaffold_templates import model_templates
 from dr_scaffold.scaffold_templates import admin_templates
 from dr_scaffold.scaffold_templates import view_templates
@@ -17,7 +17,7 @@ def pluralize(string):
     """
     pluralizer = inflect.engine()
     return pluralizer.plural(string)
-env = environ.Env()
+
 class Generator():
     """
     A wrapper for CLI command arguments and the REST api different files generation methods
@@ -33,8 +33,8 @@ class Generator():
         self.app_name = appdir.split("/")[1] if len(appdir.split('/'))>= 2 else appdir
         self.model_name = model_name
         self.fields = fields
-        self.core_dir = env.str('CORE_FOLDER', '')
-        self.api_dir = env.str('API_FOLDER', '')
+        self.core_dir = settings.CORE_FOLDER
+        self.api_dir = settings.API_FOLDER
 
 
     def run(self):
@@ -70,7 +70,7 @@ class Generator():
         """
         creates folders if they not exist
         """
-        if not self.core_dir is self.api_dir:
+        if self.core_dir is not self.api_dir:
             if not path.exists(self.core_dir + self.app_name):
                 makedirs(self.core_dir + self.app_name)
             if not path.exists(self.api_dir + self.app_name):
