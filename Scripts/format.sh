@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export SOURCE_FILES="../dr_scaffold"
+export SOURCE_FILES="./dr_scaffold"
 
 set -x
 

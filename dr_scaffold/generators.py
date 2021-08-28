@@ -5,6 +5,7 @@ from os import makedirs, mkdir, path
 
 import inflect
 from django.conf import settings
+
 from dr_scaffold import file_api
 from dr_scaffold.scaffold_templates import (
     admin_templates,
