@@ -9,11 +9,12 @@ codecov==2.1.12
 colorama==0.4.4
 coverage==5.5
 Django==3.2.6
+django-environ==0.4.5
 django-filter==2.4.0
 djangorestframework==3.12.4
 docutils==0.17.1
-dr-scaffold==0.7.1a0
 drf-scaffold==0.1.4
+environ==1.0
 flake8==3.9.2
 idna==3.2
 importlib-metadata==4.6.4
@@ -37,6 +38,7 @@ pylint==2.10.2
 pyparsing==2.4.7
 pytest==6.2.4
 pytest-cov==2.12.1
+pytest-django==4.4.0
 pytest-flake8==1.0.5
 pytest-pylint==0.16.1
 pytz==2021.1
