@@ -2,7 +2,7 @@
 Generator module where the real work happens
 """
 from os import makedirs, path
-from typing import List, Tuple
+from typing import Tuple
 
 import inflect
 from django.conf import settings
@@ -30,6 +30,7 @@ class BaseGenerator:
     """
     Base generator that any other generator class should inherit from
     """
+
     app_name: str
     model_name: str
     fields: Tuple[str]
@@ -87,10 +88,11 @@ class AppGenerator(BaseGenerator):
             model_templates.SETUP,
             admin_templates.SETUP,
             view_templates.SETUP,
-            app_template.TEMPLATE % (
+            app_template.TEMPLATE
+            % (
                 self.app_name.capitalize(),
                 self.core_app_path.replace("/", "."),
-            )
+            ),
         )
 
     def get_files(self):
@@ -158,9 +160,6 @@ class ModelGenerator(BaseGenerator):
     3 - generate_models: check if the model does already exists in the models.py
      file if not it append it
     """
-
-    model_name: str
-    fields: List[str]
 
     def get_fields_string(self):
         """
