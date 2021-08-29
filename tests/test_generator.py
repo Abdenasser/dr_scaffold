@@ -12,7 +12,10 @@ import pytest
 from django.conf import settings
 
 from dr_scaffold.generators import Generator, pluralize
-from dr_scaffold.scaffold_templates import model_templates, serializer_templates
+from dr_scaffold.scaffold_templates import (
+    model_templates,
+    serializer_templates,
+)
 
 
 class TestGenerator(TestCase):
