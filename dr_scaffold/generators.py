@@ -27,13 +27,14 @@ def pluralize(string):
 
 
 class BaseGenerator:
+    """
+    Base generator that any other generator class should inherit from
+    """
     app_name: str
     model_name: str
     fields: Tuple[str]
     core_dir: str
     api_dir: str
-    core_app_path: str
-    api_app_path: str
 
     def __init__(self, app_name, model_name, fields):
         self.init_paths_from_settings()
@@ -43,10 +44,16 @@ class BaseGenerator:
 
     @property
     def core_app_path(self):
+        """
+        Shortcut for core_dir + app_name
+        """
         return self.core_dir + self.app_name
 
     @property
     def api_app_path(self):
+        """
+        Shortcut for api_dir + app_name
+        """
         return self.api_dir + self.app_name
 
     def init_paths_from_settings(self):
@@ -71,6 +78,9 @@ class AppGenerator(BaseGenerator):
     """
 
     def get_file_imports(self):
+        """
+        Returns all import statements
+        """
         return (
             serializer_templates.SETUP,
             url_templates.SETUP,
@@ -84,6 +94,9 @@ class AppGenerator(BaseGenerator):
         )
 
     def get_files(self):
+        """
+        Files to be generated
+        """
         return (
             f"{self.api_app_path}/serializers.py",
             f"{self.api_app_path}/urls.py",
@@ -120,9 +133,15 @@ class AppGenerator(BaseGenerator):
         file_api.wipe_files(files)
 
     def is_already_generated(self):
+        """
+        Check if the core app path and the api app path exists already
+        """
         return path.exists(self.core_app_path) or path.exists(self.api_app_path)
 
     def generate_app(self):
+        """
+        Generates files related to the app
+        """
         if not self.is_already_generated():
             self.setup_folders()
             self.setup_files()
@@ -181,6 +200,9 @@ class ModelGenerator(BaseGenerator):
         return model_templates.MODEL % params
 
     def generate_models(self):
+        """
+        Generates models
+        """
         file = f"{self.core_app_path}/models.py"
         chunk = f"class {self.model_name}"
         if file_api.is_present_in_file(file, chunk):
@@ -213,6 +235,9 @@ class AdminGenerator(BaseGenerator):
         return model_import_template, model_register_template
 
     def generate_admin(self):
+        """
+        Generate admin classes
+        """
         file = f"{self.core_app_path}/admin.py"
         chunk = f"@admin.register({self.model_name})"
         if file_api.is_present_in_file(file, chunk):
@@ -245,6 +270,7 @@ class SerializerGenerator(BaseGenerator):
         return imports, serializer_template
 
     def generate_serializers(self):
+        """Generates serializers classes"""
         serializer_file = f"{self.api_app_path}/serializers.py"
         serializer_head = f"class {self.model_name}Serializer"
         if file_api.is_present_in_file(serializer_file, serializer_head):
@@ -281,6 +307,9 @@ class ViewGenerator(BaseGenerator):
         return imports, viewset_template
 
     def generate_views(self):
+        """
+        Generates views classes
+        """
         file = f"{self.api_app_path}/views.py"
         chunk = f"class {self.model_name}ViewSet"
         if file_api.is_present_in_file(file, chunk):
@@ -316,6 +345,9 @@ class URLGenerator(BaseGenerator):
         return imports, url_template
 
     def generate_urls(self):
+        """
+        Generates urls
+        """
         file = f"{self.api_app_path}/urls.py"
         chunk = f"{self.model_name}ViewSet)"
         if file_api.is_present_in_file(file, chunk):
@@ -353,6 +385,9 @@ class Generator(
         return print(f"🎉 Your RESTful {self.model_name} api resource is ready 🎉")
 
     def generate(self):
+        """
+        Calls the appropriate generator classes in the correct order
+        """
         self.generate_app()
         self.generate_models()
         self.generate_admin()
