@@ -98,7 +98,7 @@ class TestGenerator(TestCase):
         generator_obj.core_folder = self.core_folder
         files = (f"{self.core_folder}blog/models.py",)
         generator_obj.get_files = lambda: files
-        generator_obj.FILES_IMPORTS = (serializer_templates.SETUP,)
+        generator_obj.get_file_imports = lambda: (serializer_templates.SETUP,)
         generator_obj.add_setup_imports()
         with open(files[0], "r+", encoding="utf8") as file:
             body = "".join(file.readlines())
