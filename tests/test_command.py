@@ -31,7 +31,7 @@ class CommandTestCase(SimpleTestCase):
         mock_run.assert_called()
 
     @classmethod
-    @mock.patch("dr_scaffold.generators.Generator.generate_app")
+    @mock.patch("dr_scaffold.generators.Generator.generate")
     def test_generate_api(cls, mock_generate_api):
         """
         Test for successful command call
