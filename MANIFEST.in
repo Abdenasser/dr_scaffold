@@ -1,0 +1,7 @@
+include LICENSE
+include *.md
+include MANIFEST.in
+include *.rst
+graft scripts
+graft tests
+global-exclude __pycache__
