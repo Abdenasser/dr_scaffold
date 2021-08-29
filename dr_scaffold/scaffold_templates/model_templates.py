@@ -67,7 +67,7 @@ INTEGERFIELD = """
     %(name)s = models.IntegerField(null=True, default=0)"""
 
 DECIMALFIELD = """
-    %(name)s = models.DecimalField(null=True, default=0.0)"""
+    %(name)s = models.DecimalField(null=True, default=0.0, max_digits=5, decimal_places=2)"""
 
 DATETIMEFIELD = """
     %(name)s = models.DateTimeField(null=True)"""
