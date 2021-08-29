@@ -4,7 +4,7 @@ with open("README.rst", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 NAME = "dr_scaffold"
-VERSION = "v1.4.2"
+VERSION = "v1.4.3"
 DESCRIPTION = "a Django package for scaffolding django rest apis using cli"
 LONG_DESCRIPTION = (long_description,)
 URL = "https://github.com/Abdenasser/dr_scaffold"
