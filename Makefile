@@ -1,15 +1,38 @@
-help:
-	@echo "scripts:"
-	@echo "    make check:     check code quality using flake8 and black"
-	@echo "    make format:     code format with autoflake, isort and black"
-	@echo "    make test:     run tests and pylint"
+.PHONY: help
+help:             ## Show the help.
+	@echo "Usage: make <target>"
+	@echo ""
+	@echo "Targets:"
+	@fgrep "##" Makefile | fgrep -v fgrep
 
-check:
-	./scripts/check.sh
+.PHONY: lint
+lint:             ## Run pep8, black, mypy linters.
+	$(ENV_PREFIX)flake8 dr_scaffold/ --ignore=E501,E722 --exclude=__init__.py --exclude=dr_scaffold/scaffold_templates/
+	$(ENV_PREFIX)black --check --diff --target-version=py38 dr_scaffold/
+	$(ENV_PREFIX)black --check --diff --target-version=py38 tests/
+	$(ENV_PREFIX)mypy --ignore-missing-imports dr_scaffold/
 
-format:
-	./scripts/format.sh
+.PHONY: format
+format:           ## Format code using autoflake black & isort.
+	$(ENV_PREFIX)autoflake --remove-all-unused-imports --in-place --recursive dr_scaffold/ --exclude=__init__.py
+	$(ENV_PREFIX)isort dr_scaffold/
+	$(ENV_PREFIX)black --target-version=py38 dr_scaffold/
+	$(ENV_PREFIX)black --target-version=py38 tests/
 
-test:
-	./scripts/test.sh
+.PHONY: test
+test: lint        ## Run tests and generate coverage report.
+	$(ENV_PREFIX)pytest -v --cov-config .coveragerc --cov=dr_scaffold -l --tb=short --maxfail=1 tests/
+	$(ENV_PREFIX)coverage xml
+	$(ENV_PREFIX)coverage html
 
+.PHONY: virtualenv
+virtualenv:       ## Create a virtual environment.
+	@echo "creating a virtualenv at .env ..."
+	@rm -rf .env
+	@python3 -m virtualenv .env
+	@echo "!!! Please run 'source .env/bin/activate' to enable the environment !!!"
+
+.PHONY: install
+install:          ## Install the project in dev mode.
+	@echo "installing packages from requirements.txt ..."
+	@./.env/bin/pip install -r requirements.txt
