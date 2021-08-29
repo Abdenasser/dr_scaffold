@@ -1,0 +1,3 @@
+*python text eol=CRLF
+*.rst merge=union
+*.md merge=union
