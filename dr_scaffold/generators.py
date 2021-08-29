@@ -10,6 +10,7 @@ from django.conf import settings
 from dr_scaffold import file_api
 from dr_scaffold.scaffold_templates import (
     admin_templates,
+    app_template,
     model_templates,
     serializer_templates,
     url_templates,
@@ -55,7 +56,7 @@ class BaseGenerator:
         self.core_dir = getattr(settings, "CORE_FOLDER", "")
         self.api_dir = getattr(settings, "API_FOLDER", "")
         slashed = self.core_dir.endswith("/") and self.api_dir.endswith("/")
-        if not slashed:
+        if len(self.api_dir) > 0 and len(self.core_dir) > 0 and not slashed:
             raise ValueError("🤔 Oops CORE_FOLDER & API_FOLDER should end with a '/'")
 
 
@@ -69,13 +70,18 @@ class AppGenerator(BaseGenerator):
     4 - if application folder does already exist we return
     """
 
-    FILES_IMPORTS = (
-        serializer_templates.SETUP,
-        url_templates.SETUP,
-        model_templates.SETUP,
-        admin_templates.SETUP,
-        view_templates.SETUP,
-    )
+    def get_file_imports(self):
+        return (
+            serializer_templates.SETUP,
+            url_templates.SETUP,
+            model_templates.SETUP,
+            admin_templates.SETUP,
+            view_templates.SETUP,
+            app_template.TEMPLATE % (
+                self.app_name.capitalize(),
+                self.core_app_path.replace("/", "."),
+            )
+        )
 
     def get_files(self):
         return (
@@ -84,6 +90,7 @@ class AppGenerator(BaseGenerator):
             f"{self.core_app_path}/models.py",
             f"{self.core_app_path}/admin.py",
             f"{self.api_app_path}/views.py",
+            f"{self.core_app_path}/apps.py",
         )
 
     def setup_folders(self):
@@ -100,7 +107,7 @@ class AppGenerator(BaseGenerator):
         adds the bare minimum imports needed for each file
         """
         for i, file_path in enumerate(self.get_files()):
-            file_api.set_file_content(file_path, self.FILES_IMPORTS[i])
+            file_api.set_file_content(file_path, self.get_file_imports()[i])
 
     def setup_files(self):
         """
