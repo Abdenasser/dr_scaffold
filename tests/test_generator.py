@@ -105,7 +105,7 @@ class TestGenerator(TestCase):
         api_files = list(os.listdir(f"{self.api_folder}blog/"))
         with open(f"{self.core_folder}blog/models.py", "r+", encoding="utf8") as file:
             body = "".join(file.readlines())
-        assert len(core_files + api_files) == 6  # taking in count migrations folder
+        assert len(core_files + api_files) == 7  # taking in count migrations folder
         assert ("from django.db import models" in body) is True
 
     @classmethod

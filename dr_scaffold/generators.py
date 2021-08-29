@@ -9,6 +9,7 @@ from django.conf import settings
 from dr_scaffold import file_api
 from dr_scaffold.scaffold_templates import (
     admin_templates,
+    app_template,
     model_templates,
     serializer_templates,
     url_templates,
@@ -87,12 +88,17 @@ class Generator:
         self.setup_folders()
         core_app_path = self.core_dir + self.app_name
         api_app_path = self.api_dir + self.app_name
+        apps_template = app_template.TEMPLATE % (
+            self.app_name.capitalize(),
+            core_app_path.replace("/", "."),
+        )
         files = (
             f"{api_app_path}/serializers.py",
             f"{api_app_path}/urls.py",
             f"{core_app_path}/models.py",
             f"{core_app_path}/admin.py",
             f"{api_app_path}/views.py",
+            f"{core_app_path}/apps.py",
         )
         files_matching_imports = (
             serializer_templates.SETUP,
@@ -100,6 +106,7 @@ class Generator:
             model_templates.SETUP,
             admin_templates.SETUP,
             view_templates.SETUP,
+            apps_template,
         )
         file_api.create_files(files)
         if not path.exists(f"{core_app_path}/migrations/__init__.py"):
@@ -114,7 +121,7 @@ class Generator:
         self.core_dir = getattr(settings, "CORE_FOLDER", "")
         self.api_dir = getattr(settings, "API_FOLDER", "")
         slashed = self.core_dir.endswith("/") and self.api_dir.endswith("/")
-        if len(self.api_dir)>0 and len(self.core_dir)>0 and not slashed:
+        if len(self.api_dir) > 0 and len(self.core_dir) > 0 and not slashed:
             raise ValueError("🤔 Oops CORE_FOLDER & API_FOLDER should end with a '/'")
 
     def generate_app(self):
