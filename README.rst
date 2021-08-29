@@ -1,4 +1,12 @@
+.. raw:: html
 
+    <p align="center"><a href="https://github.com/Abdenasser/dr_scaffold"><img src="https://ph-files.imgix.net/99f3cc0a-58b1-4c16-bb41-1963b0a692fc.png" alt="dr_scaffold blueprint icon" height="80"/></a></p>
+    <h1 align="center">dr_scaffold</h1>
+    <p align="center">Scaffold django rest apis like a champion ⚡. said no one before</p>
+
+    <p align="center">
+        <a href="https://codecov.io/gh/Abdenasser/dr_scaffold"><img src="https://codecov.io/gh/Abdenasser/dr_scaffold/branch/main/graph/badge.svg?token=VLUZWSTJV2"/></a> <a href="https://app.travis-ci.com/Abdenasser/dr_scaffold"><img src="https://app.travis-ci.com/Abdenasser/dr_scaffold.svg?branch=main"/></a> <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/pypi/l/ansicolortags.svg"/></a> <a href="https://pypi.org/project/dr-scaffold/"><img src="https://d25lcipzij17d.cloudfront.net/badge.svg?id=py&r=r&type=6e&v=1.0.1&x2=0"/></a>
+    </p> 
 Overview
 --------
 
@@ -16,7 +24,8 @@ This library will help you to scaffold full **Restful API Resources** in seconds
 -  ``urls.py`` with appropriate URLs ready.⚡
 -  ``serializers.py`` with Model Serializers ready ⚡
 -  and more ...
-
+.. raw:: html
+   </br></br>
 
 
 Installation and usage
@@ -55,7 +64,8 @@ Add ``CORE_FOLDER`` and ``API_FOLDER`` to your ``settings.py`` include a forward
 
 Enjoy 🎉
 
-
+.. raw:: html
+   </br></br>
 
 Supported field types
 ---------------------
