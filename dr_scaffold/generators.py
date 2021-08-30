@@ -84,13 +84,13 @@ class AppGenerator(BaseGenerator):
         """
         Returns all import statements
         """
-        VIEW_SETUP = "FULL_SETUP" if self.is_full else "SETUP"
+        view_setup_key = "FULL_SETUP" if self.is_full else "SETUP"
         return (
             serializer_templates.SETUP,
             url_templates.SETUP,
             model_templates.SETUP,
             admin_templates.SETUP,
-            getattr(view_templates, VIEW_SETUP),
+            getattr(view_templates, view_setup_key),
             app_template.TEMPLATE
             % (
                 self.app_name.capitalize(),
@@ -262,8 +262,8 @@ class SerializerGenerator(BaseGenerator):
         """
         app_dir = self.core_app_path
         app_path = app_dir.replace("/", ".")
-        SERIALIZER = "FULL_SERIALIZER" if self.is_full else "SERIALIZER"
-        serializer_template = getattr(serializer_templates, SERIALIZER) % {
+        serializer_key = "FULL_SERIALIZER" if self.is_full else "SERIALIZER"
+        serializer_template = getattr(serializer_templates, serializer_key) % {
             "model": self.model_name
         }
         imports = serializer_templates.MODEL_IMPORT % {
@@ -297,8 +297,10 @@ class ViewGenerator(BaseGenerator):
         """
         core_app_path = self.core_app_path.replace("/", ".")
         api_app_path = self.api_app_path.replace("/", ".")
-        VIEWSET = "FULL_VIEWSET" if self.is_full else "VIEWSET"
-        viewset_template = getattr(view_templates, VIEWSET) % {"model": self.model_name}
+        viewset_key = "FULL_VIEWSET" if self.is_full else "VIEWSET"
+        viewset_template = getattr(view_templates, viewset_key) % {
+            "model": self.model_name
+        }
         model_import_template = view_templates.MODEL_IMPORT % {
             "app": core_app_path,
             "model": self.model_name,
