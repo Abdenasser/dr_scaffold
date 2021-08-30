@@ -16,7 +16,7 @@ class Command(BaseCommand):
      to use REST api"""
     missing_args_message = (
         "You are missing some arguments in your command check the example below"
-        "python manage.py dr_scaffold apps_folder/blog Article title:char body:text"
+        "python manage.py dr_scaffold blog Article title:char body:text"
     )
 
     def add_arguments(self, parser):
