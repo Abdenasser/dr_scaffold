@@ -84,7 +84,7 @@ class TestGenerator(TestCase):
         """
         Test arguments
         """
-        generator_obj = Generator("blog", "Article", "")
+        generator_obj = Generator("blog", "Article", "", True)
         assert generator_obj.app_name == "blog"
         assert generator_obj.model_name == "Article"
 
@@ -93,7 +93,7 @@ class TestGenerator(TestCase):
         Tests imports
         """
         generator_obj = Generator(
-            "blog", "Article", ("title:charfield", "body:textfield")
+            "blog", "Article", ("title:charfield", "body:textfield"), True
         )
         generator_obj.core_folder = self.core_folder
         files = (f"{self.core_folder}blog/models.py",)
@@ -112,6 +112,7 @@ class TestGenerator(TestCase):
             app_name="blog",
             model_name="Article",
             fields=("title:charfield", "body:textfield"),
+            is_full=True,
         )
         generator_obj.core_dir = self.core_folder
         generator_obj.api_dir = self.api_folder
@@ -133,7 +134,7 @@ class TestGenerator(TestCase):
         Tests
         """
         generator_obj = Generator(
-            "blog", "Article", ("title:charfield", "body:textfield")
+            "blog", "Article", ("title:charfield", "body:textfield"), False
         )
         fields_string = generator_obj.get_fields_string()
         body_template = model_templates.TEXTFIELD % dict(name="body")
@@ -141,7 +142,9 @@ class TestGenerator(TestCase):
         string = title_template + body_template
         assert fields_string == string
         # test relation field type
-        generator_obj2 = Generator("blog", "Article", ("author:foreignkey:Author",))
+        generator_obj2 = Generator(
+            "blog", "Article", ("author:foreignkey:Author",), True
+        )
         generator_obj2.get_fields_string()
         mock_is_in_file.assert_called_once()
 
@@ -149,7 +152,9 @@ class TestGenerator(TestCase):
         """
         Tests
         """
-        generator_obj2 = Generator("blog", "Article", ("author:foreignkey:Author",))
+        generator_obj2 = Generator(
+            "blog", "Article", ("author:foreignkey:Author",), True
+        )
         generator_obj2.core_dir = self.core_folder
         generator_obj2.api_dir = self.api_folder
         captured_output = io.StringIO()
@@ -164,7 +169,7 @@ class TestGenerator(TestCase):
         Tests
         """
         generator_obj = Generator(
-            "blog", "Article", ("title:charfield", "body:textfield")
+            "blog", "Article", ("title:charfield", "body:textfield"), False
         )
         fields_string = generator_obj.get_fields_string()
         model_string = generator_obj.get_model_string()
@@ -176,14 +181,14 @@ class TestGenerator(TestCase):
         Tests
         """
         generator_obj = Generator(
-            "blog", "Article", ("title:charfield", "body:textfield")
+            "blog", "Article", ("title:charfield", "body:textfield"), False
         )
         generator_obj.core_dir = self.core_folder
         generator_obj.api_dir = self.api_folder
         result = generator_obj.run()
         assert result == print("🎉 Your RESTful Article api resource is ready 🎉")
         # test case where something is wrong
-        generator_obj2 = Generator("blog", "Author", ("title:charfiel",))
+        generator_obj2 = Generator("blog", "Author", ("title:charfiel",), False)
         generator_obj2.core_dir = self.core_folder
         generator_obj2.api_dir = self.api_folder
         result = generator_obj2.run()
@@ -195,7 +200,7 @@ class TestGenerator(TestCase):
         Tests
         """
         generator_obj = Generator(
-            "blog", "Article", ("title:charfield", "body:textfield")
+            "blog", "Article", ("title:charfield", "body:textfield"), True
         )
         generator_obj.core_dir = self.core_folder
         generator_obj.api_dir = self.api_folder
@@ -210,6 +215,7 @@ class TestGenerator(TestCase):
             app_name="blog",
             model_name="Article",
             fields=("title:charfield", "body:textfield"),
+            is_full=False,
         )
         generator_obj.core_dir = self.core_folder
         generator_obj.api_dir = self.api_folder
@@ -225,6 +231,7 @@ class TestGenerator(TestCase):
             app_name="blog",
             model_name="Article",
             fields=("title:charfield", "body:textfield"),
+            is_full=True,
         )
         generator_obj.core_dir = self.core_folder
         generator_obj.api_dir = self.api_folder
@@ -236,7 +243,7 @@ class TestGenerator(TestCase):
         """
         Tests
         """
-        generator_obj = Generator("blog", "Article", ("title:charfield",))
+        generator_obj = Generator("blog", "Article", ("title:charfield",), True)
         generator_obj.core_dir = self.core_folder
         generator_obj.api_dir = self.api_folder
         head, body = generator_obj.get_admin_parts()
@@ -248,7 +255,10 @@ class TestGenerator(TestCase):
         Tests
         """
         generator_obj = AdminGenerator(
-            app_name="blog", model_name="Article", fields=("title:charfield",)
+            app_name="blog",
+            model_name="Article",
+            fields=("title:charfield",),
+            is_full=False,
         )
         generator_obj.core_dir = self.core_folder
         generator_obj.api_dir = self.api_folder
@@ -259,7 +269,10 @@ class TestGenerator(TestCase):
         assert ("@admin.register(Article)" in body) is True
         # test when model already registered
         generator_obj = AdminGenerator(
-            app_name="blog", model_name="Article", fields=("title:charfield",)
+            app_name="blog",
+            model_name="Article",
+            fields=("title:charfield",),
+            is_full=False,
         )
         generator_obj.core_dir = self.core_folder
         generator_obj.api_dir = self.api_folder
@@ -273,7 +286,7 @@ class TestGenerator(TestCase):
         """
         Tests
         """
-        generator_obj = Generator("blog", "Article", ("title:charfield",))
+        generator_obj = Generator("blog", "Article", ("title:charfield",), True)
         generator_obj.core_dir = self.core_folder
         generator_obj.api_dir = self.api_folder
         head, body = generator_obj.get_viewset_parts()
@@ -285,7 +298,10 @@ class TestGenerator(TestCase):
         Tests
         """
         generator_obj = ViewGenerator(
-            app_name="blog", model_name="Article", fields=("title:charfield",)
+            app_name="blog",
+            model_name="Article",
+            fields=("title:charfield",),
+            is_full=True,
         )
         generator_obj.core_dir = self.core_folder
         generator_obj.api_dir = self.api_folder
@@ -297,7 +313,10 @@ class TestGenerator(TestCase):
         assert ("ArticleSerializer" in body) is True
         # test if view already exists
         generator_obj = ViewGenerator(
-            app_name="blog", model_name="Article", fields=("title:charfield",)
+            app_name="blog",
+            model_name="Article",
+            fields=("title:charfield",),
+            is_full=True,
         )
         generator_obj.core_dir = self.core_folder
         generator_obj.api_dir = self.api_folder
@@ -314,7 +333,10 @@ class TestGenerator(TestCase):
         Tests
         """
         generator_obj = SerializerGenerator(
-            app_name="blog", model_name="Article", fields=("title:charfield",)
+            app_name="blog",
+            model_name="Article",
+            fields=("title:charfield",),
+            is_full=False,
         )
         generator_obj.core_dir = self.core_folder
         generator_obj.api_dir = self.api_folder
@@ -327,7 +349,10 @@ class TestGenerator(TestCase):
         Tests
         """
         generator_obj = SerializerGenerator(
-            app_name="blog", model_name="Article", fields=("title:charfield",)
+            app_name="blog",
+            model_name="Article",
+            fields=("title:charfield",),
+            is_full=True,
         )
         generator_obj.core_dir = self.core_folder
         generator_obj.api_dir = self.api_folder
@@ -340,7 +365,10 @@ class TestGenerator(TestCase):
         assert ("ArticleSerializer" in body) is True
         # test if serializer already exists
         generator_obj = SerializerGenerator(
-            app_name="blog", model_name="Article", fields=("title:charfield",)
+            app_name="blog",
+            model_name="Article",
+            fields=("title:charfield",),
+            is_full=False,
         )
         generator_obj.core_dir = self.core_folder
         generator_obj.api_dir = self.api_folder
@@ -357,7 +385,10 @@ class TestGenerator(TestCase):
         Tests
         """
         generator_obj = URLGenerator(
-            app_name="blog", model_name="Article", fields=("title:charfield",)
+            app_name="blog",
+            model_name="Article",
+            fields=("title:charfield",),
+            is_full=False,
         )
         generator_obj.core_dir = self.core_folder
         generator_obj.api_dir = self.api_folder
@@ -371,7 +402,10 @@ class TestGenerator(TestCase):
         Tests
         """
         generator_obj = URLGenerator(
-            app_name="blog", model_name="Article", fields=("title:charfield",)
+            app_name="blog",
+            model_name="Article",
+            fields=("title:charfield",),
+            is_full=False,
         )
         generator_obj.core_dir = self.core_folder
         generator_obj.api_dir = self.api_folder
@@ -382,7 +416,10 @@ class TestGenerator(TestCase):
         assert (", ArticleViewSet)" in body) is True
         # test : if url have been added we won't add it again
         generator_obj = URLGenerator(
-            app_name="blog", model_name="Article", fields=("title:charfield",)
+            app_name="blog",
+            model_name="Article",
+            fields=("title:charfield",),
+            is_full=False,
         )
         generator_obj.core_dir = self.core_folder
         generator_obj.api_dir = self.api_folder
@@ -393,7 +430,10 @@ class TestGenerator(TestCase):
         assert body.count(", ArticleViewSet)") == 1
         # test : if when creating another resource we replace the url_patterns
         generator_obj = URLGenerator(
-            app_name="blog", model_name="Author", fields=("name:charfield",)
+            app_name="blog",
+            model_name="Author",
+            fields=("name:charfield",),
+            is_full=False,
         )
         generator_obj.core_dir = self.core_folder
         generator_obj.api_dir = self.api_folder
@@ -405,7 +445,7 @@ class TestGenerator(TestCase):
         """
         Tests
         """
-        generator_obj = Generator("blog", "Article", ("title:charfield",))
+        generator_obj = Generator("blog", "Article", ("title:charfield",), False)
         generator_obj.core_dir = self.core_folder
         generator_obj.api_dir = self.api_folder
         generator_obj.run()
@@ -416,7 +456,10 @@ class TestGenerator(TestCase):
         Tests
         """
         generator_obj = AppGenerator(
-            app_name="blog2", model_name="Article", fields=("title:charfield",)
+            app_name="blog2",
+            model_name="Article",
+            fields=("title:charfield",),
+            is_full=True,
         )
         generator_obj.core_dir = self.core_folder
         generator_obj.api_dir = self.api_folder
@@ -436,7 +479,7 @@ class TestGenerator(TestCase):
         """
         Tests
         """
-        generator_obj = Generator("blog", "Author", ("name:charfield",))
+        generator_obj = Generator("blog", "Author", ("name:charfield",), True)
         generator_obj.core_dir = self.core_folder
         generator_obj.api_dir = self.api_folder
         generator_obj.generate()
@@ -448,7 +491,7 @@ class TestGenerator(TestCase):
         """
         delattr(self.test_settings, "CORE_FOLDER")
         delattr(self.test_settings, "API_FOLDER")
-        generator = Generator("blog", "Author", ("name:charfield",))
+        generator = Generator("blog", "Author", ("name:charfield",), False)
         assert generator.core_dir == ""
         assert generator.api_dir == ""
 
@@ -460,7 +503,7 @@ class TestGenerator(TestCase):
         setattr(self.test_settings, "CORE_FOLDER", "core")
         setattr(self.test_settings, "API_FOLDER", "api")
         with pytest.raises(ValueError, match=r".* should end with .*"):
-            Generator("blog", "Author", ("name:charfield",))
+            Generator("blog", "Author", ("name:charfield",), False)
         # settings to normal
         setattr(self.test_settings, "CORE_FOLDER", "my_app_core/")
         setattr(self.test_settings, "API_FOLDER", "my_app_api/")
@@ -471,6 +514,6 @@ class TestGenerator(TestCase):
         """
         setattr(self.test_settings, "CORE_FOLDER", "core/")
         setattr(self.test_settings, "API_FOLDER", "api/")
-        generator_obj = Generator("blog", "Author", ("name:charfield",))
+        generator_obj = Generator("blog", "Author", ("name:charfield",), False)
         assert generator_obj.core_dir == "core/"
         assert generator_obj.api_dir == "api/"

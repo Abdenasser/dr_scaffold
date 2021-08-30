@@ -36,12 +36,14 @@ class BaseGenerator:
     fields: Tuple[str]
     core_dir: str
     api_dir: str
+    is_full: bool
 
-    def __init__(self, app_name, model_name, fields):
+    def __init__(self, app_name, model_name, fields, is_full):
         self.init_paths_from_settings()
         self.app_name = app_name
         self.model_name = model_name
         self.fields = fields
+        self.is_full = is_full
 
     @property
     def core_app_path(self):
@@ -82,12 +84,13 @@ class AppGenerator(BaseGenerator):
         """
         Returns all import statements
         """
+        VIEW_SETUP = "FULL_SETUP" if self.is_full else "SETUP"
         return (
             serializer_templates.SETUP,
             url_templates.SETUP,
             model_templates.SETUP,
             admin_templates.SETUP,
-            view_templates.SETUP,
+            getattr(view_templates, VIEW_SETUP),
             app_template.TEMPLATE
             % (
                 self.app_name.capitalize(),
@@ -259,7 +262,8 @@ class SerializerGenerator(BaseGenerator):
         """
         app_dir = self.core_app_path
         app_path = app_dir.replace("/", ".")
-        serializer_template = serializer_templates.SERIALIZER % {
+        SERIALIZER = "FULL_SERIALIZER" if self.is_full else "SERIALIZER"
+        serializer_template = getattr(serializer_templates, SERIALIZER) % {
             "model": self.model_name
         }
         imports = serializer_templates.MODEL_IMPORT % {
@@ -293,7 +297,8 @@ class ViewGenerator(BaseGenerator):
         """
         core_app_path = self.core_app_path.replace("/", ".")
         api_app_path = self.api_app_path.replace("/", ".")
-        viewset_template = view_templates.VIEWSET % {"model": self.model_name}
+        VIEWSET = "FULL_VIEWSET" if self.is_full else "VIEWSET"
+        viewset_template = getattr(view_templates, VIEWSET) % {"model": self.model_name}
         model_import_template = view_templates.MODEL_IMPORT % {
             "app": core_app_path,
             "model": self.model_name,
@@ -370,8 +375,10 @@ class Generator(
     A wrapper for CLI command arguments and the REST api different files generation methods
     """
 
-    def __init__(self, app_name, model_name, fields):
-        super().__init__(app_name=app_name, model_name=model_name, fields=fields)
+    def __init__(self, app_name, model_name, fields, is_full):
+        super().__init__(
+            app_name=app_name, model_name=model_name, fields=fields, is_full=is_full
+        )
 
     def run(self):
         """

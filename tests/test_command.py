@@ -27,7 +27,7 @@ class CommandTestCase(SimpleTestCase):
         """
         Test for successful command call
         """
-        call_command("dr_scaffold", "blog", "Article", "title:charfield")
+        call_command("dr_scaffold", "blog", "Article", "title:charfield", False)
         mock_run.assert_called()
 
     @classmethod
@@ -36,5 +36,5 @@ class CommandTestCase(SimpleTestCase):
         """
         Test for successful command call
         """
-        call_command("dr_scaffold", "blog", "Article", "title:charfield")
+        call_command("dr_scaffold", "blog", "Article", "title:charfield", False)
         mock_generate_api.assert_called()

@@ -28,8 +28,15 @@ class Command(BaseCommand):
             help="""Scaffold arguments (app_name
              ModelName fields).""",
         )
+        # Named (optional) arguments
+        parser.add_argument(
+            "--fullset",
+            action="store_true",
+            help="Delete poll instead of closing it",
+        )
 
     def handle(self, *args, **kwargs):
         # handle the creation of an app with default files first
-        generator = Generator(args[0], args[1], args[2:])
+        is_full_viewset = hasattr(kwargs, "fullset")
+        generator = Generator(args[0], args[1], args[2:], is_full_viewset)
         generator.run()
