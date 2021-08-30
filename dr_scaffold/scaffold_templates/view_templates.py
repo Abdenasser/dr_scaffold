@@ -16,7 +16,7 @@ FULL_VIEWSET = """class %(model)sViewSet(
     mixins.RetrieveModelMixin,
     mixins.UpdateModelMixin,
     mixins.DestroyModelMixin,
-    GenericViewSet
+    viewsets.GenericViewSet
 ):
     queryset = %(model)s.objects.all()
     serializer_class = %(model)sSerializer
@@ -67,12 +67,7 @@ MODEL_IMPORT = """from %(app)s.models import %(model)s
 SERIALIZER_IMPORT = """from %(app)s.serializers import %(model)sSerializer
 """
 
-SETUP = """from rest_framework import viewsets
-
-"""
-
-FULL_SETUP = """from rest_framework import mixins, permissions
+SETUP = """from rest_framework import mixins, permissions, viewsets
 from rest_framework.response import Response
-from rest_framework.viewsets import GenericViewSet
 
 """

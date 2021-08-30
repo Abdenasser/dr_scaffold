@@ -84,13 +84,12 @@ class AppGenerator(BaseGenerator):
         """
         Returns all import statements
         """
-        view_setup_key = "FULL_SETUP" if self.is_full else "SETUP"
         return (
             serializer_templates.SETUP,
             url_templates.SETUP,
             model_templates.SETUP,
             admin_templates.SETUP,
-            getattr(view_templates, view_setup_key),
+            view_templates.SETUP,
             app_template.TEMPLATE
             % (
                 self.app_name.capitalize(),
