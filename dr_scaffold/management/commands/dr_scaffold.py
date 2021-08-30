@@ -29,14 +29,10 @@ class Command(BaseCommand):
              ModelName fields).""",
         )
         # Named (optional) arguments
-        parser.add_argument(
-            "--fullset",
-            action="store_true",
-            help="Delete poll instead of closing it",
-        )
+        parser.add_argument("-f", "--fullset", const="fullset", action="store_const")
 
     def handle(self, *args, **kwargs):
         # handle the creation of an app with default files first
-        is_full_viewset = hasattr(kwargs, "fullset")
+        is_full_viewset = kwargs["fullset"] == "fullset"
         generator = Generator(args[0], args[1], args[2:], is_full_viewset)
         generator.run()
