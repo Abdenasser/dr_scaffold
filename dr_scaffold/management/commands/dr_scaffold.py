@@ -16,7 +16,7 @@ class Command(BaseCommand):
      to use REST api"""
     missing_args_message = (
         "You are missing some arguments in your command check the example below"
-        "python manage.py dr_scaffold apps_folder/blog Article title:char body:text"
+        "python manage.py dr_scaffold blog Article title:char body:text"
     )
 
     def add_arguments(self, parser):
@@ -28,8 +28,19 @@ class Command(BaseCommand):
             help="""Scaffold arguments (app_name
              ModelName fields).""",
         )
+        # Named (optional) arguments
+        parser.add_argument(
+            "--mixins",
+            nargs="?",
+            default="None",
+            help="ex. --mixins CRUD where CRUD are letters of your viewset actions",
+        )
 
     def handle(self, *args, **kwargs):
         # handle the creation of an app with default files first
-        generator = Generator(args[0], args[1], args[2:])
+        actions = []
+        actions[:0] = kwargs["mixins"]
+        if kwargs["mixins"] == "None":
+            actions = False
+        generator = Generator(args[0], args[1], args[2:], actions)
         generator.run()

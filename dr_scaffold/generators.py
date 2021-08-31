@@ -36,12 +36,14 @@ class BaseGenerator:
     fields: Tuple[str]
     core_dir: str
     api_dir: str
+    mixins: Tuple[str]
 
-    def __init__(self, app_name, model_name, fields):
+    def __init__(self, app_name, model_name, fields, mixins):
         self.init_paths_from_settings()
         self.app_name = app_name
         self.model_name = model_name
         self.fields = fields
+        self.mixins = mixins
 
     @property
     def core_app_path(self):
@@ -287,6 +289,25 @@ class ViewGenerator(BaseGenerator):
     it wraps the file content between the imports and the viewset template
     """
 
+    def get_mixins_template(self):
+        """
+        returns viewset template matching the mixins based on developer command
+        """
+        mixins_list = {key: view_templates.CLRUD_MIXINS[key] for key in self.mixins}
+        mixins_string = "".join(
+            str(mixins_list[x] % {"model": self.model_name}) for x in mixins_list
+        )
+        actions_list = {key: view_templates.CLRUD_ACTIONS[key] for key in self.mixins}
+        actions_string = "".join(
+            str(actions_list[x] % {"model": self.model_name}) for x in mixins_list
+        )
+        viewset_template = view_templates.CLRUD_VIEWSET % {
+            "model": self.model_name,
+            "mixins": mixins_string,
+            "actions": actions_string,
+        }
+        return viewset_template
+
     def get_viewset_parts(self):
         """
         returns viewsets templates and imports
@@ -294,6 +315,9 @@ class ViewGenerator(BaseGenerator):
         core_app_path = self.core_app_path.replace("/", ".")
         api_app_path = self.api_app_path.replace("/", ".")
         viewset_template = view_templates.VIEWSET % {"model": self.model_name}
+        if self.mixins:
+            viewset_template = self.get_mixins_template()
+
         model_import_template = view_templates.MODEL_IMPORT % {
             "app": core_app_path,
             "model": self.model_name,
@@ -370,8 +394,10 @@ class Generator(
     A wrapper for CLI command arguments and the REST api different files generation methods
     """
 
-    def __init__(self, app_name, model_name, fields):
-        super().__init__(app_name=app_name, model_name=model_name, fields=fields)
+    def __init__(self, app_name, model_name, fields, mixins):
+        super().__init__(
+            app_name=app_name, model_name=model_name, fields=fields, mixins=mixins
+        )
 
     def run(self):
         """
