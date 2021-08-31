@@ -33,7 +33,7 @@ class Command(BaseCommand):
             "--mixins",
             nargs="?",
             default="None",
-            help="ex. --mixins CLRUD where the CLRUD are the first letters of actions you want in your viewset",
+            help="ex. --mixins CLRUD where CLRUD are letters of your viewset actions",
         )
 
     def handle(self, *args, **kwargs):
