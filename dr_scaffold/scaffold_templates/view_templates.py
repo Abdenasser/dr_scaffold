@@ -34,33 +34,23 @@ CLRUD_ACTIONS = {
         serializer = %(model)sSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response(serializer.data)
-
-""",
+        return Response(serializer.data)\n\n""",
     "L": """    def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
         serializer = %(model)sSerializer(queryset, many=True)
-        return Response(serializer.data)
-
-""",
+        return Response(serializer.data)\n\n""",
     "R": """    def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
         serializer = %(model)sSerializer(instance=instance)
-        return Response(serializer.data)
-
-""",
+        return Response(serializer.data)\n\n""",
     "U": """    def update(self, request, *args, **kwargs):
         instance = self.get_object()
         serializer = %(model)sSerializer(instance=instance, data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response(serializer.data)
-
-""",
+        return Response(serializer.data)\n\n""",
     "D": """    def destroy(self, request, *args, **kwargs):
-        return super().destroy(request=request, *args, **kwargs)
-
-""",
+        return super().destroy(request=request, *args, **kwargs)\n\n""",
 }
 
 CLRUD_VIEWSET = """class %(model)sViewSet(
