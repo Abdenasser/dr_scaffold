@@ -5,7 +5,7 @@ templates for views
 VIEWSET = """class %(model)sViewSet(viewsets.ModelViewSet):
     queryset = %(model)s.objects.all()
     serializer_class = %(model)sSerializer
-    
+
 
 """
 
