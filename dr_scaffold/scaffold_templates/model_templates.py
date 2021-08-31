@@ -8,7 +8,7 @@ MODEL = """class %s(models.Model):\
 
     class Meta:
         verbose_name_plural = "%s"
-    
+
 
 """
 
@@ -46,16 +46,16 @@ POSITIVESMALLINTEGERFIELD = """
     %(name)s = models.PositiveSmallIntegerField()"""
 
 EMAILFIELD = """
-    %(name)s = models.EmailField(max_length = 254)"""
+    %(name)s = models.EmailField(max_length=254)"""
 
 SLUGFIELD = """
-    %(name)s = models.SlugField(max_length = 200)"""
+    %(name)s = models.SlugField(max_length=200)"""
 
 TIMEFIELD = """
     %(name)s = models.TimeField()"""
 
 URLFIELD = """
-    %(name)s = models.URLField(max_length = 200)"""
+    %(name)s = models.URLField(max_length=200)"""
 
 SMALLINTEGERFIELD = """
     %(name)s = models.SmallIntegerField()"""
@@ -67,7 +67,7 @@ INTEGERFIELD = """
     %(name)s = models.IntegerField(null=True, default=0)"""
 
 DECIMALFIELD = """
-    %(name)s = models.DecimalField(null=True, default=0.0, max_digits=5, decimal_places=2)"""
+    %(name)s = models.DecimalField(max_digits=5, decimal_places=2, null=True, default=0.0)"""
 
 DATETIMEFIELD = """
     %(name)s = models.DateTimeField(null=True)"""

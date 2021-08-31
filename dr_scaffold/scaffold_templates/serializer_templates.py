@@ -6,7 +6,7 @@ SERIALIZER = """class %(model)sSerializer(serializers.HyperlinkedModelSerializer
     class Meta:
         model = %(model)s
         fields = '__all__'
-        
+
 
 """
 
