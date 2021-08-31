@@ -1,5 +1,55 @@
 # Changelog
 
+## v2.0.0
+
+With this version, we added support for **ViewSets** using **Mixins** 🥳 🎉
+
+- Customize your ViewSets on the fly with `--mixins CRUD` ⚡ .
+- Wanna only support Create, Read and Update ? pass `--mixins CRU`, customize your view in any way you like.
+- **C** is for `create` **R** is for `list` and retrieve **U** is `update` and **D** is `destroy` as you might guess.
+- One more thing ... we generate your actions along with everything you'd need inside and your get_queryset(), get_object() and more 🚀 🤖 .
+- We still **support** ModelViewSets as well, if you want them just drop the `--mixins` option.
+
+here is a ViewSet example generated with the help of `--mixins CR`:
+
+```python
+class AuthorViewSet(
+    mixins.CreateModelMixin,
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    viewsets.GenericViewSet
+):
+    queryset = Author.objects.all()
+    serializer_class = AuthorSerializer
+    #permission_classes = (permissions.IsAuthenticated,)
+
+    def get_queryset(self):
+        #user = self.request.user
+        queryset = Author.objects.all()
+        #insert specific queryset logic here
+        return queryset
+
+    def get_object(self):
+        #insert specific get_object logic here
+        return super().get_object()
+
+    def create(self, request, *args, **kwargs):
+        serializer = AuthorSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = AuthorSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = AuthorSerializer(instance=instance)
+        return Response(serializer.data)
+```
+
 ## v1.4.2
 
 - Tested for different API structures 🏗️
