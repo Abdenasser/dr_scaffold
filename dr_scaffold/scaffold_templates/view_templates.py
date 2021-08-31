@@ -23,8 +23,7 @@ from rest_framework.response import Response
 
 CLRUD_MIXINS = {
     "C": """    mixins.CreateModelMixin,\n""",
-    "L": """    mixins.ListModelMixin,\n""",
-    "R": """    mixins.RetrieveModelMixin,\n""",
+    "R": """    mixins.ListModelMixin,\n    mixins.RetrieveModelMixin,\n""",
     "U": """    mixins.UpdateModelMixin,\n""",
     "D": """    mixins.DestroyModelMixin,\n""",
 }
@@ -35,11 +34,10 @@ CLRUD_ACTIONS = {
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)\n\n""",
-    "L": """    def list(self, request, *args, **kwargs):
+    "R": """    def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
         serializer = %(model)sSerializer(queryset, many=True)
-        return Response(serializer.data)\n\n""",
-    "R": """    def retrieve(self, request, *args, **kwargs):
+        return Response(serializer.data)\n\n    def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
         serializer = %(model)sSerializer(instance=instance)
         return Response(serializer.data)\n\n""",
