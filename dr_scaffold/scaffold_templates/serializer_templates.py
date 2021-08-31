@@ -2,15 +2,7 @@
 templates for serializers
 """
 
-SERIALIZER = """class %(model)sSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = %(model)s
-        fields = '__all__'
-        
-
-"""
-
-FULL_SERIALIZER = """class %(model)sSerializer(serializers.ModelSerializer):
+SERIALIZER = """class %(model)sSerializer(serializers.ModelSerializer):
     class Meta:
         model = %(model)s
         fields = '__all__'

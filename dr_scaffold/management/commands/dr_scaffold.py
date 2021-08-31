@@ -29,10 +29,18 @@ class Command(BaseCommand):
              ModelName fields).""",
         )
         # Named (optional) arguments
-        parser.add_argument("-f", "--fullset", const="fullset", action="store_const")
+        parser.add_argument(
+            "--mixins",
+            nargs="?",
+            default="None",
+            help="ex. --mixins CLRUD where the CLRUD are the first letters of actions you want in your viewset",
+        )
 
     def handle(self, *args, **kwargs):
         # handle the creation of an app with default files first
-        is_full_viewset = kwargs["fullset"] == "fullset"
-        generator = Generator(args[0], args[1], args[2:], is_full_viewset)
+        actions = []
+        actions[:0] = kwargs["mixins"]
+        if kwargs["mixins"] == "None":
+            actions = False
+        generator = Generator(args[0], args[1], args[2:], actions)
         generator.run()

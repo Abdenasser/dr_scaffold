@@ -9,14 +9,62 @@ VIEWSET = """class %(model)sViewSet(viewsets.ModelViewSet):
 
 """
 
+MODEL_IMPORT = """from %(app)s.models import %(model)s
+"""
 
-FULL_VIEWSET = """class %(model)sViewSet(
-    mixins.CreateModelMixin,
-    mixins.ListModelMixin,
-    mixins.RetrieveModelMixin,
-    mixins.UpdateModelMixin,
-    mixins.DestroyModelMixin,
-    viewsets.GenericViewSet
+SERIALIZER_IMPORT = """from %(app)s.serializers import %(model)sSerializer
+"""
+
+SETUP = """from rest_framework import mixins, permissions, viewsets
+from rest_framework.response import Response
+
+"""
+
+
+CLRUD_MIXINS = {
+    "C": """    mixins.CreateModelMixin,\n""",
+    "L": """    mixins.ListModelMixin,\n""",
+    "R": """    mixins.RetrieveModelMixin,\n""",
+    "U": """    mixins.UpdateModelMixin,\n""",
+    "D": """    mixins.DestroyModelMixin,\n""",
+}
+
+CLRUD_ACTIONS = {
+    "C": """    def create(self, request, *args, **kwargs):
+        serializer = %(model)sSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
+""",
+    "L": """    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = %(model)sSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+""",
+    "R": """    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = %(model)sSerializer(instance=instance)
+        return Response(serializer.data)
+
+""",
+    "U": """    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = %(model)sSerializer(instance=instance, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
+""",
+    "D": """    def destroy(self, request, *args, **kwargs):
+        return super().destroy(request=request, *args, **kwargs)
+
+""",
+}
+
+CLRUD_VIEWSET = """class %(model)sViewSet(
+%(mixins)s\tviewsets.GenericViewSet
 ):
     queryset = %(model)s.objects.all()
     serializer_class = %(model)sSerializer
@@ -32,42 +80,5 @@ FULL_VIEWSET = """class %(model)sViewSet(
         #insert specific get_object logic here
         return super().get_object()
 
-    def create(self, request, *args, **kwargs):
-        serializer = %(model)sSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data)
-
-    def list(self, request, *args, **kwargs):
-        queryset = self.get_queryset()
-        serializer = %(model)sSerializer(queryset, many=True)
-        return Response(serializer.data)
-
-    def retrieve(self, request, *args, **kwargs):
-        instance = self.get_object()
-        serializer = %(model)sSerializer(instance=instance)
-        return Response(serializer.data)
-
-    def update(self, request, *args, **kwargs):
-        instance = self.get_object()
-        serializer = %(model)sSerializer(instance=instance, data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data)
-
-    def destroy(self, request, *args, **kwargs):
-        return super().destroy(request=request, *args, **kwargs)
-
-
-"""
-
-MODEL_IMPORT = """from %(app)s.models import %(model)s
-"""
-
-SERIALIZER_IMPORT = """from %(app)s.serializers import %(model)sSerializer
-"""
-
-SETUP = """from rest_framework import mixins, permissions, viewsets
-from rest_framework.response import Response
-
+%(actions)s
 """

@@ -84,7 +84,7 @@ class TestGenerator(TestCase):
         """
         Test arguments
         """
-        generator_obj = Generator("blog", "Article", "", True)
+        generator_obj = Generator("blog", "Article", "", False)
         assert generator_obj.app_name == "blog"
         assert generator_obj.model_name == "Article"
 
@@ -93,7 +93,7 @@ class TestGenerator(TestCase):
         Tests imports
         """
         generator_obj = Generator(
-            "blog", "Article", ("title:charfield", "body:textfield"), True
+            "blog", "Article", ("title:charfield", "body:textfield"), False
         )
         generator_obj.core_folder = self.core_folder
         files = (f"{self.core_folder}blog/models.py",)
@@ -112,7 +112,7 @@ class TestGenerator(TestCase):
             app_name="blog",
             model_name="Article",
             fields=("title:charfield", "body:textfield"),
-            is_full=True,
+            mixins=False,
         )
         generator_obj.core_dir = self.core_folder
         generator_obj.api_dir = self.api_folder
@@ -143,7 +143,7 @@ class TestGenerator(TestCase):
         assert fields_string == string
         # test relation field type
         generator_obj2 = Generator(
-            "blog", "Article", ("author:foreignkey:Author",), True
+            "blog", "Article", ("author:foreignkey:Author",), False
         )
         generator_obj2.get_fields_string()
         mock_is_in_file.assert_called_once()
@@ -153,7 +153,7 @@ class TestGenerator(TestCase):
         Tests
         """
         generator_obj2 = Generator(
-            "blog", "Article", ("author:foreignkey:Author",), True
+            "blog", "Article", ("author:foreignkey:Author",), False
         )
         generator_obj2.core_dir = self.core_folder
         generator_obj2.api_dir = self.api_folder
@@ -200,7 +200,7 @@ class TestGenerator(TestCase):
         Tests
         """
         generator_obj = Generator(
-            "blog", "Article", ("title:charfield", "body:textfield"), True
+            "blog", "Article", ("title:charfield", "body:textfield"), False
         )
         generator_obj.core_dir = self.core_folder
         generator_obj.api_dir = self.api_folder
@@ -215,7 +215,7 @@ class TestGenerator(TestCase):
             app_name="blog",
             model_name="Article",
             fields=("title:charfield", "body:textfield"),
-            is_full=False,
+            mixins=False,
         )
         generator_obj.core_dir = self.core_folder
         generator_obj.api_dir = self.api_folder
@@ -231,7 +231,7 @@ class TestGenerator(TestCase):
             app_name="blog",
             model_name="Article",
             fields=("title:charfield", "body:textfield"),
-            is_full=True,
+            mixins=False,
         )
         generator_obj.core_dir = self.core_folder
         generator_obj.api_dir = self.api_folder
@@ -243,7 +243,7 @@ class TestGenerator(TestCase):
         """
         Tests
         """
-        generator_obj = Generator("blog", "Article", ("title:charfield",), True)
+        generator_obj = Generator("blog", "Article", ("title:charfield",), ["C", "R"])
         generator_obj.core_dir = self.core_folder
         generator_obj.api_dir = self.api_folder
         head, body = generator_obj.get_admin_parts()
@@ -258,7 +258,7 @@ class TestGenerator(TestCase):
             app_name="blog",
             model_name="Article",
             fields=("title:charfield",),
-            is_full=False,
+            mixins=False,
         )
         generator_obj.core_dir = self.core_folder
         generator_obj.api_dir = self.api_folder
@@ -272,7 +272,7 @@ class TestGenerator(TestCase):
             app_name="blog",
             model_name="Article",
             fields=("title:charfield",),
-            is_full=False,
+            mixins=False,
         )
         generator_obj.core_dir = self.core_folder
         generator_obj.api_dir = self.api_folder
@@ -286,7 +286,7 @@ class TestGenerator(TestCase):
         """
         Tests
         """
-        generator_obj = Generator("blog", "Article", ("title:charfield",), True)
+        generator_obj = Generator("blog", "Article", ("title:charfield",), False)
         generator_obj.core_dir = self.core_folder
         generator_obj.api_dir = self.api_folder
         head, body = generator_obj.get_viewset_parts()
@@ -301,7 +301,7 @@ class TestGenerator(TestCase):
             app_name="blog",
             model_name="Article",
             fields=("title:charfield",),
-            is_full=True,
+            mixins=False,
         )
         generator_obj.core_dir = self.core_folder
         generator_obj.api_dir = self.api_folder
@@ -316,7 +316,7 @@ class TestGenerator(TestCase):
             app_name="blog",
             model_name="Article",
             fields=("title:charfield",),
-            is_full=True,
+            mixins=False,
         )
         generator_obj.core_dir = self.core_folder
         generator_obj.api_dir = self.api_folder
@@ -336,7 +336,7 @@ class TestGenerator(TestCase):
             app_name="blog",
             model_name="Article",
             fields=("title:charfield",),
-            is_full=False,
+            mixins=False,
         )
         generator_obj.core_dir = self.core_folder
         generator_obj.api_dir = self.api_folder
@@ -352,7 +352,7 @@ class TestGenerator(TestCase):
             app_name="blog",
             model_name="Article",
             fields=("title:charfield",),
-            is_full=True,
+            mixins=False,
         )
         generator_obj.core_dir = self.core_folder
         generator_obj.api_dir = self.api_folder
@@ -368,7 +368,7 @@ class TestGenerator(TestCase):
             app_name="blog",
             model_name="Article",
             fields=("title:charfield",),
-            is_full=False,
+            mixins=False,
         )
         generator_obj.core_dir = self.core_folder
         generator_obj.api_dir = self.api_folder
@@ -388,7 +388,7 @@ class TestGenerator(TestCase):
             app_name="blog",
             model_name="Article",
             fields=("title:charfield",),
-            is_full=False,
+            mixins=False,
         )
         generator_obj.core_dir = self.core_folder
         generator_obj.api_dir = self.api_folder
@@ -405,7 +405,7 @@ class TestGenerator(TestCase):
             app_name="blog",
             model_name="Article",
             fields=("title:charfield",),
-            is_full=False,
+            mixins=False,
         )
         generator_obj.core_dir = self.core_folder
         generator_obj.api_dir = self.api_folder
@@ -419,7 +419,7 @@ class TestGenerator(TestCase):
             app_name="blog",
             model_name="Article",
             fields=("title:charfield",),
-            is_full=False,
+            mixins=False,
         )
         generator_obj.core_dir = self.core_folder
         generator_obj.api_dir = self.api_folder
@@ -433,7 +433,7 @@ class TestGenerator(TestCase):
             app_name="blog",
             model_name="Author",
             fields=("name:charfield",),
-            is_full=False,
+            mixins=False,
         )
         generator_obj.core_dir = self.core_folder
         generator_obj.api_dir = self.api_folder
@@ -459,7 +459,7 @@ class TestGenerator(TestCase):
             app_name="blog2",
             model_name="Article",
             fields=("title:charfield",),
-            is_full=True,
+            mixins=False,
         )
         generator_obj.core_dir = self.core_folder
         generator_obj.api_dir = self.api_folder
@@ -479,7 +479,7 @@ class TestGenerator(TestCase):
         """
         Tests
         """
-        generator_obj = Generator("blog", "Author", ("name:charfield",), True)
+        generator_obj = Generator("blog", "Author", ("name:charfield",), False)
         generator_obj.core_dir = self.core_folder
         generator_obj.api_dir = self.api_folder
         generator_obj.generate()

@@ -36,14 +36,14 @@ class BaseGenerator:
     fields: Tuple[str]
     core_dir: str
     api_dir: str
-    is_full: bool
+    mixins: Tuple[str]
 
-    def __init__(self, app_name, model_name, fields, is_full):
+    def __init__(self, app_name, model_name, fields, mixins):
         self.init_paths_from_settings()
         self.app_name = app_name
         self.model_name = model_name
         self.fields = fields
-        self.is_full = is_full
+        self.mixins = mixins
 
     @property
     def core_app_path(self):
@@ -261,8 +261,7 @@ class SerializerGenerator(BaseGenerator):
         """
         app_dir = self.core_app_path
         app_path = app_dir.replace("/", ".")
-        serializer_key = "FULL_SERIALIZER" if self.is_full else "SERIALIZER"
-        serializer_template = getattr(serializer_templates, serializer_key) % {
+        serializer_template = serializer_templates.SERIALIZER % {
             "model": self.model_name
         }
         imports = serializer_templates.MODEL_IMPORT % {
@@ -290,16 +289,32 @@ class ViewGenerator(BaseGenerator):
     it wraps the file content between the imports and the viewset template
     """
 
+    def get_mixins_template(self):
+        mixins_list = {key: view_templates.CLRUD_MIXINS[key] for key in self.mixins}
+        mixins_string = "".join(
+            str(mixins_list[x] % {"model": self.model_name}) for x in mixins_list
+        )
+        actions_list = {key: view_templates.CLRUD_ACTIONS[key] for key in self.mixins}
+        actions_string = "".join(
+            str(actions_list[x] % {"model": self.model_name}) for x in mixins_list
+        )
+        viewset_template = view_templates.CLRUD_VIEWSET % {
+            "model": self.model_name,
+            "mixins": mixins_string,
+            "actions": actions_string,
+        }
+        return viewset_template
+
     def get_viewset_parts(self):
         """
         returns viewsets templates and imports
         """
         core_app_path = self.core_app_path.replace("/", ".")
         api_app_path = self.api_app_path.replace("/", ".")
-        viewset_key = "FULL_VIEWSET" if self.is_full else "VIEWSET"
-        viewset_template = getattr(view_templates, viewset_key) % {
-            "model": self.model_name
-        }
+        viewset_template = view_templates.VIEWSET % {"model": self.model_name}
+        if self.mixins:
+            viewset_template = self.get_mixins_template()
+
         model_import_template = view_templates.MODEL_IMPORT % {
             "app": core_app_path,
             "model": self.model_name,
@@ -376,9 +391,9 @@ class Generator(
     A wrapper for CLI command arguments and the REST api different files generation methods
     """
 
-    def __init__(self, app_name, model_name, fields, is_full):
+    def __init__(self, app_name, model_name, fields, mixins):
         super().__init__(
-            app_name=app_name, model_name=model_name, fields=fields, is_full=is_full
+            app_name=app_name, model_name=model_name, fields=fields, mixins=mixins
         )
 
     def run(self):
