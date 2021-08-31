@@ -328,6 +328,27 @@ class TestGenerator(TestCase):
         assert body.count("import ArticleSerializer") == 1
         assert body.count("serializer_class = ArticleSerializer") == 1
 
+    def test_generate_views_with_mixins(self):
+        """
+        Tests
+        """
+        generator_obj = ViewGenerator(
+            app_name="blog",
+            model_name="Article",
+            fields=("title:charfield",),
+            mixins=["C", "R"],
+        )
+        generator_obj.core_dir = self.core_folder
+        generator_obj.api_dir = self.api_folder
+        generator_obj.generate_views()
+        with open(f"{self.api_folder}blog/views.py", "r+", encoding="utf8") as file:
+            body = "".join(file.readlines())
+        assert ("import Article" in body) is True
+        assert ("ArticleViewSet" in body) is True
+        assert ("def create" in body) is True
+        assert ("def retrieve" in body) is True
+        assert ("def update" in body) is not True
+
     def test_get_serializer_parts(self):
         """
         Tests
