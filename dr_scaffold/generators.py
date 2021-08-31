@@ -290,6 +290,9 @@ class ViewGenerator(BaseGenerator):
     """
 
     def get_mixins_template(self):
+        """
+        returns viewset template matching the mixins based on developer command
+        """
         mixins_list = {key: view_templates.CLRUD_MIXINS[key] for key in self.mixins}
         mixins_string = "".join(
             str(mixins_list[x] % {"model": self.model_name}) for x in mixins_list
