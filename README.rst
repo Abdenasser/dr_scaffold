@@ -35,7 +35,7 @@ Installation and usage
 ----------------------
 
 For a detailed guide read `scaffold django apis like a champion <https://www.abdenasser.com/scaffold-django-apis>`_
-**********************
+*******************************************************************************************************************
 
 This library assumes that you have setup your project with **Django Rest
 Framework**.
@@ -69,7 +69,7 @@ if not, please refer to `this guide <https://www.django-rest-framework.org/#inst
     API_FOLDER = "my_api_folder/"   # or set them to be the same
 
 4- Run the your scaffolds like this:
-===========================================
+====================================
 
 .. code:: console
 
@@ -82,7 +82,7 @@ if not, please refer to `this guide <https://www.django-rest-framework.org/#inst
    </br></br>
 
 Supported ViewSet types
----------------------
+-----------------------
 
 We support two types of ViewSets, we support **ModelViewSet** and we support **ViewSets** with Mixins. 
 
