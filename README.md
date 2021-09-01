@@ -128,6 +128,12 @@ class AuthorViewSet(
 
 We support most of django field types.
 
-# TODO
 
-- add an option to include swagger documentation
+# Contributors
+
+This project exists thanks to all the people who contribute. [[Contribute](CONTRIBUTING.md)]
+
+
+<a href="https://github.com/Abdenasser/dr_scaffold/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=Abdenasser/dr_scaffold" />
+</a>
