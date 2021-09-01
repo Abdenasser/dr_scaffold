@@ -1,6 +1,6 @@
 from setuptools import find_packages, setup
 
-with open("README.rst", "r", encoding="utf-8") as fh:
+with open("PYPIREADME.rst", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 NAME = "dr_scaffold"
