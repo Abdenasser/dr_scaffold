@@ -5,6 +5,7 @@ from os import makedirs, path
 from typing import Tuple
 
 import inflect
+import isort
 from django.conf import settings
 
 from dr_scaffold import file_api
@@ -407,7 +408,18 @@ class Generator(
             self.generate()
         except Exception as error:
             return print(f"🤔 Oops something is wrong: {error}")
-        return print(f"🎉 Your RESTful {self.model_name} api resource is ready 🎉")
+        return print(
+            "🎉 \033[92mSuccess:\033[0m your RESTful "
+            f"\033[1m{self.model_name}\033[0m api resource is ready."
+        )
+
+    def sort_imports(self):
+        """
+        Sort file imports using isort
+        """
+        print("🦄 \033[95mSorting file imports:\033[0m")
+        for file in self.get_files()[0:5]:
+            isort.file(file)
 
     def generate(self):
         """
@@ -419,3 +431,4 @@ class Generator(
         self.generate_serializers()
         self.generate_views()
         self.generate_urls()
+        self.sort_imports()
