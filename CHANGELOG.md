@@ -1,5 +1,13 @@
 # Changelog
 
+## v2.0.2
+
+With v2.0.2 you get:
+
+- sorted & elegant imports in your generated files 🤖
+- better line breaks and code formatting ✨
+- nice colored outputs 💅
+
 ## v2.0.1
 
 With v2.0.1 you get sorted elegant imports in your generated files out of the box, using the power of `isort` 🤖

@@ -183,7 +183,8 @@ class ModelGenerator(BaseGenerator):
                 chunk = f'class {field_dict["related"]}(models.Model)'
                 if not file_api.is_present_in_file(file, chunk):
                     print(
-                        f"⚠️ bare in mind that {field_dict['related']} model doesn't exist yet!"
+                        "⚠️ \033[93mbare in mind\033[0m that "
+                        f"{field_dict['related']} model doesn't exist yet!"
                     )
             field_template = model_templates.FIELD_TYPES[field_type] % field_dict
             actual_fields.append(field_template)
@@ -407,7 +408,7 @@ class Generator(
         try:
             self.generate()
         except Exception as error:
-            return print(f"🤔 Oops something is wrong: {error}")
+            return print(f"🤔 \033[93mOops\033[0m something is wrong: {error}")
         return print(
             "🎉 \033[92mSuccess:\033[0m your RESTful "
             f"\033[1m{self.model_name}\033[0m api resource is ready."
@@ -417,7 +418,7 @@ class Generator(
         """
         Sort file imports using isort
         """
-        print("🦄 \033[95mSorting file imports:\033[0m")
+        print("🦄 \033[95mSorting file imports ...\033[0m")
         for file in self.get_files()[0:5]:
             isort.file(file)
 

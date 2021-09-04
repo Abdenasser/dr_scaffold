@@ -161,7 +161,9 @@ class TestGenerator(TestCase):
         sys.stdout = captured_output
         generator_obj2.get_fields_string()
         sys.stdout = sys.__stdout__
-        assert "⚠️ bare in mind that Author" in captured_output.getvalue()
+        assert (
+            "⚠️ \x1b[93mbare in mind\x1b[0m that Author" in captured_output.getvalue()
+        )
 
     @classmethod
     def test_get_model_string(cls):
