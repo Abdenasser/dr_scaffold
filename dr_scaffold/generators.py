@@ -409,7 +409,8 @@ class Generator(
         except Exception as error:
             return print(f"🤔 Oops something is wrong: {error}")
         return print(
-            f"🎉 \033[92mSuccess:\033[0m your RESTful \033[1m{self.model_name}\033[0m api resource is ready."
+            "🎉 \033[92mSuccess:\033[0m your RESTful "
+            f"\033[1m{self.model_name}\033[0m api resource is ready."
         )
 
     def sort_imports(self):
