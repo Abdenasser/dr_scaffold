@@ -17,7 +17,7 @@ PACKAGES = [
     "dr_scaffold.management",
     "dr_scaffold.management.commands",
 ]
-REQUIREMENTS = ["django", "inflect"]
+REQUIREMENTS = ["django", "inflect", "isort"]
 CLASSIFIERS = [
     "Development Status :: 5 - Production/Stable",
     "Environment :: Web Environment",
