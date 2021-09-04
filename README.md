@@ -3,9 +3,9 @@
 <p align="center">Scaffold django rest apis like a champion ⚡. said no one before</p>
 
 <p align="center">
-    <a href="https://codecov.io/gh/Abdenasser/dr_scaffold"><img src="https://codecov.io/gh/Abdenasser/dr_scaffold/branch/main/graph/badge.svg?token=VLUZWSTJV2"/></a> <a href="https://app.travis-ci.com/Abdenasser/dr_scaffold"><img src="https://app.travis-ci.com/Abdenasser/dr_scaffold.svg?branch=main"/></a> <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/pypi/l/ansicolortags.svg"/></a> <a href="https://pypi.org/project/dr-scaffold/"><img src="https://d25lcipzij17d.cloudfront.net/badge.svg?id=py&r=r&type=6e&v=2.0.0&x2=0"/></a> <a href="https://twitter.com/intent/tweet?text=Scaffold django rest apis like a champion ⚡. said no one before.&url=https://github.com/Abdenasser/dr_scaffold&hashtags=python,opensource,django,api,developers"><img src="http://randojs.com/images/tweetShield.svg" alt="Tweet" height="20"/></a>
+    <a href="https://codecov.io/gh/Abdenasser/dr_scaffold"><img src="https://codecov.io/gh/Abdenasser/dr_scaffold/branch/main/graph/badge.svg?token=VLUZWSTJV2"/></a> <a href="https://app.travis-ci.com/Abdenasser/dr_scaffold"><img src="https://app.travis-ci.com/Abdenasser/dr_scaffold.svg?branch=main"/></a> <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/pypi/l/ansicolortags.svg"/></a> <a href="https://pypi.org/project/dr-scaffold/"><img src="https://d25lcipzij17d.cloudfront.net/badge.svg?id=py&r=r&type=6e&v=2.0.1&x2=0"/></a> <a href="https://twitter.com/intent/tweet?text=Scaffold django rest apis like a champion ⚡. said no one before.&url=https://github.com/Abdenasser/dr_scaffold&hashtags=python,opensource,django,api,developers"><img src="http://randojs.com/images/tweetShield.svg" alt="Tweet" height="20"/></a>
 
-</p> 
+</p>
 
 # Overview
 
@@ -23,22 +23,17 @@ $ python manage.py dr_scaffold blog Post body:textfield author:foreignkey:Author
 
 - and more ...
 
-
 # Installation and usage
 
 > For a detailed guide read [scaffold django apis like a champion](https://www.abdenasser.com/scaffold-django-apis), this library assumes that you have **Django Rest Framework**. if not, please refer to [this guide](https://www.django-rest-framework.org/#installation).
 
-
 #### Install dr_scaffold package :
-
 
 ```console
 $ pip install dr-scaffold
 ```
 
-
 #### Add dr_scaffold to your INSTALLED_APPS like this:
-
 
 ```python
 INSTALLED_APPS = [
@@ -47,23 +42,18 @@ INSTALLED_APPS = [
 ]
 ```
 
-
 #### Add CORE_FOLDER and API_FOLDER to your settings.py (optional):
-
 
 ```python
 CORE_FOLDER = "core_dir/"
 API_FOLDER = "api_dir/"
 ```
 
-
 #### Run the your scaffolds like this:
-
 
 ```console
 $ python manage.py dr_scaffold blog Post body:textfield author:foreignkey:Author --mixins CRUD
 ```
-
 
 # Supported ViewSet types
 
@@ -128,11 +118,9 @@ class AuthorViewSet(
 
 We support most of django field types.
 
-
 # Contributors
 
 This project exists thanks to all the people who contribute. [[Contribute](CONTRIBUTING.md)]
-
 
 <a href="https://github.com/Abdenasser/dr_scaffold/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=Abdenasser/dr_scaffold" />

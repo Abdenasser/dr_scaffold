@@ -4,9 +4,10 @@ with open("PYPIREADME.rst", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 NAME = "dr_scaffold"
-VERSION = "v2.0.0"
+VERSION = "v2.0.1"
 DESCRIPTION = "a Django package for scaffolding django rest apis using cli"
 LONG_DESCRIPTION = (long_description,)
+LONG_DESCRIPTION_CONTENT_TYPE = "text/x-rst"
 URL = "https://github.com/Abdenasser/dr_scaffold"
 AUTHOR = "abdenasser"
 AUTHOR_EMAIL = "nasser.elidrissi065@gmail.com"
@@ -40,6 +41,7 @@ setup(
     version=VERSION,
     description=DESCRIPTION,
     long_description=LONG_DESCRIPTION,
+    long_description_content_type=LONG_DESCRIPTION_CONTENT_TYPE,
     url=URL,
     author=AUTHOR,
     author_email=AUTHOR_EMAIL,

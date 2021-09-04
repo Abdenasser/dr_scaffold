@@ -1,5 +1,9 @@
 # Changelog
 
+## v2.0.1
+
+With v2.0.1 you get sorted elegant imports in your generated files out of the box, using the power of `isort` 🤖
+
 ## v2.0.0
 
 With this version, we added support for **ViewSets** using **Mixins** 🥳 🎉
