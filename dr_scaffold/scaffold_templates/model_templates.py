@@ -9,7 +9,6 @@ MODEL = """class %s(models.Model):\
     class Meta:
         verbose_name_plural = "%s"
 
-
 """
 
 MODEL_IMPORT = """from %(app)s.models import %(model)s

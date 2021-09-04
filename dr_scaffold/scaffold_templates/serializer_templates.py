@@ -7,7 +7,6 @@ SERIALIZER = """class %(model)sSerializer(serializers.ModelSerializer):
         model = %(model)s
         fields = '__all__'
 
-
 """
 
 MODEL_IMPORT = """from %(app)s.models import %(model)s

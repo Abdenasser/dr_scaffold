@@ -6,7 +6,6 @@ VIEWSET = """class %(model)sViewSet(viewsets.ModelViewSet):
     queryset = %(model)s.objects.all()
     serializer_class = %(model)sSerializer
 
-
 """
 
 MODEL_IMPORT = """from %(app)s.models import %(model)s
@@ -68,5 +67,4 @@ CLRUD_VIEWSET = """class %(model)sViewSet(
         #insert specific get_object logic here
         return super().get_object()
 
-%(actions)s
-"""
+%(actions)s"""
