@@ -8,7 +8,7 @@ import inflect
 import isort
 from django.conf import settings
 
-from dr_scaffold import file_api
+from dr_scaffold import file_api, print_off
 from dr_scaffold.scaffold_templates import (
     admin_templates,
     app_template,
@@ -419,7 +419,8 @@ class Generator(
         """
         print("🦄 \033[95mSorting file imports ...\033[0m")
         for file in self.get_files()[0:5]:
-            isort.file(file)
+            with print_off.HiddenPrints():
+                isort.file(file)
 
     def generate(self):
         """
