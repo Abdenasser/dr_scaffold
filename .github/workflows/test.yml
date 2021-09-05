@@ -1,0 +1,19 @@
+name: Build
+
+on:
+  push:
+    branches-ignore:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v1
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: check linting
+        run: make lint
+      - name: Test code
+        run: make test
