@@ -1,0 +1,21 @@
+name: Build
+
+on:
+  push:
+    branches-ignore:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v1
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - uses: satackey/action-docker-layer-caching@v0.0.8
+        continue-on-error: true
+      - name: check linting
+        run: make lint
+      - name: Test code
+        run: make test
