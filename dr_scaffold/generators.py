@@ -303,12 +303,11 @@ class ViewGenerator(BaseGenerator):
         actions_string = "".join(
             str(actions_list[x] % {"model": self.model_name}) for x in mixins_list
         )
-        viewset_template = view_templates.CLRUD_VIEWSET % {
+        return view_templates.CLRUD_VIEWSET % {
             "model": self.model_name,
             "mixins": mixins_string,
             "actions": actions_string,
         }
-        return viewset_template
 
     def get_viewset_parts(self):
         """
