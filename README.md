@@ -49,10 +49,10 @@ CORE_FOLDER = "core_dir/"
 API_FOLDER = "api_dir/"
 ```
 
-#### Run the your scaffolds like this:
+#### Run your scaffolds like this:
 
 ```console
-$ python manage.py dr_scaffold blog Post body:textfield author:foreignkey:Author --mixins CRUD
+$ python manage.py dr_scaffold blog Post body:textfield author:foreignkey:Author
 ```
 
 # Supported ViewSet types
