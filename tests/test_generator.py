@@ -195,7 +195,7 @@ class TestGenerator(TestCase):
         generator_obj.api_dir = self.api_folder
         generator_obj.generate_models()
         with open(f"{self.core_folder}blog/models.py", "r+", encoding="utf8") as file:
-            body = "".join(line for line in file.readlines())
+            body = "".join(file.readlines())
         assert ("Article" in body) is True
         assert ("Articles" in body) is True
         assert ("title" in body) is True
