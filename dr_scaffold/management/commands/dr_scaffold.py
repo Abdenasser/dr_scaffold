@@ -43,15 +43,11 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **kwargs):
-        # handle the creation of an app with default files first
-        tests = True
         actions = []
         actions[:0] = kwargs["mixins"]
         if kwargs["mixins"] == "None":
             actions = False
-        if kwargs["tests"] == "None":
-            tests = False
-
+        tests = kwargs["tests"] != "None"
         # Remove : if exists on first and second arguments.
         first_args = args[0].replace(':', '')
         second_args = args[1].replace(':', '')
