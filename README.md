@@ -55,7 +55,19 @@ API_FOLDER = "api_dir/"
 $ python manage.py dr_scaffold blog Post body:textfield author:foreignkey:Author
 ```
 
-# Supported ViewSet types
+# Generate tests
+
+We support generating tests for your models and apis, you can generate tests by adding `--tests` to your command like follow:
+
+```console
+$ python manage.py dr_scaffold blog Author name:charfield --tests
+```
+
+This will generate factories for your models and their tests (ViewSets tests will be added soon), we depend on `pytest` and `factory_boy` so you should have them installed in order to run your tests.
+
+Also bare in mind that you should run your migrations before running the tests
+
+# Generate ViewSet Mixins
 
 We support two types of ViewSets, we support **ModelViewSet** and we
 support **ViewSets** with Mixins.

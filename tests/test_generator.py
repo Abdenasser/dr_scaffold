@@ -18,6 +18,8 @@ from dr_scaffold.generators import (
     AdminGenerator,
     ViewGenerator,
     SerializerGenerator,
+    FactoryGenerator,
+    FactoryTestGenerator,
     URLGenerator,
     pluralize,
 )
@@ -84,7 +86,7 @@ class TestGenerator(TestCase):
         """
         Test arguments
         """
-        generator_obj = Generator("blog", "Article", "", False)
+        generator_obj = Generator("blog", "Article", "", False, False)
         assert generator_obj.app_name == "blog"
         assert generator_obj.model_name == "Article"
 
@@ -93,7 +95,7 @@ class TestGenerator(TestCase):
         Tests imports
         """
         generator_obj = Generator(
-            "blog", "Article", ("title:charfield", "body:textfield"), False
+            "blog", "Article", ("title:charfield", "body:textfield"), False, False
         )
         generator_obj.core_folder = self.core_folder
         files = (f"{self.core_folder}blog/models.py",)
@@ -113,6 +115,7 @@ class TestGenerator(TestCase):
             model_name="Article",
             fields=("title:charfield", "body:textfield"),
             mixins=False,
+            tests=False,
         )
         generator_obj.core_dir = self.core_folder
         generator_obj.api_dir = self.api_folder
@@ -134,7 +137,7 @@ class TestGenerator(TestCase):
         Tests
         """
         generator_obj = Generator(
-            "blog", "Article", ("title:charfield", "body:textfield"), False
+            "blog", "Article", ("title:charfield", "body:textfield"), False, False
         )
         fields_string = generator_obj.get_fields_string()
         body_template = model_templates.TEXTFIELD % dict(name="body")
@@ -143,7 +146,7 @@ class TestGenerator(TestCase):
         assert fields_string == string
         # test relation field type
         generator_obj2 = Generator(
-            "blog", "Article", ("author:foreignkey:Author",), False
+            "blog", "Article", ("author:foreignkey:Author",), False, False
         )
         generator_obj2.get_fields_string()
         mock_is_in_file.assert_called_once()
@@ -153,7 +156,7 @@ class TestGenerator(TestCase):
         Tests
         """
         generator_obj2 = Generator(
-            "blog", "Article", ("author:foreignkey:Author",), False
+            "blog", "Article", ("author:foreignkey:Author",), False, False
         )
         generator_obj2.core_dir = self.core_folder
         generator_obj2.api_dir = self.api_folder
@@ -171,7 +174,7 @@ class TestGenerator(TestCase):
         Tests
         """
         generator_obj = Generator(
-            "blog", "Article", ("title:charfield", "body:textfield"), False
+            "blog", "Article", ("title:charfield", "body:textfield"), False, False
         )
         fields_string = generator_obj.get_fields_string()
         model_string = generator_obj.get_model_string()
@@ -183,14 +186,14 @@ class TestGenerator(TestCase):
         Tests
         """
         generator_obj = Generator(
-            "blog", "Article", ("title:charfield", "body:textfield"), False
+            "blog", "Article", ("title:charfield", "body:textfield"), False, False
         )
         generator_obj.core_dir = self.core_folder
         generator_obj.api_dir = self.api_folder
         result = generator_obj.run()
         assert result == print("🎉 Your RESTful Article api resource is ready 🎉")
         # test case where something is wrong
-        generator_obj2 = Generator("blog", "Author", ("title:charfiel",), False)
+        generator_obj2 = Generator("blog", "Author", ("title:charfiel",), False, False)
         generator_obj2.core_dir = self.core_folder
         generator_obj2.api_dir = self.api_folder
         result = generator_obj2.run()
@@ -202,7 +205,7 @@ class TestGenerator(TestCase):
         Tests
         """
         generator_obj = Generator(
-            "blog", "Article", ("title:charfield", "body:textfield"), False
+            "blog", "Article", ("title:charfield", "body:textfield"), False, False
         )
         generator_obj.core_dir = self.core_folder
         generator_obj.api_dir = self.api_folder
@@ -218,6 +221,7 @@ class TestGenerator(TestCase):
             model_name="Article",
             fields=("title:charfield", "body:textfield"),
             mixins=False,
+            tests=False,
         )
         generator_obj.core_dir = self.core_folder
         generator_obj.api_dir = self.api_folder
@@ -234,6 +238,7 @@ class TestGenerator(TestCase):
             model_name="Article",
             fields=("title:charfield", "body:textfield"),
             mixins=False,
+            tests=False,
         )
         generator_obj.core_dir = self.core_folder
         generator_obj.api_dir = self.api_folder
@@ -245,7 +250,9 @@ class TestGenerator(TestCase):
         """
         Tests
         """
-        generator_obj = Generator("blog", "Article", ("title:charfield",), ["C", "R"])
+        generator_obj = Generator(
+            "blog", "Article", ("title:charfield",), ["C", "R"], False
+        )
         generator_obj.core_dir = self.core_folder
         generator_obj.api_dir = self.api_folder
         head, body = generator_obj.get_admin_parts()
@@ -261,6 +268,7 @@ class TestGenerator(TestCase):
             model_name="Article",
             fields=("title:charfield",),
             mixins=False,
+            tests=False,
         )
         generator_obj.core_dir = self.core_folder
         generator_obj.api_dir = self.api_folder
@@ -275,6 +283,7 @@ class TestGenerator(TestCase):
             model_name="Article",
             fields=("title:charfield",),
             mixins=False,
+            tests=False,
         )
         generator_obj.core_dir = self.core_folder
         generator_obj.api_dir = self.api_folder
@@ -288,7 +297,7 @@ class TestGenerator(TestCase):
         """
         Tests
         """
-        generator_obj = Generator("blog", "Article", ("title:charfield",), False)
+        generator_obj = Generator("blog", "Article", ("title:charfield",), False, False)
         generator_obj.core_dir = self.core_folder
         generator_obj.api_dir = self.api_folder
         head, body = generator_obj.get_viewset_parts()
@@ -304,6 +313,7 @@ class TestGenerator(TestCase):
             model_name="Article",
             fields=("title:charfield",),
             mixins=False,
+            tests=False,
         )
         generator_obj.core_dir = self.core_folder
         generator_obj.api_dir = self.api_folder
@@ -319,6 +329,7 @@ class TestGenerator(TestCase):
             model_name="Article",
             fields=("title:charfield",),
             mixins=False,
+            tests=False,
         )
         generator_obj.core_dir = self.core_folder
         generator_obj.api_dir = self.api_folder
@@ -339,6 +350,7 @@ class TestGenerator(TestCase):
             model_name="Article",
             fields=("title:charfield",),
             mixins=["C", "R"],
+            tests=False,
         )
         generator_obj.core_dir = self.core_folder
         generator_obj.api_dir = self.api_folder
@@ -360,6 +372,7 @@ class TestGenerator(TestCase):
             model_name="Article",
             fields=("title:charfield",),
             mixins=False,
+            tests=False,
         )
         generator_obj.core_dir = self.core_folder
         generator_obj.api_dir = self.api_folder
@@ -376,6 +389,7 @@ class TestGenerator(TestCase):
             model_name="Article",
             fields=("title:charfield",),
             mixins=False,
+            tests=False,
         )
         generator_obj.core_dir = self.core_folder
         generator_obj.api_dir = self.api_folder
@@ -392,6 +406,7 @@ class TestGenerator(TestCase):
             model_name="Article",
             fields=("title:charfield",),
             mixins=False,
+            tests=False,
         )
         generator_obj.core_dir = self.core_folder
         generator_obj.api_dir = self.api_folder
@@ -412,6 +427,7 @@ class TestGenerator(TestCase):
             model_name="Article",
             fields=("title:charfield",),
             mixins=False,
+            tests=False,
         )
         generator_obj.core_dir = self.core_folder
         generator_obj.api_dir = self.api_folder
@@ -429,6 +445,7 @@ class TestGenerator(TestCase):
             model_name="Article",
             fields=("title:charfield",),
             mixins=False,
+            tests=False,
         )
         generator_obj.core_dir = self.core_folder
         generator_obj.api_dir = self.api_folder
@@ -443,6 +460,7 @@ class TestGenerator(TestCase):
             model_name="Article",
             fields=("title:charfield",),
             mixins=False,
+            tests=False,
         )
         generator_obj.core_dir = self.core_folder
         generator_obj.api_dir = self.api_folder
@@ -457,6 +475,7 @@ class TestGenerator(TestCase):
             model_name="Author",
             fields=("name:charfield",),
             mixins=False,
+            tests=False,
         )
         generator_obj.core_dir = self.core_folder
         generator_obj.api_dir = self.api_folder
@@ -468,7 +487,7 @@ class TestGenerator(TestCase):
         """
         Tests
         """
-        generator_obj = Generator("blog", "Article", ("title:charfield",), False)
+        generator_obj = Generator("blog", "Article", ("title:charfield",), False, False)
         generator_obj.core_dir = self.core_folder
         generator_obj.api_dir = self.api_folder
         generator_obj.run()
@@ -483,6 +502,7 @@ class TestGenerator(TestCase):
             model_name="Article",
             fields=("title:charfield",),
             mixins=False,
+            tests=False,
         )
         generator_obj.core_dir = self.core_folder
         generator_obj.api_dir = self.api_folder
@@ -502,7 +522,7 @@ class TestGenerator(TestCase):
         """
         Tests
         """
-        generator_obj = Generator("blog", "Author", ("name:charfield",), False)
+        generator_obj = Generator("blog", "Author", ("name:charfield",), False, False)
         generator_obj.core_dir = self.core_folder
         generator_obj.api_dir = self.api_folder
         generator_obj.generate()
@@ -514,7 +534,7 @@ class TestGenerator(TestCase):
         """
         delattr(self.test_settings, "CORE_FOLDER")
         delattr(self.test_settings, "API_FOLDER")
-        generator = Generator("blog", "Author", ("name:charfield",), False)
+        generator = Generator("blog", "Author", ("name:charfield",), False, False)
         assert generator.core_dir == ""
         assert generator.api_dir == ""
 
@@ -526,7 +546,7 @@ class TestGenerator(TestCase):
         setattr(self.test_settings, "CORE_FOLDER", "core")
         setattr(self.test_settings, "API_FOLDER", "api")
         with pytest.raises(ValueError, match=r".* should end with .*"):
-            Generator("blog", "Author", ("name:charfield",), False)
+            Generator("blog", "Author", ("name:charfield",), False, False)
         # settings to normal
         setattr(self.test_settings, "CORE_FOLDER", "my_app_core/")
         setattr(self.test_settings, "API_FOLDER", "my_app_api/")
@@ -537,6 +557,80 @@ class TestGenerator(TestCase):
         """
         setattr(self.test_settings, "CORE_FOLDER", "core/")
         setattr(self.test_settings, "API_FOLDER", "api/")
-        generator_obj = Generator("blog", "Author", ("name:charfield",), False)
+        generator_obj = Generator("blog", "Author", ("name:charfield",), False, False)
         assert generator_obj.core_dir == "core/"
         assert generator_obj.api_dir == "api/"
+
+    def test_generate_factories(self):
+        """
+        Tests
+        """
+        generator_obj = FactoryGenerator(
+            "blog", "Author", ("name:charfield",), False, True
+        )
+        generator_obj.core_dir = self.core_folder
+        generator_obj.api_dir = self.api_folder
+        generator_obj.root_dir = f"{self.tmpdirpath}"
+        os.makedirs(f"{self.tmpdirpath}/tests/core/blog", exist_ok=True)
+        with open(
+            f"{self.tmpdirpath}/tests/core/blog/factories.py", "x", encoding="utf8"
+        ):
+            pass
+        generator_obj.generate_factories()
+        with open(
+            f"{self.tmpdirpath}/tests/core/blog/factories.py", "r+", encoding="utf8"
+        ) as file:
+            body = "".join(file.readlines())
+        assert body.count("AuthorFactory") == 1
+        # test if factory already exists
+        generator_obj = FactoryGenerator(
+            "blog", "Author", ("name:charfield",), False, True
+        )
+        generator_obj.core_dir = self.core_folder
+        generator_obj.api_dir = self.api_folder
+        generator_obj.root_dir = f"{self.tmpdirpath}"
+        generator_obj.generate_factories()
+        with open(
+            f"{self.tmpdirpath}/tests/core/blog/factories.py", "r+", encoding="utf8"
+        ) as file:
+            body = "".join(file.readlines())
+        assert body.count("AuthorFactory") == 1
+
+    def test_generate_factories_tests(self):
+        """
+        Tests
+        """
+        generator_obj = FactoryTestGenerator(
+            "blog", "Author", ("name:charfield",), False, True
+        )
+        generator_obj.core_dir = self.core_folder
+        generator_obj.api_dir = self.api_folder
+        generator_obj.root_dir = f"{self.tmpdirpath}"
+        os.makedirs(f"{self.tmpdirpath}/tests/core/blog", exist_ok=True)
+        with open(
+            f"{self.tmpdirpath}/tests/core/blog/test_factories.py", "x", encoding="utf8"
+        ):
+            pass
+        generator_obj.generate_factories_tests()
+        with open(
+            f"{self.tmpdirpath}/tests/core/blog/test_factories.py",
+            "r+",
+            encoding="utf8",
+        ) as file:
+            body = "".join(file.readlines())
+        assert body.count("def test_author_factory():") == 1
+        # test if factory already exists
+        generator_obj = FactoryTestGenerator(
+            "blog", "Author", ("name:charfield",), False, True
+        )
+        generator_obj.core_dir = self.core_folder
+        generator_obj.api_dir = self.api_folder
+        generator_obj.root_dir = f"{self.tmpdirpath}"
+        generator_obj.generate_factories_tests()
+        with open(
+            f"{self.tmpdirpath}/tests/core/blog/test_factories.py",
+            "r+",
+            encoding="utf8",
+        ) as file:
+            body = "".join(file.readlines())
+        assert body.count("def test_author_factory():") == 1

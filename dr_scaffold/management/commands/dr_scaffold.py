@@ -35,12 +35,21 @@ class Command(BaseCommand):
             default="None",
             help="ex. --mixins CRUD where CRUD are letters of your viewset actions",
         )
+        parser.add_argument(
+            "--tests",
+            nargs="?",
+            default="None",
+            help="ex. --tests by itself without any value will be equivalent to --tests True",
+        )
 
     def handle(self, *args, **kwargs):
         # handle the creation of an app with default files first
+        tests = True
         actions = []
         actions[:0] = kwargs["mixins"]
         if kwargs["mixins"] == "None":
             actions = False
-        generator = Generator(args[0], args[1], args[2:], actions)
+        if kwargs["tests"] == "None":
+            tests = False
+        generator = Generator(args[0], args[1], args[2:], actions, tests)
         generator.run()

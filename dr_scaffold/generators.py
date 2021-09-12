@@ -1,3 +1,6 @@
+# pylint: disable=too-many-instance-attributes
+# pylint: disable=too-many-arguments
+# pylint: disable=too-many-ancestors
 """
 Generator module where the real work happens
 """
@@ -12,6 +15,8 @@ from dr_scaffold import file_api, print_off
 from dr_scaffold.scaffold_templates import (
     admin_templates,
     app_template,
+    factory_templates,
+    factory_tests_templates,
     model_templates,
     serializer_templates,
     url_templates,
@@ -37,14 +42,18 @@ class BaseGenerator:
     fields: Tuple[str]
     core_dir: str
     api_dir: str
+    root_dir: str
     mixins: Tuple[str]
+    tests: bool
 
-    def __init__(self, app_name, model_name, fields, mixins):
+    def __init__(self, app_name, model_name, fields, mixins, tests):
         self.init_paths_from_settings()
         self.app_name = app_name
         self.model_name = model_name
         self.fields = fields
         self.mixins = mixins
+        self.tests = tests
+        self.root_dir = "."
 
     @property
     def core_app_path(self):
@@ -59,6 +68,13 @@ class BaseGenerator:
         Shortcut for api_dir + app_name
         """
         return self.api_dir + self.app_name
+
+    @property
+    def tests_path(self):
+        """
+        Shortcut for tests path
+        """
+        return self.root_dir + "/tests"
 
     def init_paths_from_settings(self):
         """
@@ -85,7 +101,7 @@ class AppGenerator(BaseGenerator):
         """
         Returns all import statements
         """
-        return (
+        imports = [
             serializer_templates.SETUP,
             url_templates.SETUP,
             model_templates.SETUP,
@@ -96,29 +112,41 @@ class AppGenerator(BaseGenerator):
                 self.app_name.capitalize(),
                 self.core_app_path.replace("/", "."),
             ),
-        )
+        ]
+        if self.tests:
+            imports = [factory_templates.SETUP, factory_tests_templates.SETUP] + imports
+        return imports
 
     def get_files(self):
         """
         Files to be generated
         """
-        return (
+        files = [
             f"{self.api_app_path}/serializers.py",
             f"{self.api_app_path}/urls.py",
             f"{self.core_app_path}/models.py",
             f"{self.core_app_path}/admin.py",
             f"{self.api_app_path}/views.py",
             f"{self.core_app_path}/apps.py",
-        )
+        ]
+        if self.tests:
+            files = [
+                f"{self.tests_path}/core/{self.app_name}/factories.py",
+                f"{self.tests_path}/core/{self.app_name}/test_factories.py",
+            ] + files
+        return files
 
     def setup_folders(self):
         """
         creates folders if they not exist
         """
         migrations_path = f"{self.core_app_path}/migrations/"
-        makedirs(self.core_app_path, exist_ok=True)
         makedirs(self.api_app_path, exist_ok=True)
+        makedirs(self.core_app_path, exist_ok=True)
         makedirs(migrations_path, exist_ok=True)
+        if self.tests:
+            factories_path = f"{self.tests_path}/core/{self.app_name}/"
+            makedirs(factories_path, exist_ok=True)
 
     def add_setup_imports(self):
         """
@@ -342,6 +370,72 @@ class ViewGenerator(BaseGenerator):
         file_api.wrap_file_content(file, head, body)
 
 
+class FactoryGenerator(BaseGenerator):
+    """
+    FACTORY GENERATION
+    1 - get_factory_parts : returns the factory template and imports of the Model class
+    2 - generate_factories : check if the factory already exists in factories.py if not
+    it wraps the file content between the imports and the factory template
+    """
+
+    def get_factory_parts(self):
+        """
+        returns serializer class template and model import
+        """
+        app_dir = self.core_app_path
+        app_path = app_dir.replace("/", ".")
+        factory_template = factory_templates.FACTORY % {"model": self.model_name}
+        imports = factory_templates.MODEL_IMPORT % {
+            "app": app_path,
+            "model": self.model_name,
+        }
+        return imports, factory_template
+
+    def generate_factories(self):
+        """Generates serializers classes"""
+        if not self.tests:
+            return
+        factory_file = f"{self.tests_path}/core/{self.app_name}/factories.py"
+        factory_head = f"class {self.model_name}Factory"
+        if file_api.is_present_in_file(factory_file, factory_head):
+            return
+        head, body = self.get_factory_parts()
+        file_api.wrap_file_content(factory_file, head, body)
+
+
+class FactoryTestGenerator(BaseGenerator):
+    """
+    FACTORY GENERATION
+    1 - get_factory_parts : returns the factory template and imports of the Model class
+    2 - generate_factories : check if the factory already exists in factories.py if not
+    it wraps the file content between the imports and the factory template
+    """
+
+    def get_factory_test_parts(self):
+        """
+        returns serializer class template and model import
+        """
+        factory_test_template = factory_tests_templates.FACTORY_TEST % {
+            "model_lower": self.model_name.lower(),
+            "model": self.model_name,
+        }
+        imports = factory_tests_templates.MODEL_IMPORT % {
+            "model": self.model_name,
+        }
+        return imports, factory_test_template
+
+    def generate_factories_tests(self):
+        """Generates serializers classes"""
+        if not self.tests:
+            return
+        factory_test_file = f"{self.tests_path}/core/{self.app_name}/test_factories.py"
+        factory_test_head = f"def test_{self.model_name.lower()}_factory():"
+        if file_api.is_present_in_file(factory_test_file, factory_test_head):
+            return
+        head, body = self.get_factory_test_parts()
+        file_api.wrap_file_content(factory_test_file, head, body)
+
+
 class URLGenerator(BaseGenerator):
     """
     URLS GENERATION
@@ -389,15 +483,21 @@ class Generator(
     AdminGenerator,
     SerializerGenerator,
     ViewGenerator,
+    FactoryGenerator,
+    FactoryTestGenerator,
     URLGenerator,
 ):
     """
     A wrapper for CLI command arguments and the REST api different files generation methods
     """
 
-    def __init__(self, app_name, model_name, fields, mixins):
+    def __init__(self, app_name, model_name, fields, mixins, tests):
         super().__init__(
-            app_name=app_name, model_name=model_name, fields=fields, mixins=mixins
+            app_name=app_name,
+            model_name=model_name,
+            fields=fields,
+            mixins=mixins,
+            tests=tests,
         )
 
     def run(self):
@@ -418,7 +518,7 @@ class Generator(
         Sort file imports using isort
         """
         print("🦄 \033[95mSorting file imports ...\033[0m")
-        for file in self.get_files()[0:5]:
+        for file in self.get_files()[:-1]:
             with print_off.HiddenPrints():
                 isort.file(file)
 
@@ -431,5 +531,7 @@ class Generator(
         self.generate_admin()
         self.generate_serializers()
         self.generate_views()
+        self.generate_factories()
+        self.generate_factories_tests()
         self.generate_urls()
         self.sort_imports()
