@@ -1,5 +1,15 @@
 # Changelog
 
+## v2.1.0
+
+With v2.1.0 you get:
+
+- we generate **factories** for your models based on factory_boy 🤖
+- we generate **tests** for your factories based on Pytest ✨
+- we put your core tests under **tests/core/$app_name** and your api tests under **tests/apis/$app_name** 💅
+
+> next version will include API endpoints tests
+
 ## v2.0.2
 
 With v2.0.2 you get:
