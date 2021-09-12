@@ -634,3 +634,24 @@ class TestGenerator(TestCase):
         ) as file:
             body = "".join(file.readlines())
         assert body.count("def test_author_factory():") == 1
+
+    def test_add_setup_imports_with_tests(self):
+        """
+        Tests imports
+        """
+        generator_obj = Generator(
+            "blog", "Article", ("title:charfield", "body:textfield"), False, False
+        )
+        assert len(generator_obj.get_files()) == 6
+        assert len(generator_obj.get_file_imports()) == 6
+        generator_obj2 = Generator(
+            "blog", "Article", ("title:charfield", "body:textfield"), False, True
+        )
+        generator_obj2.core_dir = self.core_folder
+        generator_obj2.api_dir = self.api_folder
+        generator_obj2.root_dir = f"{self.tmpdirpath}"
+        os.makedirs(f"{self.tmpdirpath}/tests/core", exist_ok=True)
+        assert len(generator_obj2.get_files()) == 8
+        assert len(generator_obj2.get_file_imports()) == 8
+        generator_obj2.setup_folders()
+        assert os.path.exists(f"{self.tmpdirpath}/tests/core/blog") == True
