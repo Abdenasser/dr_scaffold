@@ -51,5 +51,10 @@ class Command(BaseCommand):
             actions = False
         if kwargs["tests"] == "None":
             tests = False
-        generator = Generator(args[0], args[1], args[2:], actions, tests)
+
+        # Remove : if exists on first and second arguments.
+        first_args = args[0].replace(':', '')
+        second_args = args[1].replace(':', '')
+
+        generator = Generator(first_args, second_args, args[2:], actions, tests)
         generator.run()
