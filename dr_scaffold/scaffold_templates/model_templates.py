@@ -9,6 +9,10 @@ MODEL = """class %s(models.Model):\
     class Meta:
         verbose_name_plural = "%s"
 
+    def __str__(self):
+        # return the name of field.
+        ...
+
 """
 
 MODEL_IMPORT = """from %(app)s.models import %(model)s
