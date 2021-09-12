@@ -654,4 +654,4 @@ class TestGenerator(TestCase):
         assert len(generator_obj2.get_files()) == 8
         assert len(generator_obj2.get_file_imports()) == 8
         generator_obj2.setup_folders()
-        assert os.path.exists(f"{self.tmpdirpath}/tests/core/blog") == True
+        assert os.path.exists(f"{self.tmpdirpath}/tests/core/blog") is True
