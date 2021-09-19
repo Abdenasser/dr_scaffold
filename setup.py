@@ -4,7 +4,7 @@ with open("PYPIREADME.rst", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 NAME = "dr_scaffold"
-VERSION = "v2.1.0"
+VERSION = "v2.1.1"
 DESCRIPTION = "a Django package for scaffolding django rest apis using cli"
 LONG_DESCRIPTION = (long_description,)
 LONG_DESCRIPTION_CONTENT_TYPE = "text/x-rst"
