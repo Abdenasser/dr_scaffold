@@ -178,7 +178,12 @@ class TestGenerator(TestCase):
         )
         fields_string = generator_obj.get_fields_string()
         model_string = generator_obj.get_model_string()
-        string = model_templates.MODEL % ("Article", fields_string, "Articles")
+        string = model_templates.MODEL % (
+            "Article",
+            fields_string,
+            "{self.title} {self.body}",
+            "Articles",
+        )
         assert model_string == string
 
     def test_run(self):
