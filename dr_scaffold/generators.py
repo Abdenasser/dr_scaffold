@@ -223,9 +223,11 @@ class ModelGenerator(BaseGenerator):
         returns a Model class string with fields and Meta class
         """
         fields_string = self.get_fields_string()
+        fields_for_str = " ".join("{self.%s}" % f.split(":")[0] for f in self.fields)
         params = (
             self.model_name,
             fields_string,
+            fields_for_str,
             pluralize(self.model_name.lower()).capitalize(),
         )
         return model_templates.MODEL % params
