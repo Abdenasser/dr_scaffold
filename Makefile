@@ -20,7 +20,7 @@ format:           ## Format code using autoflake black & isort.
 	$(ENV_PREFIX)black --target-version=py38 tests/
 
 .PHONY: test
-test: lint        ## Run tests and generate coverage report.
+test:             ## Run tests and generate coverage report.
 	$(ENV_PREFIX)pytest -v --cov-config .coveragerc --cov=dr_scaffold -l --tb=short --maxfail=1 tests/
 	$(ENV_PREFIX)coverage xml
 	$(ENV_PREFIX)coverage html
