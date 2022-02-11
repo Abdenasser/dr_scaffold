@@ -8,16 +8,16 @@ help:             ## Show the help.
 .PHONY: lint
 lint:             ## Run pep8, black, mypy linters.
 	$(ENV_PREFIX)flake8 dr_scaffold/ --ignore=E501,E722 --exclude=__init__.py --exclude=dr_scaffold/scaffold_templates/
-	$(ENV_PREFIX)black --check --diff --target-version=py38 dr_scaffold/
-	$(ENV_PREFIX)black --check --diff --target-version=py38 tests/
+	$(ENV_PREFIX)black --check --diff dr_scaffold/
+	$(ENV_PREFIX)black --check --diff tests/
 	$(ENV_PREFIX)mypy --ignore-missing-imports dr_scaffold/
 
 .PHONY: format
 format:           ## Format code using autoflake black & isort.
 	$(ENV_PREFIX)autoflake --remove-all-unused-imports --in-place --recursive dr_scaffold/ --exclude=__init__.py
 	$(ENV_PREFIX)isort dr_scaffold/
-	$(ENV_PREFIX)black --target-version=py38 dr_scaffold/
-	$(ENV_PREFIX)black --target-version=py38 tests/
+	$(ENV_PREFIX)black dr_scaffold/
+	$(ENV_PREFIX)black tests/
 
 .PHONY: test
 test:             ## Run tests and generate coverage report.
