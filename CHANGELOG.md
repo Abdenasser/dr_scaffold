@@ -1,5 +1,11 @@
 # Changelog
 
+## v2.1.2
+
+- minor changes and support for latest python versions
+- now "created" and "updated" fields will be included in generated models
+- minor bug fixes
+
 ## v2.1.0
 
 With v2.1.0 you get:
