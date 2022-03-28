@@ -183,6 +183,7 @@ class TestGenerator(TestCase):
             fields_string,
             "{self.title} {self.body}",
             "Articles",
+            "Article"
         )
         assert model_string == string
 

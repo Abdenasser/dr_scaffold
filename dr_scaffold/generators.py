@@ -229,6 +229,7 @@ class ModelGenerator(BaseGenerator):
             fields_string,
             fields_for_str,
             pluralize(self.model_name.lower()).capitalize(),
+            self.model_name
         )
         return model_templates.MODEL % params
 

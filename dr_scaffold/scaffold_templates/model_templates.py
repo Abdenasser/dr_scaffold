@@ -12,6 +12,7 @@ MODEL = """class %s(models.Model):\
 
     class Meta:
         verbose_name_plural = "%s"
+        db_table = "%s"
 
 """
 
@@ -22,46 +23,46 @@ CHARFIELD = """
     %(name)s = models.CharField(max_length=255, null=True, blank=True)"""
 
 BIGINTEGERFIELD = """
-    %(name)s = models.BigIntegerField()"""
+    %(name)s = models.BigIntegerField(null=True, blank=True)"""
 
 BINARYFIELD = """
-    %(name)s = models.BinaryField()"""
+    %(name)s = models.BinaryField(null=True, blank=True)"""
 
 BOOLEANFIELD = """
-    %(name)s = models.BooleanField()"""
+    %(name)s = models.BooleanField(null=True, blank=True)"""
 
 DATEFIELD = """
-    %(name)s = models.DateField()"""
+    %(name)s = models.DateField(null=True, blank=True)"""
 
 FLOATFIELD = """
-    %(name)s = models.FloatField()"""
+    %(name)s = models.FloatField(null=True, blank=True)"""
 
 GENERICIPADDRESSFIELD = """
-    %(name)s = models.GenericIPAddressField()"""
+    %(name)s = models.GenericIPAddressField(null=True, blank=True)"""
 
 NULLBOOLEANFIELD = """
-    %(name)s = forms.NullBooleanField()"""
+    %(name)s = forms.NullBooleanField(null=True, blank=True)"""
 
 POSITIVEINTEGERFIELD = """
-    %(name)s = models.PositiveIntegerField()"""
+    %(name)s = models.PositiveIntegerField(null=True, blank=True)"""
 
 POSITIVESMALLINTEGERFIELD = """
-    %(name)s = models.PositiveSmallIntegerField()"""
+    %(name)s = models.PositiveSmallIntegerField(null=True, blank=True)"""
 
 EMAILFIELD = """
-    %(name)s = models.EmailField(max_length=254)"""
+    %(name)s = models.EmailField(max_length=254, null=True, blank=True)"""
 
 SLUGFIELD = """
-    %(name)s = models.SlugField(max_length=200)"""
+    %(name)s = models.SlugField(max_length=200, null=True, blank=True)"""
 
 TIMEFIELD = """
-    %(name)s = models.TimeField()"""
+    %(name)s = models.TimeField(null=True, blank=True)"""
 
 URLFIELD = """
-    %(name)s = models.URLField(max_length=200)"""
+    %(name)s = models.URLField(max_length=200, null=True, blank=True)"""
 
 SMALLINTEGERFIELD = """
-    %(name)s = models.SmallIntegerField()"""
+    %(name)s = models.SmallIntegerField(null=True, blank=True)"""
 
 TEXTFIELD = """
     %(name)s = models.TextField(null=True, blank=True)"""
@@ -73,7 +74,7 @@ DECIMALFIELD = """
     %(name)s = models.DecimalField(max_digits=5, decimal_places=2, null=True, default=0.0)"""
 
 DATETIMEFIELD = """
-    %(name)s = models.DateTimeField(null=True)"""
+    %(name)s = models.DateTimeField(null=True, blank=True)"""
 
 FOREIGNKEY = """
     %(name)s = models.ForeignKey(%(related)s, on_delete=models.CASCADE, null=True)"""
