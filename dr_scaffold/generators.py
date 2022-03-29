@@ -122,6 +122,7 @@ class AppGenerator(BaseGenerator):
         Files to be generated
         """
         files = [
+            f"{self.api_app_path}/__init__.py"
             f"{self.api_app_path}/serializers.py",
             f"{self.api_app_path}/urls.py",
             f"{self.core_app_path}/models.py",
