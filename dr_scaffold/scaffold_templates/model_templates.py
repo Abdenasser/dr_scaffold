@@ -12,7 +12,6 @@ MODEL = """class %s(models.Model):\
 
     class Meta:
         verbose_name_plural = "%s"
-        db_table = "%s"
 
 """
 
