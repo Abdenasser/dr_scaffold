@@ -128,7 +128,7 @@ class TestGenerator(TestCase):
         with open(f"{self.core_folder}blog/models.py", "r+", encoding="utf8") as file:
             body = "".join(file.readlines())
         assert len(core_files + api_files) == 7  # taking in count migrations folder
-        assert ("from django.db import models" in body) is True
+        assert "from django.db import models" in body
 
     @classmethod
     @mock.patch("dr_scaffold.generators.file_api.is_present_in_file")
@@ -233,10 +233,10 @@ class TestGenerator(TestCase):
         generator_obj.generate_models()
         with open(f"{self.core_folder}blog/models.py", "r+", encoding="utf8") as file:
             body = "".join(file.readlines())
-        assert ("Article" in body) is True
-        assert ("Articles" in body) is True
-        assert ("title" in body) is True
-        assert ("body" in body) is True
+        assert "Article" in body
+        assert "Articles" in body
+        assert "title" in body
+        assert "body" in body
         # test when model already generated
         generator_obj = ModelGenerator(
             app_name="blog",
@@ -261,8 +261,8 @@ class TestGenerator(TestCase):
         generator_obj.core_dir = self.core_folder
         generator_obj.api_dir = self.api_folder
         head, body = generator_obj.get_admin_parts()
-        assert ("import Article" in head) is True
-        assert ("@admin.register(Article)" in body) is True
+        assert "import Article" in head
+        assert "@admin.register(Article)" in body
 
     def test_register_models_to_admin(self):
         """
@@ -280,8 +280,8 @@ class TestGenerator(TestCase):
         generator_obj.generate_admin()
         with open(f"{self.core_folder}blog/admin.py", "r+", encoding="utf8") as file:
             body = "".join(file.readlines())
-        assert ("import Article" in body) is True
-        assert ("@admin.register(Article)" in body) is True
+        assert "import Article" in body
+        assert "@admin.register(Article)" in body
         # test when model already registered
         generator_obj = AdminGenerator(
             app_name="blog",
@@ -306,8 +306,8 @@ class TestGenerator(TestCase):
         generator_obj.core_dir = self.core_folder
         generator_obj.api_dir = self.api_folder
         head, body = generator_obj.get_viewset_parts()
-        assert ("import Article" in head) is True
-        assert ("class ArticleViewSet" in body) is True
+        assert "import Article" in head
+        assert "class ArticleViewSet" in body
 
     def test_generate_views(self):
         """
@@ -325,9 +325,9 @@ class TestGenerator(TestCase):
         generator_obj.generate_views()
         with open(f"{self.api_folder}blog/views.py", "r+", encoding="utf8") as file:
             body = "".join(file.readlines())
-        assert ("import Article" in body) is True
-        assert ("ArticleViewSet" in body) is True
-        assert ("ArticleSerializer" in body) is True
+        assert "import Article" in body
+        assert "ArticleViewSet" in body
+        assert "ArticleSerializer" in body
         # test if view already exists
         generator_obj = ViewGenerator(
             app_name="blog",
@@ -362,11 +362,11 @@ class TestGenerator(TestCase):
         generator_obj.generate_views()
         with open(f"{self.api_folder}blog/views.py", "r+", encoding="utf8") as file:
             body = "".join(file.readlines())
-        assert ("import Article" in body) is True
-        assert ("ArticleViewSet" in body) is True
-        assert ("def create" in body) is True
-        assert ("def retrieve" in body) is True
-        assert ("def update" in body) is not True
+        assert "import Article" in body
+        assert "ArticleViewSet" in body
+        assert "def create" in body
+        assert "def retrieve" in body
+        assert "def update" not in body
 
     def test_get_serializer_parts(self):
         """
@@ -382,8 +382,8 @@ class TestGenerator(TestCase):
         generator_obj.core_dir = self.core_folder
         generator_obj.api_dir = self.api_folder
         head, body = generator_obj.get_serializer_parts()
-        assert ("import Article" in head) is True
-        assert ("class ArticleSerializer" in body) is True
+        assert "import Article" in head
+        assert "class ArticleSerializer" in body
 
     def test_generate_serializer(self):
         """
@@ -403,8 +403,8 @@ class TestGenerator(TestCase):
             f"{self.api_folder}blog/serializers.py", "r+", encoding="utf8"
         ) as file:
             body = "".join(file.readlines())
-        assert ("import Article" in body) is True
-        assert ("ArticleSerializer" in body) is True
+        assert "import Article" in body
+        assert "ArticleSerializer" in body
         # test if serializer already exists
         generator_obj = SerializerGenerator(
             app_name="blog",
@@ -437,8 +437,8 @@ class TestGenerator(TestCase):
         generator_obj.core_dir = self.core_folder
         generator_obj.api_dir = self.api_folder
         head, body = generator_obj.get_url_parts()
-        assert ("import ArticleViewSet" in head) is True
-        assert (", ArticleViewSet)" in body) is True
+        assert "import ArticleViewSet" in head
+        assert ", ArticleViewSet)" in body
 
     @mock.patch("dr_scaffold.generators.file_api.replace_file_chunk")
     def test_generate_urls(self, mock_replace_chunk):
@@ -457,8 +457,8 @@ class TestGenerator(TestCase):
         generator_obj.generate_urls()
         with open(f"{self.api_folder}blog/urls.py", "r+", encoding="utf8") as file:
             body = "".join(file.readlines())
-        assert ("import ArticleViewSet" in body) is True
-        assert (", ArticleViewSet)" in body) is True
+        assert "import ArticleViewSet" in body
+        assert ", ArticleViewSet)" in body
         # test : if url have been added we won't add it again
         generator_obj = URLGenerator(
             app_name="blog",

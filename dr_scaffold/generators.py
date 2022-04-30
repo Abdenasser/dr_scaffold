@@ -74,7 +74,7 @@ class BaseGenerator:
         """
         Shortcut for tests path
         """
-        return self.root_dir + "/tests"
+        return f"{self.root_dir}/tests"
 
     def init_paths_from_settings(self):
         """
@@ -83,7 +83,7 @@ class BaseGenerator:
         self.core_dir = getattr(settings, "CORE_FOLDER", "")
         self.api_dir = getattr(settings, "API_FOLDER", "")
         slashed = self.core_dir.endswith("/") and self.api_dir.endswith("/")
-        if len(self.api_dir) > 0 and len(self.core_dir) > 0 and not slashed:
+        if self.api_dir != '' and self.core_dir != '' and not slashed:
             raise ValueError("🤔 Oops CORE_FOLDER & API_FOLDER should end with a '/'")
 
 
