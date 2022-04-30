@@ -122,7 +122,6 @@ class AppGenerator(BaseGenerator):
         Files to be generated
         """
         files = [
-            f"{self.api_app_path}/__init__.py"
             f"{self.api_app_path}/serializers.py",
             f"{self.api_app_path}/urls.py",
             f"{self.core_app_path}/models.py",
@@ -164,6 +163,8 @@ class AppGenerator(BaseGenerator):
         file_api.create_files(files)
         if not path.exists(f"{self.core_app_path}/migrations/__init__.py"):
             file_api.create_file(f"{self.core_app_path}/migrations/__init__.py")
+        if not path.exists(f"{self.core_app_path}/__init__.py"):
+            file_api.create_file(f"{self.core_app_path}/__init__.py")
         file_api.wipe_files(files)
 
     def is_already_generated(self):
@@ -230,7 +231,6 @@ class ModelGenerator(BaseGenerator):
             fields_string,
             fields_for_str,
             pluralize(self.model_name.lower()).capitalize(),
-            self.model_name
         )
         return model_templates.MODEL % params
 
@@ -524,6 +524,7 @@ class Generator(
         print("🦄 \033[95mSorting file imports ...\033[0m")
         for file in self.get_files()[:-1]:
             with print_off.HiddenPrints():
+                print(file)
                 isort.file(file)
 
     def generate(self):
