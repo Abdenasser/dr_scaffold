@@ -25,7 +25,7 @@ $ python manage.py dr_scaffold blog Post body:textfield author:foreignkey:Author
 
 # Installation and usage
 
-> For a detailed guide read [scaffold django apis like a champion](https://abdenasser.com/scaffold-django-apis-like-a-champion/), this library assumes that you have **Django Rest Framework**. if not, please refer to [this guide](https://www.django-rest-framework.org/#installation).
+> For a detailed guide read [scaffold django apis like a champion](https://www.abdenasser.com/2021/08/25/scaffold-django-apis-like-a-champion/), this library assumes that you have **Django Rest Framework**. if not, please refer to [this guide](https://www.django-rest-framework.org/#installation).
 
 #### Install dr_scaffold package :
 
